@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AF SG 3-Day Strength & Vitals Hub</title>
+  <title>AF SG 3-Day Strength & Nutrition Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,7 +32,6 @@
     }
   </script>
   <style>
-    /* Custom scrollbar & smooth transitions */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -47,6 +46,13 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #7C3AED;
     }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
       -webkit-appearance: none;
@@ -59,10 +65,10 @@
 </head>
 <body class="bg-af-dark text-slate-100 font-sans antialiased min-h-screen pb-28 selection:bg-af-purple selection:text-white">
 
-  <!-- Toast Notification Banner (Replaces alert()) -->
+  <!-- Toast Notification Banner -->
   <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
 
-  <!-- Confirmation Modal (Replaces confirm()) -->
+  <!-- Confirmation Modal -->
   <div id="confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
     <div class="bg-af-card border border-af-border rounded-2xl max-w-md w-full p-6 shadow-2xl">
       <h3 id="confirm-title" class="text-lg font-bold text-white mb-2">Confirm Action</h3>
@@ -75,21 +81,20 @@
   </div>
 
   <!-- Top Header -->
-  <header class="sticky top-0 z-30 bg-af-dark/90 backdrop-blur-md border-b border-af-border">
+  <header class="sticky top-0 z-30 bg-af-dark/95 backdrop-blur-md border-b border-af-border">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-900/40">
-          <!-- Custom Running/Strength SVG Icon -->
           <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6.5 6.5h11M6.5 17.5h11M4 9.5v5M20 9.5v5M2 11v2M22 11v2M12 6.5v11" />
           </svg>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white">AF SG <span class="text-purple-400">3-Day Pro</span></h1>
+            <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white">AF SG <span class="text-purple-400">Strength &amp; Fuel</span></h1>
             <span class="hidden sm:inline-block text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">Singapore</span>
           </div>
-          <p class="text-xs text-slate-400">Yishun &bull; Tiong Bahru &bull; Bugis</p>
+          <p class="text-xs text-slate-400">Yishun &bull; Tiong Bahru &bull; Bugis &bull; 89kg &rarr; 80kg Cut</p>
         </div>
       </div>
 
@@ -98,29 +103,34 @@
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          <span>Reset Demo Data</span>
+          <span>Reset Demo</span>
         </button>
       </div>
     </div>
 
     <!-- Navigation Tabs -->
     <nav class="max-w-6xl mx-auto px-4 flex overflow-x-auto no-scrollbar gap-1 sm:gap-2 pb-0">
-      <button onclick="switchTab('workout')" id="tab-btn-workout" class="tab-btn active-tab whitespace-nowrap px-4 py-3 text-sm font-semibold border-b-2 border-purple-500 text-purple-400 flex items-center gap-2 transition">
+      <button onclick="switchTab('workout')" id="tab-btn-workout" class="tab-btn whitespace-nowrap px-3.5 py-3 text-sm font-semibold border-b-2 border-purple-500 text-purple-400 flex items-center gap-1.5 transition">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        <span>3-Day Workout Plan</span>
+        <span>Workout</span>
       </button>
-      <button onclick="switchTab('onerm')" id="tab-btn-onerm" class="tab-btn whitespace-nowrap px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 transition">
+      <button onclick="switchTab('nutrition')" id="tab-btn-nutrition" class="tab-btn whitespace-nowrap px-3.5 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        <span>Nutrition &amp; Supps</span>
+        <span id="nav-kcal-left-badge" class="text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">2,050 left</span>
+      </button>
+      <button onclick="switchTab('onerm')" id="tab-btn-onerm" class="tab-btn whitespace-nowrap px-3.5 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-        <span>1RM &amp; % Calc</span>
+        <span>1RM Hub</span>
       </button>
-      <button onclick="switchTab('history')" id="tab-btn-history" class="tab-btn whitespace-nowrap px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <span>Workout History</span>
-        <span id="history-count-badge" class="text-xs bg-af-surface text-slate-300 px-2 py-0.5 rounded-full">0</span>
-      </button>
-      <button onclick="switchTab('vitals')" id="tab-btn-vitals" class="tab-btn whitespace-nowrap px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 transition">
+      <button onclick="switchTab('vitals')" id="tab-btn-vitals" class="tab-btn whitespace-nowrap px-3.5 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-        <span>Daily Vitals</span>
+        <span>Vitals</span>
+      </button>
+      <button onclick="switchTab('history')" id="tab-btn-history" class="tab-btn whitespace-nowrap px-3.5 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>History</span>
+        <span id="history-count-badge" class="text-xs bg-af-surface text-slate-300 px-2 py-0.5 rounded-full">0</span>
       </button>
     </nav>
   </header>
@@ -145,10 +155,7 @@
               <option value="tiongbahru">AF Tiong Bahru Plaza (#01-128/129)</option>
               <option value="yishun">AF Yishun (Junction 9 / Yishun East / KTPH)</option>
             </select>
-            <!-- Branch Equipment & Crowd Intel Box -->
-            <div id="branch-intel-box" class="bg-af-dark/70 border border-af-border/80 rounded-xl p-3.5 text-xs text-slate-300 space-y-1.5">
-              <!-- Populated dynamically via JS -->
-            </div>
+            <div id="branch-intel-box" class="bg-af-dark/70 border border-af-border/80 rounded-xl p-3.5 text-xs text-slate-300 space-y-1.5"></div>
           </div>
 
           <!-- Split & Training Goal Selector -->
@@ -211,30 +218,367 @@
       </div>
 
       <!-- Active Day Workout Header Banner -->
-      <div id="active-day-header" class="bg-gradient-to-r from-af-card via-af-surface to-af-card border border-af-border rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <!-- Rendered by JS -->
-      </div>
+      <div id="active-day-header" class="bg-gradient-to-r from-af-card via-af-surface to-af-card border border-af-border rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"></div>
 
       <!-- Exercise Cards Container -->
-      <div id="exercise-list-container" class="space-y-4">
-        <!-- Exercise cards rendered dynamically by JS -->
-      </div>
+      <div id="exercise-list-container" class="space-y-4"></div>
 
-      <!-- Bottom Complete Button for Mobile Convenience -->
+      <!-- Bottom Complete Button -->
       <div class="pt-2 flex justify-end">
         <button onclick="completeAndSaveWorkout()" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-950/50 transition flex items-center justify-center gap-2">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <span>Finish &amp; Log This Session to History</span>
         </button>
       </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 2: NUTRITION, MACROS, PHOTO ANALYZER & SUPPLEMENTS    -->
+    <!-- ========================================================= -->
+    <section id="tab-nutrition" class="hidden space-y-6">
+
+      <!-- Date Selector & Profile Goal Banner -->
+      <div class="bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-af-border/70 pb-4">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">Auto-Calorie Engine</span>
+              <span class="text-xs text-slate-400">Height: <strong class="text-white">182 cm</strong> &bull; Goal: <strong class="text-emerald-400">80.0 kg</strong></span>
+            </div>
+            <h2 class="text-xl font-extrabold text-white mt-1">Daily Calories, Macros &amp; Supplements</h2>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label for="nutrition-date-picker" class="text-xs font-semibold text-slate-400">Date:</label>
+            <input type="date" id="nutrition-date-picker" onchange="changeNutritionDate(this.value)" class="bg-af-surface border border-af-border rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-purple-500">
+            <button onclick="toggleNutritionSettings()" class="px-3 py-2 rounded-xl bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-semibold text-purple-300 transition flex items-center gap-1.5" title="Configure Calorie Formula & Optional AI Key">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <span>Calorie &amp; AI Settings</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible Calorie & AI Settings Drawer -->
+        <div id="nutrition-settings-drawer" class="hidden bg-af-dark/80 border border-af-border rounded-xl p-4 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Height (cm)</label>
+              <input type="number" id="prof-height" value="182" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-bold text-white">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Target Weight (kg)</label>
+              <input type="number" id="prof-target-weight" value="80" step="0.5" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-bold text-white">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Age (yrs)</label>
+              <input type="number" id="prof-age" value="35" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-bold text-white">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Weight Basis</label>
+              <select id="prof-weight-basis" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-semibold text-white">
+                <option value="avg7" selected>7-Day Rolling Avg (Recommended)</option>
+                <option value="latest">Latest Weigh-In Only</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Activity Level (AF 3-Day Lifting)</label>
+              <select id="prof-activity" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-semibold text-white">
+                <option value="1.375">Lightly Active (Desk job + 1-3 workouts/wk)</option>
+                <option value="1.50" selected>Moderately Active (Desk job + 3-4 AF sessions/wk)</option>
+                <option value="1.625">Active (Daily steps 8k+ &amp; 3-4 lifting sessions)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Fat Loss Pace (89kg &rarr; 80kg)</label>
+              <select id="prof-deficit" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-semibold text-white">
+                <option value="350">Lean Recomp (-350 kcal/day | ~0.35 kg/wk)</option>
+                <option value="500" selected>Steady Fat Loss (-500 kcal/day | ~0.5 kg/wk)</option>
+                <option value="650">Aggressive Cut (-650 kcal/day | ~0.65 kg/wk)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Optional Gemini API Key for AI Photo & Custom Food Parsing -->
+          <div class="pt-3 border-t border-af-border/70">
+            <label class="block text-[11px] font-bold uppercase text-purple-400 mb-1">Optional: Google Gemini API Key (For Live AI Photo &amp; Any-Meal Vision Analysis)</label>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <input type="password" id="gemini-api-key-input" placeholder="AIzaSy... (Saved locally in your phone browser only)" class="flex-1 bg-af-surface border border-af-border rounded-lg px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-purple-500">
+              <button onclick="saveGeminiApiKey()" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition">Save Key</button>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1">No key? No problem—the built-in Singapore &amp; Fitness Food Engine + Visual Meal Estimator work 100% offline out-of-the-box.</p>
+          </div>
+        </div>
+
+        <!-- Feature A: Dynamic Weight-Linked Calorie & Journey Summary Strip -->
+        <div id="calorie-engine-summary" class="grid grid-cols-2 lg:grid-cols-5 gap-3">
+          <!-- Populated dynamically by JS -->
+        </div>
+
+        <!-- Quick Weight Log Inline Bar (Updates Vitals + Recalculates Calories Immediately) -->
+        <div class="bg-af-dark/70 border border-af-border/80 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="text-xs text-slate-300">
+            <span class="font-bold text-purple-300">Quick Weigh-In Sync:</span> Logging your weight here updates your Vitals &amp; automatically recalculates today's target calories.
+          </div>
+          <form onsubmit="quickWeightUpdateFromNutrition(event)" class="flex items-center gap-2">
+            <input type="number" id="quick-nutr-weight" step="0.1" min="35" max="250" placeholder="89.0" required class="w-24 bg-af-surface border border-af-border rounded-lg px-3 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-purple-500">
+            <span class="text-xs font-semibold text-slate-400">kg</span>
+            <button type="submit" class="px-3.5 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition whitespace-nowrap">Update Weight</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Feature D: Leftover Calories & Macros Dashboard (Calories, Protein, Carbs, Fats, Fibre) -->
+      <div class="bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Remaining Daily Budget</span>
+            <h3 class="text-lg font-extrabold text-white">Leftover Calories &amp; Macros You Can Eat Today</h3>
+          </div>
+          <div id="calorie-status-pill" class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            On Track
+          </div>
+        </div>
+
+        <!-- 5 Macro Cards (Calories, Protein, Carbs, Fats, Fibre) -->
+        <div id="leftover-macros-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+
+      <!-- Feature C & Feature B: Log Food by Text OR Photo Upload -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Feature C: Text Food Entry & Macro Calculator -->
+        <div class="lg:col-span-6 bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-400">Smart Text Macro Parser</span>
+            <h3 class="text-lg font-extrabold text-white mt-0.5">Type Food Ate &amp; Calculate Macros</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Try typing <span class="text-slate-200 font-medium">"200ml low fat meiji milk"</span>, <span class="text-slate-200 font-medium">"180g chicken breast"</span>, or <span class="text-slate-200 font-medium">"1 bowl chicken rice"</span>.</p>
+          </div>
+
+          <div class="flex gap-2">
+            <input type="text" id="food-text-input" placeholder="e.g. 200ml low fat meiji milk" onkeydown="if(event.key==='Enter'){event.preventDefault();parseTextFood();}" class="flex-1 bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-purple-500">
+            <button onclick="parseTextFood()" class="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold transition whitespace-nowrap">
+              Calculate
+            </button>
+          </div>
+
+          <!-- One-Tap Quick Staples -->
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Quick Tap Staples:</div>
+            <div class="flex flex-wrap gap-1.5">
+              <button onclick="quickFillFood('200ml low fat meiji milk')" class="text-xs bg-af-surface hover:bg-purple-600/30 text-slate-200 hover:text-purple-200 border border-af-border px-2.5 py-1.5 rounded-lg transition">+ 200ml Meiji Low Fat Milk</button>
+              <button onclick="quickFillFood('1 scoop whey protein')" class="text-xs bg-af-surface hover:bg-purple-600/30 text-slate-200 hover:text-purple-200 border border-af-border px-2.5 py-1.5 rounded-lg transition">+ 1 Scoop Whey</button>
+              <button onclick="quickFillFood('150g chicken breast')" class="text-xs bg-af-surface hover:bg-purple-600/30 text-slate-200 hover:text-purple-200 border border-af-border px-2.5 py-1.5 rounded-lg transition">+ 150g Chicken Breast</button>
+              <button onclick="quickFillFood('2 whole eggs')" class="text-xs bg-af-surface hover:bg-purple-600/30 text-slate-200 hover:text-purple-200 border border-af-border px-2.5 py-1.5 rounded-lg transition">+ 2 Eggs</button>
+              <button onclick="quickFillFood('150g white rice')" class="text-xs bg-af-surface hover:bg-purple-600/30 text-slate-200 hover:text-purple-200 border border-af-border px-2.5 py-1.5 rounded-lg transition">+ 150g White Rice</button>
+              <button onclick="quickFillFood('1 tbsp chia seeds')" class="text-xs bg-af-surface hover:bg-purple-600/30 text-slate-200 hover:text-purple-200 border border-af-border px-2.5 py-1.5 rounded-lg transition">+ 1 tbsp Chia Seeds</button>
+            </div>
+          </div>
+
+          <!-- Calculated Macro Preview & Confirm Box -->
+          <div id="text-food-preview-box" class="bg-af-dark/80 border border-af-border rounded-xl p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-purple-300">Macro Breakdown Preview (Editable)</span>
+              <span id="text-food-source-tag" class="text-[10px] font-semibold px-2 py-0.5 rounded bg-af-surface text-slate-300">Ready</span>
+            </div>
+
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">Food Item Name</label>
+              <input type="text" id="preview-food-name" value="200ml Low Fat Meiji Milk" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-1.5 text-sm font-bold text-white">
+            </div>
+
+            <div class="grid grid-cols-5 gap-2">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 mb-1">Kcal</label>
+                <input type="number" id="preview-food-kcal" value="106" step="1" class="w-full bg-af-surface border border-af-border rounded-lg px-2 py-1.5 text-xs font-extrabold text-white text-center">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-blue-400 mb-1">Protein (g)</label>
+                <input type="number" id="preview-food-protein" value="6.8" step="0.1" class="w-full bg-af-surface border border-af-border rounded-lg px-2 py-1.5 text-xs font-extrabold text-blue-300 text-center">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-amber-400 mb-1">Carbs (g)</label>
+                <input type="number" id="preview-food-carbs" value="10.0" step="0.1" class="w-full bg-af-surface border border-af-border rounded-lg px-2 py-1.5 text-xs font-extrabold text-amber-300 text-center">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-rose-400 mb-1">Fats (g)</label>
+                <input type="number" id="preview-food-fats" value="3.8" step="0.1" class="w-full bg-af-surface border border-af-border rounded-lg px-2 py-1.5 text-xs font-extrabold text-rose-300 text-center">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-emerald-400 mb-1">Fibre (g)</label>
+                <input type="number" id="preview-food-fibre" value="0.0" step="0.1" class="w-full bg-af-surface border border-af-border rounded-lg px-2 py-1.5 text-xs font-extrabold text-emerald-300 text-center">
+              </div>
+            </div>
+
+            <button onclick="addPreviewedFoodToLog()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold shadow-lg shadow-emerald-950/50 transition flex items-center justify-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+              <span>Add to Today's Food Log</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Feature B: Photo Meal Upload & Macro + Fibre Analyzer -->
+        <div class="lg:col-span-6 bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Snap or Upload Food Photo</span>
+            <h3 class="text-lg font-extrabold text-white mt-0.5">Photo Meal Macro &amp; Fibre Analyzer</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Upload a meal photo to analyze its calories, protein, carbs, fats, and fibre.</p>
+          </div>
+
+          <!-- Upload Dropzone / Camera Input -->
+          <label for="meal-photo-input" class="block border-2 border-dashed border-af-border hover:border-purple-500 rounded-2xl p-4 text-center cursor-pointer bg-af-dark/60 transition">
+            <input type="file" id="meal-photo-input" accept="image/*" onchange="handleMealPhotoUpload(event)" class="hidden">
+            <div id="meal-photo-placeholder" class="py-3 space-y-1.5">
+              <div class="w-11 h-11 rounded-full bg-purple-600/20 text-purple-300 mx-auto flex items-center justify-center border border-purple-500/30">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </div>
+              <div class="text-sm font-bold text-white">Tap to Take Photo or Choose Meal Image</div>
+              <div class="text-xs text-slate-400">Supports JPG, PNG, HEIC / Mobile Camera</div>
+            </div>
+            <div id="meal-photo-preview-wrap" class="hidden relative">
+              <img id="meal-photo-img" src="" alt="Uploaded meal" class="max-h-48 mx-auto rounded-xl object-cover border border-af-border">
+              <span class="inline-block mt-2 text-xs text-purple-300 font-semibold">Tap image to change photo</span>
+            </div>
+          </label>
+
+          <!-- Meal Type / Portion Helper (Works offline or assists AI) -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+            <div class="sm:col-span-8">
+              <label class="block text-[11px] font-bold text-slate-400 mb-1">Meal Preset / Visual Match</label>
+              <select id="photo-meal-preset" onchange="applyPhotoMealPreset()" class="w-full bg-af-surface border border-af-border rounded-xl px-3 py-2 text-xs font-semibold text-white">
+                <option value="chicken_rice">Steamed Chicken Rice (Breast, Less Rice, Veg)</option>
+                <option value="grilled_chicken_bowl">Grilled Chicken Breast, Brown Rice &amp; Broccoli</option>
+                <option value="salmon_poke">Salmon Poke / Grain Bowl w/ Edamame &amp; Avocado</option>
+                <option value="cai_png">Economy Rice (1 Meat + 2 Veg, Less Rice)</option>
+                <option value="ytf_soup">Yong Tau Foo Soup (6 pcs + Noodles + Greens)</option>
+                <option value="protein_oats">Protein Oats Bowl (Oats + Whey + Berries + Chia)</option>
+                <option value="eggs_toast">3 Eggs, 2 Wholemeal Toast &amp; Kopi C Kosong</option>
+              </select>
+            </div>
+            <div class="sm:col-span-4">
+              <label class="block text-[11px] font-bold text-slate-400 mb-1">Portion Size</label>
+              <select id="photo-portion-scale" onchange="applyPhotoMealPreset()" class="w-full bg-af-surface border border-af-border rounded-xl px-3 py-2 text-xs font-semibold text-white">
+                <option value="0.8">Small (0.8x)</option>
+                <option value="1.0" selected>Regular (1.0x)</option>
+                <option value="1.3">Large (1.3x)</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="analyze-photo-btn" onclick="analyzeUploadedMealPhoto()" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold transition flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            <span id="analyze-photo-btn-text">Analyze Photo &amp; Calculate Macros + Fibre</span>
+          </button>
+
+          <!-- Photo Result Box -->
+          <div id="photo-analysis-result" class="bg-af-dark/80 border border-af-border rounded-xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span id="photo-result-title" class="text-xs font-bold text-white">Steamed Chicken Rice (Breast, Less Rice, Veg)</span>
+              <span id="photo-result-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">Preset Ready</span>
+            </div>
+            <div class="grid grid-cols-5 gap-1.5 text-center text-xs">
+              <div class="bg-af-surface rounded-lg p-1.5">
+                <div class="text-[10px] text-slate-400">Kcal</div>
+                <div id="photo-res-kcal" class="font-extrabold text-white">540</div>
+              </div>
+              <div class="bg-af-surface rounded-lg p-1.5">
+                <div class="text-[10px] text-blue-400">Protein</div>
+                <div id="photo-res-protein" class="font-extrabold text-blue-300">42g</div>
+              </div>
+              <div class="bg-af-surface rounded-lg p-1.5">
+                <div class="text-[10px] text-amber-400">Carbs</div>
+                <div id="photo-res-carbs" class="font-extrabold text-amber-300">58g</div>
+              </div>
+              <div class="bg-af-surface rounded-lg p-1.5">
+                <div class="text-[10px] text-rose-400">Fats</div>
+                <div id="photo-res-fats" class="font-extrabold text-rose-300">14g</div>
+              </div>
+              <div class="bg-af-surface rounded-lg p-1.5">
+                <div class="text-[10px] text-emerald-400">Fibre</div>
+                <div id="photo-res-fibre" class="font-extrabold text-emerald-300">4.5g</div>
+              </div>
+            </div>
+            <button onclick="logAnalyzedPhotoMeal()" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">
+              + Log Photo Meal to Today's Calories
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Today's Logged Foods List + Feature E: Daily Supplements Dropdown Tracker -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Today's Logged Meals & Foods -->
+        <div class="lg:col-span-7 bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-extrabold text-white">Logged Foods for <span id="food-log-date-label" class="text-purple-400">Today</span></h3>
+              <p class="text-xs text-slate-400">Every item automatically deducts from your remaining calories, protein, carbs, fats &amp; fibre.</p>
+            </div>
+            <span id="food-items-count-badge" class="text-xs font-bold bg-af-surface text-slate-300 px-2.5 py-1 rounded-full">0 items</span>
+          </div>
+
+          <div id="daily-food-log-list" class="space-y-2.5">
+            <!-- Rendered dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- Feature E: Daily Supplements Dropdown & Checklist -->
+        <div class="lg:col-span-5 bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4 h-fit">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-purple-400">Daily Stack Tracker</span>
+              <h3 class="text-lg font-extrabold text-white mt-0.5">Supplements Taken</h3>
+            </div>
+            <span id="supplements-progress-badge" class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">0 / 10</span>
+          </div>
+
+          <!-- Dropdown Selector to Log Supplement -->
+          <div class="space-y-2 bg-af-dark/70 border border-af-border rounded-xl p-3.5">
+            <label for="supplement-dropdown" class="block text-xs font-semibold text-slate-300">Select Supplement Taken:</label>
+            <div class="flex gap-2">
+              <select id="supplement-dropdown" class="flex-1 bg-af-surface border border-af-border rounded-xl px-3 py-2.5 text-sm font-semibold text-white focus:outline-none focus:border-purple-500">
+                <option value="Multi vitamins">Multi vitamins</option>
+                <option value="UC II">UC II</option>
+                <option value="Panax ginseng">Panax ginseng</option>
+                <option value="Omega 3">Omega 3</option>
+                <option value="Vit K + D">Vit K + D</option>
+                <option value="Cherry tart">Cherry tart</option>
+                <option value="Magnesium glycinate">Magnesium glycinate</option>
+                <option value="Hyaluronic acid powder">Hyaluronic acid powder</option>
+                <option value="Preworkout">Preworkout</option>
+                <option value="Sunflower lecithin">Sunflower lecithin</option>
+              </select>
+              <button onclick="logSupplementFromDropdown()" class="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition whitespace-nowrap">
+                Log Taken
+              </button>
+            </div>
+            <div class="flex justify-end pt-1">
+              <button onclick="markAllSupplementsTaken()" class="text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 transition">
+                ✓ Mark All 10 Taken Today
+              </button>
+            </div>
+          </div>
+
+          <!-- Interactive 10-Supplement Status Checklist -->
+          <div id="supplements-checklist" class="space-y-1.5">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+      </div>
 
     </section>
 
     <!-- ========================================================= -->
-    <!-- TAB 2: 1RM HUB, ESTIMATOR & % CHART                       -->
+    <!-- TAB 3: 1RM HUB, ESTIMATOR & % CHART                       -->
     <!-- ========================================================= -->
     <section id="tab-onerm" class="hidden space-y-6">
-      
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         <!-- Interactive 1RM Estimator Card -->
@@ -248,9 +592,7 @@
           <div class="space-y-4">
             <div>
               <label class="block text-xs font-semibold text-slate-300 mb-1.5">Select Lift to Update</label>
-              <select id="calc-lift-select" class="w-full bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-semibold text-white focus:outline-none focus:border-purple-500">
-                <!-- Populated dynamically -->
-              </select>
+              <select id="calc-lift-select" class="w-full bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-semibold text-white focus:outline-none focus:border-purple-500"></select>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -264,7 +606,6 @@
               </div>
             </div>
 
-            <!-- Result Box -->
             <div class="bg-gradient-to-br from-purple-900/40 to-af-surface border border-purple-500/40 rounded-2xl p-4 text-center space-y-1">
               <div class="text-xs font-semibold uppercase tracking-wider text-purple-300">Estimated 1RM (Avg)</div>
               <div id="calc-result-main" class="text-4xl font-extrabold text-white">91.7 kg</div>
@@ -277,33 +618,26 @@
             </button>
           </div>
 
-          <!-- Quick Percentage Breakdown Preview for Calculated 1RM -->
           <div class="pt-3 border-t border-af-border">
             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Training Zones for Estimated 1RM</h3>
-            <div id="calc-zones-grid" class="grid grid-cols-3 gap-2 text-center text-xs">
-              <!-- Populated by JS -->
-            </div>
+            <div id="calc-zones-grid" class="grid grid-cols-3 gap-2 text-center text-xs"></div>
           </div>
         </div>
 
         <!-- Recorded 1RM Profile & Add Custom Lift -->
         <div class="lg:col-span-7 space-y-5">
           <div class="bg-af-card border border-af-border rounded-2xl p-6 shadow-xl">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-              <div>
-                <h2 class="text-xl font-extrabold text-white">My Recorded 1RM Profile</h2>
-                <p class="text-xs text-slate-400 mt-0.5">Edit any 1RM directly in kg. Changes immediately recalculate your 3-day workout weights.</p>
-              </div>
+            <div class="mb-5">
+              <h2 class="text-xl font-extrabold text-white">My Recorded 1RM Profile</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Edit any 1RM directly in kg. Changes immediately recalculate your 3-day workout weights.</p>
             </div>
 
-            <!-- Add Custom Lift Form -->
             <form onsubmit="addCustomLift(event)" class="flex flex-col sm:flex-row gap-2.5 mb-5 bg-af-dark/60 p-3 rounded-xl border border-af-border">
               <input type="text" id="new-lift-name" placeholder="Add lift (e.g., Incline Bench Press)" required class="flex-1 bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-purple-500">
               <input type="number" id="new-lift-1rm" placeholder="1RM (kg)" step="0.5" min="1" required class="w-full sm:w-28 bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-purple-500">
               <button type="submit" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold transition whitespace-nowrap">+ Add Lift</button>
             </form>
 
-            <!-- 1RM List Table -->
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse">
                 <thead>
@@ -315,9 +649,7 @@
                     <th class="py-2.5 px-3 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody id="onerm-table-body" class="divide-y divide-af-border/60 text-sm">
-                  <!-- Populated via JS -->
-                </tbody>
+                <tbody id="onerm-table-body" class="divide-y divide-af-border/60 text-sm"></tbody>
               </table>
             </div>
           </div>
@@ -327,56 +659,17 @@
     </section>
 
     <!-- ========================================================= -->
-    <!-- TAB 3: WORKOUT HISTORY LOG                                -->
-    <!-- ========================================================= -->
-    <section id="tab-history" class="hidden space-y-6">
-      
-      <div class="bg-af-card border border-af-border rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-xl font-extrabold text-white">Completed Workout Log</h2>
-          <p class="text-xs text-slate-400 mt-0.5">Refer back to your previous sets, reps, weights, and branch sessions across Singapore.</p>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2.5">
-          <select id="history-filter-branch" onchange="renderHistory()" class="bg-af-surface border border-af-border rounded-xl px-3 py-2 text-xs font-semibold text-white focus:outline-none focus:border-purple-500">
-            <option value="all">All AF Branches</option>
-            <option value="bugis">AF Bugis (Middle Rd)</option>
-            <option value="tiongbahru">AF Tiong Bahru Plaza</option>
-            <option value="yishun">AF Yishun</option>
-          </select>
-          <input type="text" id="history-search" oninput="renderHistory()" placeholder="Search exercise or day..." class="bg-af-surface border border-af-border rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-purple-500">
-        </div>
-      </div>
-
-      <!-- Summary Stats Row -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="history-stats-row">
-        <!-- Rendered by JS -->
-      </div>
-
-      <!-- History Sessions Accordion / Cards -->
-      <div id="history-list-container" class="space-y-4">
-        <!-- Rendered by JS -->
-      </div>
-
-    </section>
-
-    <!-- ========================================================= -->
     <!-- TAB 4: DAILY VITALS & BODY WEIGHT TRACKER                 -->
     <!-- ========================================================= -->
     <section id="tab-vitals" class="hidden space-y-6">
-      
-      <!-- Top Metrics Summary Cards -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="vitals-kpi-cards">
-        <!-- Populated by JS -->
-      </div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="vitals-kpi-cards"></div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        <!-- Daily Vitals Entry Form -->
         <div class="lg:col-span-4 bg-af-card border border-af-border rounded-2xl p-6 shadow-xl h-fit space-y-4">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-purple-400">Morning Check-In</span>
             <h2 class="text-xl font-extrabold text-white mt-0.5">Log Daily Vitals</h2>
+            <p class="text-xs text-slate-400 mt-1">Automatically updates your daily calorie target in the Nutrition tab.</p>
           </div>
 
           <form onsubmit="saveDailyVital(event)" class="space-y-4">
@@ -388,7 +681,7 @@
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Body Weight (kg) *</label>
-                <input type="number" id="vital-weight" step="0.1" min="30" max="250" placeholder="74.5" required class="w-full bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-bold text-white focus:outline-none focus:border-purple-500">
+                <input type="number" id="vital-weight" step="0.1" min="30" max="250" placeholder="89.0" required class="w-full bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-bold text-white focus:outline-none focus:border-purple-500">
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Resting HR (bpm)</label>
@@ -417,18 +710,16 @@
             </div>
 
             <button type="submit" class="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm shadow-lg shadow-purple-900/40 transition">
-              Record Today's Vitals
+              Record Vitals &amp; Sync Calories
             </button>
           </form>
         </div>
 
-        <!-- Weight Trend Chart & Log Table -->
         <div class="lg:col-span-8 space-y-5">
-          <!-- Responsive HTML5 Canvas Chart -->
           <div class="bg-af-card border border-af-border rounded-2xl p-5 shadow-xl">
             <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
               <div>
-                <h3 class="text-base font-bold text-white">Body Weight Trend &amp; 7-Day Moving Avg</h3>
+                <h3 class="text-base font-bold text-white">Body Weight Trend &amp; 7-Day Moving Avg (Goal: 80.0 kg)</h3>
                 <p class="text-xs text-slate-400">Visualizing daily morning weigh-ins (kg)</p>
               </div>
               <div class="flex items-center gap-4 text-xs">
@@ -441,7 +732,6 @@
             </div>
           </div>
 
-          <!-- Vitals History Table -->
           <div class="bg-af-card border border-af-border rounded-2xl p-5 shadow-xl overflow-hidden">
             <h3 class="text-base font-bold text-white mb-3">Vitals History Log</h3>
             <div class="overflow-x-auto">
@@ -457,15 +747,37 @@
                     <th class="py-2.5 px-3 text-right">Del</th>
                   </tr>
                 </thead>
-                <tbody id="vitals-table-body" class="divide-y divide-af-border/60 text-sm">
-                  <!-- Rendered by JS -->
-                </tbody>
+                <tbody id="vitals-table-body" class="divide-y divide-af-border/60 text-sm"></tbody>
               </table>
             </div>
           </div>
         </div>
-
       </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 5: WORKOUT HISTORY LOG                                -->
+    <!-- ========================================================= -->
+    <section id="tab-history" class="hidden space-y-6">
+      <div class="bg-af-card border border-af-border rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-extrabold text-white">Completed Workout Log</h2>
+          <p class="text-xs text-slate-400 mt-0.5">Refer back to your previous sets, reps, weights, and branch sessions across Singapore.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <select id="history-filter-branch" onchange="renderHistory()" class="bg-af-surface border border-af-border rounded-xl px-3 py-2 text-xs font-semibold text-white focus:outline-none focus:border-purple-500">
+            <option value="all">All AF Branches</option>
+            <option value="bugis">AF Bugis (Middle Rd)</option>
+            <option value="tiongbahru">AF Tiong Bahru Plaza</option>
+            <option value="yishun">AF Yishun</option>
+          </select>
+          <input type="text" id="history-search" oninput="renderHistory()" placeholder="Search exercise or day..." class="bg-af-surface border border-af-border rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-purple-500">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="history-stats-row"></div>
+      <div id="history-list-container" class="space-y-4"></div>
     </section>
 
   </main>
@@ -474,14 +786,11 @@
   <!-- FLOATING / DOCKED SMART REST TIMER BAR ("REST BUTTON")    -->
   <!-- ========================================================= -->
   <div id="rest-timer-dock" class="fixed bottom-0 inset-x-0 z-40 bg-af-card/95 backdrop-blur-lg border-t border-purple-500/40 shadow-2xl shadow-black">
-    <!-- Thin animated progress bar at very top of dock -->
     <div class="w-full h-1 bg-af-dark overflow-hidden">
       <div id="rest-progress-bar" class="h-full bg-gradient-to-r from-purple-500 to-emerald-400 transition-all duration-300" style="width: 100%;"></div>
     </div>
 
     <div class="max-w-6xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
-      
-      <!-- Timer Display & Main Rest Button -->
       <div class="flex items-center gap-3">
         <button id="rest-toggle-btn" onclick="toggleRestTimer()" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm shadow-md shadow-purple-900/50 transition flex items-center gap-2">
           <svg id="rest-icon-play" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>
@@ -495,7 +804,6 @@
         </div>
       </div>
 
-      <!-- Quick Presets & +/- 15s Adjustments -->
       <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto">
         <button onclick="adjustRestTime(-15)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 text-xs font-bold text-slate-300 border border-af-border transition">-15s</button>
         <button onclick="adjustRestTime(15)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 text-xs font-bold text-slate-300 border border-af-border transition">+15s</button>
@@ -508,7 +816,6 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
-
     </div>
   </div>
 
@@ -595,10 +902,67 @@
     };
 
     // ---------------------------------------------------------
-    // 3. WORKOUT TEMPLATES TAILORED TO BRANCHES & SPLITS
+    // 3. SUPPLEMENTS LIST & SINGAPORE/FITNESS FOOD DATABASE
+    // ---------------------------------------------------------
+    const SUPPLEMENT_LIST = [
+      'Multi vitamins',
+      'UC II',
+      'Panax ginseng',
+      'Omega 3',
+      'Vit K + D',
+      'Cherry tart',
+      'Magnesium glycinate',
+      'Hyaluronic acid powder',
+      'Preworkout',
+      'Sunflower lecithin'
+    ];
+
+    // Macros per 100g/100ml OR per standard unit
+    const FOOD_DATABASE = [
+      { keywords: ['low fat meiji milk', 'meiji low fat milk', 'meiji milk', 'low fat milk'], name: 'Low Fat Meiji Milk', unitType: 'ml', baseQty: 100, kcal: 53, protein: 3.4, carbs: 5.0, fats: 1.9, fibre: 0.0 },
+      { keywords: ['full cream meiji milk', 'fresh milk', 'whole milk'], name: 'Fresh Full Cream Milk', unitType: 'ml', baseQty: 100, kcal: 66, protein: 3.3, carbs: 4.8, fats: 3.7, fibre: 0.0 },
+      { keywords: ['hl milk', 'marigold hl'], name: 'Marigold HL Milk', unitType: 'ml', baseQty: 100, kcal: 48, protein: 4.2, carbs: 5.2, fats: 1.1, fibre: 0.0 },
+      { keywords: ['soy milk', 'soya milk', 'unsweetened soy'], name: 'Unsweetened Soy Milk', unitType: 'ml', baseQty: 100, kcal: 38, protein: 3.5, carbs: 1.8, fats: 1.8, fibre: 0.6 },
+      { keywords: ['whey protein', 'whey', 'protein shake', 'isolate'], name: 'Whey Protein (1 Scoop / 30g)', unitType: 'unit', baseQty: 1, kcal: 120, protein: 24.0, carbs: 3.0, fats: 1.5, fibre: 0.5 },
+      { keywords: ['chicken breast', 'grilled chicken', 'steamed chicken breast'], name: 'Chicken Breast (Cooked, Skinless)', unitType: 'g', baseQty: 100, kcal: 165, protein: 31.0, carbs: 0.0, fats: 3.6, fibre: 0.0 },
+      { keywords: ['chicken thigh', 'chicken leg'], name: 'Chicken Thigh (Skinless)', unitType: 'g', baseQty: 100, kcal: 195, protein: 25.0, carbs: 0.0, fats: 10.2, fibre: 0.0 },
+      { keywords: ['salmon', 'salmon fillet'], name: 'Salmon Fillet (Cooked)', unitType: 'g', baseQty: 100, kcal: 208, protein: 20.4, carbs: 0.0, fats: 13.4, fibre: 0.0 },
+      { keywords: ['whole egg', 'whole eggs', 'egg', 'eggs', 'boiled egg'], name: 'Large Whole Egg', unitType: 'unit', baseQty: 1, kcal: 72, protein: 6.3, carbs: 0.4, fats: 5.0, fibre: 0.0 },
+      { keywords: ['egg white', 'egg whites'], name: 'Egg White', unitType: 'unit', baseQty: 1, kcal: 17, protein: 3.6, carbs: 0.2, fats: 0.1, fibre: 0.0 },
+      { keywords: ['white rice', 'cooked rice', 'jasmine rice', 'rice'], name: 'Cooked White Jasmine Rice', unitType: 'g', baseQty: 100, kcal: 130, protein: 2.7, carbs: 28.2, fats: 0.3, fibre: 0.4 },
+      { keywords: ['brown rice'], name: 'Cooked Brown Rice', unitType: 'g', baseQty: 100, kcal: 112, protein: 2.6, carbs: 23.5, fats: 0.9, fibre: 1.8 },
+      { keywords: ['rolled oats', 'oats', 'oatmeal'], name: 'Rolled Oats (Dry)', unitType: 'g', baseQty: 100, kcal: 379, protein: 13.2, carbs: 67.7, fats: 6.5, fibre: 10.1 },
+      { keywords: ['chia seed', 'chia seeds'], name: 'Chia Seeds (1 tbsp / 12g)', unitType: 'unit', baseQty: 1, kcal: 58, protein: 2.0, carbs: 5.0, fats: 3.7, fibre: 4.1 },
+      { keywords: ['wholemeal bread', 'whole wheat bread', 'bread'], name: 'Wholemeal Bread (1 Slice)', unitType: 'unit', baseQty: 1, kcal: 82, protein: 4.0, carbs: 13.8, fats: 1.1, fibre: 2.2 },
+      { keywords: ['banana', 'bananas'], name: 'Medium Banana', unitType: 'unit', baseQty: 1, kcal: 105, protein: 1.3, carbs: 27.0, fats: 0.4, fibre: 3.1 },
+      { keywords: ['apple', 'apples'], name: 'Medium Apple', unitType: 'unit', baseQty: 1, kcal: 95, protein: 0.5, carbs: 25.0, fats: 0.3, fibre: 4.4 },
+      { keywords: ['broccoli', 'steamed broccoli'], name: 'Broccoli (Cooked)', unitType: 'g', baseQty: 100, kcal: 35, protein: 2.4, carbs: 7.2, fats: 0.4, fibre: 3.3 },
+      { keywords: ['edamame'], name: 'Edamame (Shelled)', unitType: 'g', baseQty: 100, kcal: 121, protein: 11.9, carbs: 8.9, fats: 5.2, fibre: 5.2 },
+      { keywords: ['greek yogurt', 'chobani'], name: 'Plain Non-Fat Greek Yogurt', unitType: 'g', baseQty: 100, kcal: 59, protein: 10.3, carbs: 3.6, fats: 0.4, fibre: 0.0 },
+      { keywords: ['sweet potato'], name: 'Baked Sweet Potato', unitType: 'g', baseQty: 100, kcal: 90, protein: 2.0, carbs: 20.7, fats: 0.2, fibre: 3.3 },
+      { keywords: ['avocado'], name: 'Fresh Avocado', unitType: 'g', baseQty: 100, kcal: 160, protein: 2.0, carbs: 8.5, fats: 14.7, fibre: 6.7 },
+      { keywords: ['peanut butter'], name: 'Peanut Butter (1 tbsp / 16g)', unitType: 'unit', baseQty: 1, kcal: 94, protein: 4.0, carbs: 3.2, fats: 8.0, fibre: 1.0 },
+      { keywords: ['olive oil'], name: 'Extra Virgin Olive Oil (1 tbsp)', unitType: 'unit', baseQty: 1, kcal: 119, protein: 0.0, carbs: 0.0, fats: 13.5, fibre: 0.0 },
+      { keywords: ['chicken rice'], name: 'SG Hainanese Chicken Rice (1 Plate)', unitType: 'unit', baseQty: 1, kcal: 607, protein: 32.0, carbs: 68.0, fats: 22.0, fibre: 2.5 },
+      { keywords: ['yong tau foo'], name: 'Yong Tau Foo Soup (6 pcs + Bee Hoon)', unitType: 'unit', baseQty: 1, kcal: 440, protein: 26.0, carbs: 54.0, fats: 12.0, fibre: 5.5 },
+      { keywords: ['kopi c kosong'], name: 'Kopi C Kosong (Unsweetened)', unitType: 'unit', baseQty: 1, kcal: 45, protein: 1.5, carbs: 3.0, fats: 2.8, fibre: 0.0 },
+      { keywords: ['kopi o kosong', 'americano', 'black coffee'], name: 'Kopi O Kosong / Black Coffee', unitType: 'unit', baseQty: 1, kcal: 5, protein: 0.2, carbs: 0.8, fats: 0.0, fibre: 0.0 }
+    ];
+
+    const PHOTO_MEAL_PRESETS = {
+      chicken_rice: { name: 'Steamed Chicken Rice (Breast, Less Rice, Veg)', kcal: 540, protein: 42.0, carbs: 58.0, fats: 14.0, fibre: 4.5 },
+      grilled_chicken_bowl: { name: 'Grilled Chicken Breast, Brown Rice & Broccoli', kcal: 510, protein: 46.0, carbs: 52.0, fats: 11.0, fibre: 7.5 },
+      salmon_poke: { name: 'Salmon Poke Bowl w/ Edamame & Avocado', kcal: 620, protein: 38.0, carbs: 56.0, fats: 25.0, fibre: 9.0 },
+      cai_png: { name: 'Economy Rice (1 Lean Meat + 2 Veg, Less Rice)', kcal: 520, protein: 30.0, carbs: 60.0, fats: 16.0, fibre: 6.5 },
+      ytf_soup: { name: 'Yong Tau Foo Clear Soup (6 pcs + Greens)', kcal: 430, protein: 27.0, carbs: 50.0, fats: 12.0, fibre: 6.0 },
+      protein_oats: { name: 'Protein Oats Bowl (Oats, Whey, Berries & Chia)', kcal: 440, protein: 34.0, carbs: 48.0, fats: 11.5, fibre: 9.8 },
+      eggs_toast: { name: '3 Whole Eggs, 2 Wholemeal Toast & Kopi C Kosong', kcal: 425, protein: 28.5, carbs: 31.0, fats: 20.0, fibre: 4.4 }
+    };
+
+    // ---------------------------------------------------------
+    // 4. WORKOUT TEMPLATES TAILORED TO BRANCHES & SPLITS
     // ---------------------------------------------------------
     function buildWorkoutTemplates(branch, split, variationIndex = 0) {
-      // Branch-specific equipment notes & slight exercise optimizations
       const isBugis = branch === 'bugis';
       const isTB = branch === 'tiongbahru';
       const isYishun = branch === 'yishun';
@@ -733,48 +1097,17 @@
           }
         ];
       } else {
-        // FULL BODY 3-DAY SPLIT
         return [
           {
             dayTitle: 'Day 1: Full Body A (Squat & Horizontal Push)',
             focus: 'Lower Quad Focus + Chest Press + Row',
             estDuration: '55–65 mins',
             exercises: [
-              {
-                name: 'Barbell Back Squat',
-                liftKey: 'Barbell Back Squat',
-                tier: 'compound',
-                sets: 4,
-                stationNote: isBugis ? 'Level 3 Squat Rack' : 'Main Power / Half Rack'
-              },
-              {
-                name: 'Barbell Bench Press',
-                liftKey: 'Barbell Bench Press',
-                tier: 'compound',
-                sets: 4,
-                stationNote: 'Flat Bench / Rack Station'
-              },
-              {
-                name: 'Seated Cable Row',
-                liftKey: 'Seated Cable Row',
-                tier: 'secondary',
-                sets: 3,
-                stationNote: 'Cable Tower Low Pulley'
-              },
-              {
-                name: 'Cable Lateral Raises',
-                liftKey: 'Cable Lateral Raise',
-                tier: 'accessory',
-                sets: 3,
-                stationNote: 'Cable Crossover Tower'
-              },
-              {
-                name: 'Cable Rope Crunch',
-                liftKey: 'Cable Crunch',
-                tier: 'accessory',
-                sets: 3,
-                stationNote: 'High Cable Pulley'
-              }
+              { name: 'Barbell Back Squat', liftKey: 'Barbell Back Squat', tier: 'compound', sets: 4, stationNote: isBugis ? 'Level 3 Squat Rack' : 'Main Power / Half Rack' },
+              { name: 'Barbell Bench Press', liftKey: 'Barbell Bench Press', tier: 'compound', sets: 4, stationNote: 'Flat Bench / Rack Station' },
+              { name: 'Seated Cable Row', liftKey: 'Seated Cable Row', tier: 'secondary', sets: 3, stationNote: 'Cable Tower Low Pulley' },
+              { name: 'Cable Lateral Raises', liftKey: 'Cable Lateral Raise', tier: 'accessory', sets: 3, stationNote: 'Cable Crossover Tower' },
+              { name: 'Cable Rope Crunch', liftKey: 'Cable Crunch', tier: 'accessory', sets: 3, stationNote: 'High Cable Pulley' }
             ]
           },
           {
@@ -782,41 +1115,11 @@
             focus: 'Posterior Hinge + Overhead Press + Vertical Pull',
             estDuration: '55–65 mins',
             exercises: [
-              {
-                name: isBugis ? 'Conventional Barbell Deadlift' : 'Romanian Deadlift (RDL)',
-                liftKey: isBugis ? 'Barbell Deadlift' : 'Romanian Deadlift',
-                tier: 'compound',
-                sets: 4,
-                stationNote: isBugis ? 'Level 3 Deadlift Platform' : 'Main Rack / Free Weight Floor'
-              },
-              {
-                name: 'Overhead Barbell Press',
-                liftKey: 'Overhead Press',
-                tier: 'compound',
-                sets: 3,
-                stationNote: 'Power Rack / Standing Barbell'
-              },
-              {
-                name: 'Wide-Grip Lat Pulldown',
-                liftKey: 'Lat Pulldown',
-                tier: 'secondary',
-                sets: 3,
-                stationNote: 'Lat Pulldown Station'
-              },
-              {
-                name: 'Seated / Lying Leg Curl',
-                liftKey: 'Leg Curl',
-                tier: 'accessory',
-                sets: 3,
-                stationNote: 'Leg Curl Machine'
-              },
-              {
-                name: 'Tricep Rope Pushdown',
-                liftKey: 'Tricep Rope Pushdown',
-                tier: 'accessory',
-                sets: 3,
-                stationNote: 'High Cable Pulley'
-              }
+              { name: isBugis ? 'Conventional Barbell Deadlift' : 'Romanian Deadlift (RDL)', liftKey: isBugis ? 'Barbell Deadlift' : 'Romanian Deadlift', tier: 'compound', sets: 4, stationNote: isBugis ? 'Level 3 Deadlift Platform' : 'Main Rack / Free Weight Floor' },
+              { name: 'Overhead Barbell Press', liftKey: 'Overhead Press', tier: 'compound', sets: 3, stationNote: 'Power Rack / Standing Barbell' },
+              { name: 'Wide-Grip Lat Pulldown', liftKey: 'Lat Pulldown', tier: 'secondary', sets: 3, stationNote: 'Lat Pulldown Station' },
+              { name: 'Seated / Lying Leg Curl', liftKey: 'Leg Curl', tier: 'accessory', sets: 3, stationNote: 'Leg Curl Machine' },
+              { name: 'Tricep Rope Pushdown', liftKey: 'Tricep Rope Pushdown', tier: 'accessory', sets: 3, stationNote: 'High Cable Pulley' }
             ]
           },
           {
@@ -824,41 +1127,11 @@
             focus: 'Balanced Hypertrophy & Joint-Friendly Volume',
             estDuration: '55–65 mins',
             exercises: [
-              {
-                name: '45° Leg Press',
-                liftKey: 'Leg Press',
-                tier: 'compound',
-                sets: 4,
-                stationNote: isBugis ? 'Level 4 Plate-Loaded Leg Press' : 'Leg Press Station'
-              },
-              {
-                name: 'Incline Dumbbell Press',
-                liftKey: 'Incline Dumbbell Press',
-                tier: 'secondary',
-                sets: 3,
-                stationNote: 'Adjustable Bench & Dumbbell Rack'
-              },
-              {
-                name: 'Barbell Bent-Over Row',
-                liftKey: 'Barbell Row',
-                tier: 'secondary',
-                sets: 3,
-                stationNote: isBugis ? 'Level 3 Platform' : 'Rack / Smith Machine'
-              },
-              {
-                name: 'Cable Face Pulls',
-                liftKey: 'Cable Face Pull',
-                tier: 'accessory',
-                sets: 3,
-                stationNote: 'Cable Crossover Tower'
-              },
-              {
-                name: 'Dumbbell Bicep Curl',
-                liftKey: 'Dumbbell Bicep Curl',
-                tier: 'accessory',
-                sets: 3,
-                stationNote: 'Dumbbell Rack Area'
-              }
+              { name: '45° Leg Press', liftKey: 'Leg Press', tier: 'compound', sets: 4, stationNote: isBugis ? 'Level 4 Plate-Loaded Leg Press' : 'Leg Press Station' },
+              { name: 'Incline Dumbbell Press', liftKey: 'Incline Dumbbell Press', tier: 'secondary', sets: 3, stationNote: 'Adjustable Bench & Dumbbell Rack' },
+              { name: 'Barbell Bent-Over Row', liftKey: 'Barbell Row', tier: 'secondary', sets: 3, stationNote: isBugis ? 'Level 3 Platform' : 'Rack / Smith Machine' },
+              { name: 'Cable Face Pulls', liftKey: 'Cable Face Pull', tier: 'accessory', sets: 3, stationNote: 'Cable Crossover Tower' },
+              { name: 'Dumbbell Bicep Curl', liftKey: 'Dumbbell Bicep Curl', tier: 'accessory', sets: 3, stationNote: 'Dumbbell Rack Area' }
             ]
           }
         ];
@@ -866,12 +1139,18 @@
     }
 
     // ---------------------------------------------------------
-    // 4. STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
+    // 5. STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
     // ---------------------------------------------------------
-    const STORAGE_KEY = 'af_sg_fitness_tracker_v1';
+    const STORAGE_KEY = 'af_sg_strength_nutrition_v2';
+
+    function getTodayISO() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset() * 60000;
+      return new Date(now - offset).toISOString().split('T')[0];
+    }
 
     function getDefaultState() {
-      const today = new Date().toISOString().split('T')[0];
+      const today = getTodayISO();
       const d1 = new Date(Date.now() - 86400000 * 6).toISOString().split('T')[0];
       const d2 = new Date(Date.now() - 86400000 * 5).toISOString().split('T')[0];
       const d3 = new Date(Date.now() - 86400000 * 4).toISOString().split('T')[0];
@@ -886,6 +1165,29 @@
           goal: 'hypertrophy',
           activeDay: 0,
           variationIndex: 0
+        },
+        nutritionProfile: {
+          heightCm: 182,
+          startWeightKg: 89.0,
+          targetWeightKg: 80.0,
+          age: 35,
+          activityMultiplier: 1.50,
+          deficitKcal: 500,
+          weightBasis: 'avg7',
+          geminiApiKey: ''
+        },
+        activeNutritionDate: today,
+        foodLogsByDate: {
+          [today]: [
+            { id: 'f-demo-1', name: '200ml Low Fat Meiji Milk + 1 Scoop Whey', kcal: 226, protein: 30.8, carbs: 13.0, fats: 5.3, fibre: 0.5, source: 'Morning Shake' }
+          ]
+        },
+        supplementsByDate: {
+          [today]: {
+            'Multi vitamins': '08:15 AM',
+            'Omega 3': '08:15 AM',
+            'Vit K + D': '08:15 AM'
+          }
         },
         oneRMs: {
           'Barbell Back Squat': 120,
@@ -906,7 +1208,6 @@
           'Dumbbell Bicep Curl': 35,
           'Cable Crunch': 45
         },
-        // Active set logs keyed by `${split}_${dayIndex}_${exerciseIndex}_${setIndex}`
         activeLogs: {},
         history: [
           {
@@ -935,15 +1236,6 @@
                   { weight: 42.5, reps: 10 },
                   { weight: 40, reps: 11 }
                 ]
-              },
-              {
-                name: 'Plate-Loaded Incline Chest Press',
-                prescribedPct: '67.5% – 72.5% 1RM',
-                sets: [
-                  { weight: 52.5, reps: 12 },
-                  { weight: 52.5, reps: 11 },
-                  { weight: 50, reps: 12 }
-                ]
               }
             ]
           },
@@ -964,27 +1256,18 @@
                   { weight: 62.5, reps: 10 },
                   { weight: 62.5, reps: 9 }
                 ]
-              },
-              {
-                name: 'Wide-Grip Lat Pulldown',
-                prescribedPct: '67.5% – 72.5% 1RM',
-                sets: [
-                  { weight: 55, reps: 12 },
-                  { weight: 55, reps: 11 },
-                  { weight: 55, reps: 10 }
-                ]
               }
             ]
           }
         ],
         vitals: [
-          { id: 'v1', date: d1, weight: 75.4, rhr: 64, sleep: 7.0, energy: 'Normal', notes: 'Monday morning check-in' },
-          { id: 'v2', date: d2, weight: 75.1, rhr: 62, sleep: 7.5, energy: 'High', notes: 'Felt strong at AF Bugis' },
-          { id: 'v3', date: d3, weight: 75.2, rhr: 63, sleep: 6.5, energy: 'Normal', notes: 'Late dinner hawker meal' },
-          { id: 'v4', date: d4, weight: 74.8, rhr: 61, sleep: 8.0, energy: 'High', notes: 'Great recovery sleep' },
-          { id: 'v5', date: d5, weight: 74.7, rhr: 60, sleep: 7.5, energy: 'High', notes: 'Post-pull session at Yishun' },
-          { id: 'v6', date: d6, weight: 74.5, rhr: 61, sleep: 7.5, energy: 'Normal', notes: 'Hydrated well' },
-          { id: 'v7', date: today, weight: 74.3, rhr: 59, sleep: 8.0, energy: 'High', notes: 'Ready for today’s session!' }
+          { id: 'v1', date: d1, weight: 89.8, rhr: 65, sleep: 7.0, energy: 'Normal', notes: 'Starting week check-in' },
+          { id: 'v2', date: d2, weight: 89.6, rhr: 63, sleep: 7.5, energy: 'High', notes: 'AF Bugis Push session' },
+          { id: 'v3', date: d3, weight: 89.5, rhr: 64, sleep: 6.5, energy: 'Normal', notes: 'Hydrated well' },
+          { id: 'v4', date: d4, weight: 89.3, rhr: 62, sleep: 8.0, energy: 'High', notes: 'Good sleep recovery' },
+          { id: 'v5', date: d5, weight: 89.2, rhr: 61, sleep: 7.5, energy: 'High', notes: 'AF Yishun Pull session' },
+          { id: 'v6', date: d6, weight: 89.1, rhr: 61, sleep: 7.5, energy: 'Normal', notes: 'Steady trend' },
+          { id: 'v7', date: today, weight: 89.0, rhr: 60, sleep: 8.0, energy: 'High', notes: 'Current weight 89.0kg -> Target 80.0kg' }
         ]
       };
     }
@@ -996,7 +1279,12 @@
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
           const parsed = JSON.parse(saved);
-          return { ...getDefaultState(), ...parsed };
+          const def = getDefaultState();
+          return {
+            ...def,
+            ...parsed,
+            nutritionProfile: { ...def.nutritionProfile, ...(parsed.nutritionProfile || {}) }
+          };
         }
       } catch (err) {
         console.error('Error loading state:', err);
@@ -1013,7 +1301,7 @@
     }
 
     // ---------------------------------------------------------
-    // 5. UTILITY HELPERS (ROUNDING, TOASTS, CONFIRM MODAL)
+    // 6. UTILITY HELPERS (ROUNDING, TOASTS, CONFIRM MODAL)
     // ---------------------------------------------------------
     function roundToPlate(weight) {
       if (!weight || isNaN(weight)) return 0;
@@ -1029,7 +1317,7 @@
         ? 'bg-purple-950/95 border-purple-500/60 text-purple-100'
         : 'bg-rose-950/95 border-rose-500/60 text-rose-100';
 
-      toast.className = `pointer-events-auto border ${colors} backdrop-blur-md px-4 py-3 rounded-xl shadow-2xl text-xs sm:text-sm font-medium flex items-center justify-between gap-3 transition-all duration-300 transform translate-y-0 opacity-100`;
+      toast.className = `pointer-events-auto border ${colors} backdrop-blur-md px-4 py-3 rounded-xl shadow-2xl text-xs sm:text-sm font-medium flex items-center justify-between gap-3 transition-all duration-300`;
       toast.innerHTML = `<span>${message}</span>`;
       container.appendChild(toast);
 
@@ -1065,7 +1353,7 @@
     function openResetConfirm() {
       openConfirmModal(
         'Reset All Data to Demo Defaults?',
-        'This will clear your custom 1RMs, workout logs, and vitals history and restore the default Singapore Anytime Fitness sample profile.',
+        'This will clear your custom 1RMs, workout logs, nutrition logs, and vitals history and restore the default 89kg -> 80kg Singapore profile.',
         () => {
           localStorage.removeItem(STORAGE_KEY);
           appState = getDefaultState();
@@ -1077,10 +1365,10 @@
     }
 
     // ---------------------------------------------------------
-    // 6. TAB NAVIGATION
+    // 7. TAB NAVIGATION
     // ---------------------------------------------------------
     function switchTab(tabName) {
-      const tabs = ['workout', 'onerm', 'history', 'vitals'];
+      const tabs = ['workout', 'nutrition', 'onerm', 'vitals', 'history'];
       tabs.forEach(t => {
         const section = document.getElementById(`tab-${t}`);
         const btn = document.getElementById(`tab-btn-${t}`);
@@ -1095,19 +1383,689 @@
         }
       });
 
-      if (tabName === 'vitals') {
-        setTimeout(drawWeightChart, 50);
-      }
-      if (tabName === 'onerm') {
-        renderOneRMTab();
-      }
-      if (tabName === 'history') {
-        renderHistory();
-      }
+      if (tabName === 'vitals') setTimeout(drawWeightChart, 50);
+      if (tabName === 'nutrition') renderNutritionTab();
+      if (tabName === 'onerm') renderOneRMTab();
+      if (tabName === 'history') renderHistory();
     }
 
     // ---------------------------------------------------------
-    // 7. WORKOUT PLAN GENERATOR & LOGGER LOGIC
+    // 8. FEATURE A, B, C, D, E: NUTRITION & SUPPLEMENTS ENGINE
+    // ---------------------------------------------------------
+    function getWeightStatsForCalories() {
+      const sorted = [...appState.vitals].sort((a, b) => a.date.localeCompare(b.date));
+      const latestEntry = sorted[sorted.length - 1];
+      const latestWeight = latestEntry ? latestEntry.weight : 89.0;
+
+      const last7 = sorted.slice(-7);
+      const avg7Weight = last7.length
+        ? Number((last7.reduce((sum, v) => sum + v.weight, 0) / last7.length).toFixed(2))
+        : latestWeight;
+
+      return { latestWeight, avg7Weight };
+    }
+
+    function calculateDailyMacroTargets() {
+      const prof = appState.nutritionProfile;
+      const { latestWeight, avg7Weight } = getWeightStatsForCalories();
+      const effectiveWeight = prof.weightBasis === 'latest' ? latestWeight : avg7Weight;
+
+      // Mifflin-St Jeor Equation (Male): 10*W + 6.25*H - 5*A + 5
+      const bmr = (10 * effectiveWeight) + (6.25 * prof.heightCm) - (5 * prof.age) + 5;
+      const tdee = Math.round(bmr * prof.activityMultiplier);
+      const targetCalories = Math.max(1500, Math.round(tdee - prof.deficitKcal));
+
+      // Macro Split tailored for Strength + Fat Loss (89kg -> 80kg):
+      // Protein: ~2.15g per kg of target weight (80kg * 2.15 = 172g) to preserve muscle in deficit
+      const targetProtein = Math.round(prof.targetWeightKg * 2.15);
+      // Fats: ~0.75g per kg of target weight (~60g) for hormone support
+      const targetFats = Math.round(prof.targetWeightKg * 0.75);
+      // Remaining calories go to Carbohydrates
+      const remainingCalsForCarbs = Math.max(200, targetCalories - (targetProtein * 4) - (targetFats * 9));
+      const targetCarbs = Math.round(remainingCalsForCarbs / 4);
+      // Fibre: 14g per 1,000 kcal (standard clinical guideline ~30–34g)
+      const targetFibre = Math.max(28, Math.round((targetCalories / 1000) * 14));
+
+      return {
+        latestWeight,
+        avg7Weight,
+        effectiveWeight,
+        bmr: Math.round(bmr),
+        tdee,
+        targetCalories,
+        targetProtein,
+        targetCarbs,
+        targetFats,
+        targetFibre
+      };
+    }
+
+    function toggleNutritionSettings() {
+      const drawer = document.getElementById('nutrition-settings-drawer');
+      drawer.classList.toggle('hidden');
+    }
+
+    function saveNutritionProfile() {
+      const prof = appState.nutritionProfile;
+      prof.heightCm = parseFloat(document.getElementById('prof-height').value) || 182;
+      prof.targetWeightKg = parseFloat(document.getElementById('prof-target-weight').value) || 80;
+      prof.age = parseInt(document.getElementById('prof-age').value, 10) || 35;
+      prof.weightBasis = document.getElementById('prof-weight-basis').value;
+      prof.activityMultiplier = parseFloat(document.getElementById('prof-activity').value) || 1.50;
+      prof.deficitKcal = parseInt(document.getElementById('prof-deficit').value, 10) || 500;
+      saveState();
+      renderNutritionTab();
+      showToast('Calorie & macro formula updated!', 'success');
+    }
+
+    function saveGeminiApiKey() {
+      const key = document.getElementById('gemini-api-key-input').value.trim();
+      appState.nutritionProfile.geminiApiKey = key;
+      saveState();
+      showToast(key ? 'Gemini AI Vision key saved locally.' : 'API key cleared.', 'info');
+    }
+
+    function changeNutritionDate(newDate) {
+      if (!newDate) return;
+      appState.activeNutritionDate = newDate;
+      saveState();
+      renderNutritionTab();
+    }
+
+    function quickWeightUpdateFromNutrition(e) {
+      e.preventDefault();
+      const input = document.getElementById('quick-nutr-weight');
+      const w = parseFloat(input.value);
+      if (!w || w < 35) return;
+
+      const dateStr = appState.activeNutritionDate || getTodayISO();
+      const existingIdx = appState.vitals.findIndex(v => v.date === dateStr);
+      if (existingIdx >= 0) {
+        appState.vitals[existingIdx].weight = w;
+      } else {
+        appState.vitals.push({
+          id: 'v-' + Date.now(),
+          date: dateStr,
+          weight: w,
+          rhr: null,
+          sleep: null,
+          energy: 'Normal',
+          notes: 'Logged via Nutrition tab'
+        });
+      }
+      appState.vitals.sort((a, b) => a.date.localeCompare(b.date));
+      saveState();
+      input.value = '';
+      renderNutritionTab();
+      renderVitalsTab();
+      showToast(`Weight updated to ${w.toFixed(1)} kg! Daily calorie target recalculated.`, 'success');
+    }
+
+    function renderNutritionTab() {
+      const activeDate = appState.activeNutritionDate || getTodayISO();
+      document.getElementById('nutrition-date-picker').value = activeDate;
+      document.getElementById('food-log-date-label').textContent = activeDate === getTodayISO() ? `Today (${activeDate})` : activeDate;
+
+      // Sync profile inputs
+      const prof = appState.nutritionProfile;
+      document.getElementById('prof-height').value = prof.heightCm;
+      document.getElementById('prof-target-weight').value = prof.targetWeightKg;
+      document.getElementById('prof-age').value = prof.age;
+      document.getElementById('prof-weight-basis').value = prof.weightBasis;
+      document.getElementById('prof-activity').value = String(prof.activityMultiplier);
+      document.getElementById('prof-deficit').value = String(prof.deficitKcal);
+      document.getElementById('gemini-api-key-input').value = prof.geminiApiKey || '';
+
+      const targets = calculateDailyMacroTargets();
+      const kgToLose = Math.max(0, targets.latestWeight - prof.targetWeightKg);
+      const totalSpan = Math.max(0.1, prof.startWeightKg - prof.targetWeightKg);
+      const progressPct = Math.max(0, Math.min(100, ((prof.startWeightKg - targets.latestWeight) / totalSpan) * 100));
+
+      // Render Feature A Summary Cards
+      document.getElementById('calorie-engine-summary').innerHTML = `
+        <div class="bg-af-dark/80 border border-af-border rounded-xl p-3.5">
+          <div class="text-[11px] font-semibold text-slate-400">Latest Weigh-In</div>
+          <div class="text-xl font-extrabold text-white mt-0.5">${targets.latestWeight.toFixed(1)} kg</div>
+          <div class="text-[11px] text-purple-300 mt-0.5">${kgToLose.toFixed(1)} kg to ${prof.targetWeightKg}kg goal</div>
+        </div>
+        <div class="bg-af-dark/80 border border-af-border rounded-xl p-3.5">
+          <div class="text-[11px] font-semibold text-slate-400">7-Day Rolling Avg</div>
+          <div class="text-xl font-extrabold text-purple-400 mt-0.5">${targets.avg7Weight.toFixed(1)} kg</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">${prof.weightBasis === 'avg7' ? 'Active formula basis' : 'Smoothed reference'}</div>
+        </div>
+        <div class="bg-af-dark/80 border border-af-border rounded-xl p-3.5">
+          <div class="text-[11px] font-semibold text-slate-400">Maintenance (TDEE)</div>
+          <div class="text-xl font-extrabold text-slate-200 mt-0.5">${targets.tdee.toLocaleString()} kcal</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">BMR: ${targets.bmr.toLocaleString()} kcal</div>
+        </div>
+        <div class="bg-gradient-to-br from-purple-900/40 to-af-dark border border-purple-500/40 rounded-xl p-3.5">
+          <div class="text-[11px] font-bold text-purple-300">Daily Calorie Target</div>
+          <div class="text-xl font-extrabold text-white mt-0.5">${targets.targetCalories.toLocaleString()} kcal</div>
+          <div class="text-[11px] text-emerald-400 mt-0.5">-${prof.deficitKcal} kcal/day deficit</div>
+        </div>
+        <div class="col-span-2 lg:col-span-1 bg-af-dark/80 border border-af-border rounded-xl p-3.5 flex flex-col justify-between">
+          <div class="flex justify-between text-[11px] font-semibold">
+            <span class="text-slate-400">Cut Progress</span>
+            <span class="text-emerald-400">${progressPct.toFixed(0)}%</span>
+          </div>
+          <div class="w-full h-2.5 bg-af-surface rounded-full overflow-hidden my-1.5">
+            <div class="h-full bg-gradient-to-r from-purple-500 to-emerald-400 rounded-full" style="width: ${progressPct}%"></div>
+          </div>
+          <div class="text-[10px] text-slate-400">${prof.startWeightKg}kg &rarr; ${prof.targetWeightKg}kg</div>
+        </div>
+      `;
+
+      // Calculate Consumed Totals for Active Date
+      const dayFoods = appState.foodLogsByDate[activeDate] || [];
+      const consumed = dayFoods.reduce((acc, item) => {
+        acc.kcal += Number(item.kcal) || 0;
+        acc.protein += Number(item.protein) || 0;
+        acc.carbs += Number(item.carbs) || 0;
+        acc.fats += Number(item.fats) || 0;
+        acc.fibre += Number(item.fibre) || 0;
+        return acc;
+      }, { kcal: 0, protein: 0, carbs: 0, fats: 0, fibre: 0 });
+
+      const remKcal = Math.round(targets.targetCalories - consumed.kcal);
+      const remProtein = Number((targets.targetProtein - consumed.protein).toFixed(1));
+      const remCarbs = Number((targets.targetCarbs - consumed.carbs).toFixed(1));
+      const remFats = Number((targets.targetFats - consumed.fats).toFixed(1));
+      const remFibre = Number((targets.targetFibre - consumed.fibre).toFixed(1));
+
+      // Update Header Navigation Badge
+      const navBadge = document.getElementById('nav-kcal-left-badge');
+      if (navBadge) {
+        navBadge.textContent = remKcal >= 0 ? `${remKcal.toLocaleString()} left` : `${Math.abs(remKcal)} over`;
+        navBadge.className = remKcal >= 0
+          ? 'text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold'
+          : 'text-[11px] bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded-full font-bold';
+      }
+
+      const statusPill = document.getElementById('calorie-status-pill');
+      if (remKcal < 0) {
+        statusPill.textContent = `${Math.abs(remKcal)} kcal Over Target`;
+        statusPill.className = 'text-xs font-bold px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30';
+      } else if (remKcal < 250) {
+        statusPill.textContent = 'Close to Daily Target';
+        statusPill.className = 'text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+      } else {
+        statusPill.textContent = `${remKcal.toLocaleString()} kcal Left Today`;
+        statusPill.className = 'text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      }
+
+      // Render Feature D: Leftover Calories & 4 Macros Cards
+      const macroCards = [
+        {
+          label: 'Calories Left',
+          unit: 'kcal',
+          rem: remKcal,
+          eaten: Math.round(consumed.kcal),
+          target: targets.targetCalories,
+          barColor: remKcal < 0 ? 'bg-rose-500' : 'bg-purple-500',
+          textColor: remKcal < 0 ? 'text-rose-400' : 'text-white'
+        },
+        {
+          label: 'Protein Left',
+          unit: 'g',
+          rem: remProtein,
+          eaten: consumed.protein.toFixed(1),
+          target: targets.targetProtein,
+          barColor: 'bg-blue-500',
+          textColor: 'text-blue-300'
+        },
+        {
+          label: 'Carbs Left',
+          unit: 'g',
+          rem: remCarbs,
+          eaten: consumed.carbs.toFixed(1),
+          target: targets.targetCarbs,
+          barColor: 'bg-amber-500',
+          textColor: 'text-amber-300'
+        },
+        {
+          label: 'Fats Left',
+          unit: 'g',
+          rem: remFats,
+          eaten: consumed.fats.toFixed(1),
+          target: targets.targetFats,
+          barColor: 'bg-rose-400',
+          textColor: 'text-rose-300'
+        },
+        {
+          label: 'Fibre Left',
+          unit: 'g',
+          rem: remFibre,
+          eaten: consumed.fibre.toFixed(1),
+          target: targets.targetFibre,
+          barColor: 'bg-emerald-500',
+          textColor: 'text-emerald-300'
+        }
+      ];
+
+      document.getElementById('leftover-macros-grid').innerHTML = macroCards.map(m => {
+        const pct = m.target > 0 ? Math.min(100, Math.max(0, (Number(m.eaten) / m.target) * 100)) : 0;
+        const isOver = m.rem < 0;
+        const displayRem = isOver ? `-${Math.abs(m.rem)}${m.unit}` : `${m.rem}${m.unit}`;
+        return `
+          <div class="bg-af-dark/80 border border-af-border rounded-xl p-3.5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-300">${m.label}</span>
+              <span class="text-[10px] font-semibold text-slate-400">${Math.round(pct)}%</span>
+            </div>
+            <div class="text-2xl font-extrabold ${isOver ? 'text-rose-400' : m.textColor}">
+              ${displayRem}
+            </div>
+            <div class="w-full h-2 bg-af-surface rounded-full overflow-hidden">
+              <div class="h-full ${m.barColor} rounded-full transition-all duration-300" style="width: ${pct}%"></div>
+            </div>
+            <div class="text-[11px] text-slate-400">
+              Eaten: <strong class="text-slate-200">${m.eaten}${m.unit}</strong> / ${m.target}${m.unit}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Render Logged Foods List
+      document.getElementById('food-items-count-badge').textContent = `${dayFoods.length} item${dayFoods.length === 1 ? '' : 's'}`;
+      const foodListEl = document.getElementById('daily-food-log-list');
+      if (dayFoods.length === 0) {
+        foodListEl.innerHTML = `
+          <div class="bg-af-dark/60 border border-af-border/70 rounded-xl p-6 text-center text-xs text-slate-400">
+            No foods logged for this date yet. Type a food (e.g., "200ml low fat meiji milk") or upload a meal photo above!
+          </div>
+        `;
+      } else {
+        foodListEl.innerHTML = dayFoods.map(item => `
+          <div class="bg-af-dark/70 border border-af-border/80 rounded-xl p-3 flex items-center justify-between gap-3">
+            <div class="space-y-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-sm font-bold text-white">${item.name}</span>
+                <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-af-surface text-slate-400">${item.source || 'Logged'}</span>
+              </div>
+              <div class="flex flex-wrap gap-2 text-xs">
+                <span class="font-extrabold text-purple-300">${Math.round(item.kcal)} kcal</span>
+                <span class="text-blue-300">P: <strong>${Number(item.protein).toFixed(1)}g</strong></span>
+                <span class="text-amber-300">C: <strong>${Number(item.carbs).toFixed(1)}g</strong></span>
+                <span class="text-rose-300">F: <strong>${Number(item.fats).toFixed(1)}g</strong></span>
+                <span class="text-emerald-300">Fibre: <strong>${Number(item.fibre).toFixed(1)}g</strong></span>
+              </div>
+            </div>
+            <button onclick="deleteFoodItem('${item.id}')" class="p-2 rounded-lg bg-af-surface hover:bg-rose-950/60 text-slate-400 hover:text-rose-400 transition shrink-0" title="Remove item">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        `).join('');
+      }
+
+      // Render Feature E: Supplements Checklist
+      renderSupplementsChecklist(activeDate);
+    }
+
+    // ---------------------------------------------------------
+    // 9. FEATURE C: SMART TEXT FOOD PARSER ("200ml low fat meiji milk")
+    // ---------------------------------------------------------
+    function quickFillFood(text) {
+      document.getElementById('food-text-input').value = text;
+      parseTextFood();
+    }
+
+    async function parseTextFood() {
+      const rawInput = document.getElementById('food-text-input').value.trim();
+      if (!rawInput) {
+        showToast('Type a food item first (e.g., 200ml low fat meiji milk).', 'info');
+        return;
+      }
+
+      const lower = rawInput.toLowerCase();
+
+      // Extract leading quantity & unit (e.g., "200ml", "200 ml", "150g", "2 scoops", "1.5 tbsp")
+      const qtyMatch = lower.match(/^(\d+(?:\.\d+)?)\s*(ml|g|grams|gram|scoop|scoops|slice|slices|piece|pieces|pcs|bowl|bowls|cup|cups|tbsp|whole)?\b/i);
+      const parsedQty = qtyMatch ? parseFloat(qtyMatch[1]) : 1;
+      const parsedUnit = qtyMatch && qtyMatch[2] ? qtyMatch[2].toLowerCase() : null;
+
+      // Match against built-in Singapore + Fitness database
+      let bestMatch = null;
+      let longestKeywordLen = 0;
+
+      for (const item of FOOD_DATABASE) {
+        for (const kw of item.keywords) {
+          if (lower.includes(kw) && kw.length > longestKeywordLen) {
+            bestMatch = item;
+            longestKeywordLen = kw.length;
+          }
+        }
+      }
+
+      if (bestMatch) {
+        let multiplier = 1;
+        if (bestMatch.unitType === 'ml' || bestMatch.unitType === 'g') {
+          // If user typed "200ml" or "150g", scale relative to 100ml/100g
+          const qtyToUse = (parsedUnit === 'ml' || parsedUnit === 'g' || parsedUnit === 'grams' || parsedUnit === 'gram')
+            ? parsedQty
+            : (parsedQty > 15 ? parsedQty : 100);
+          multiplier = qtyToUse / bestMatch.baseQty;
+        } else {
+          // Unit-based item (e.g., 1 scoop, 2 eggs, 1 bowl)
+          multiplier = parsedQty;
+        }
+
+        document.getElementById('preview-food-name').value = rawInput.replace(/\b\w/g, c => c.toUpperCase());
+        document.getElementById('preview-food-kcal').value = Math.round(bestMatch.kcal * multiplier);
+        document.getElementById('preview-food-protein').value = (bestMatch.protein * multiplier).toFixed(1);
+        document.getElementById('preview-food-carbs').value = (bestMatch.carbs * multiplier).toFixed(1);
+        document.getElementById('preview-food-fats').value = (bestMatch.fats * multiplier).toFixed(1);
+        document.getElementById('preview-food-fibre').value = (bestMatch.fibre * multiplier).toFixed(1);
+        document.getElementById('text-food-source-tag').textContent = `Matched: ${bestMatch.name}`;
+        showToast(`Calculated macros for "${rawInput}"!`, 'success');
+        return;
+      }
+
+      // If not found in local DB and user configured Gemini API key, use Gemini AI
+      const apiKey = appState.nutritionProfile.geminiApiKey;
+      if (apiKey) {
+        try {
+          document.getElementById('text-food-source-tag').textContent = 'Analyzing with AI...';
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                parts: [{
+                  text: `Estimate nutrition macros for this food item eaten in Singapore: "${rawInput}". Return ONLY valid JSON with keys: name (string), kcal (number), protein (number), carbs (number), fats (number), fibre (number).`
+                }]
+              }],
+              generationConfig: { responseMimeType: 'application/json' }
+            })
+          });
+          const data = await res.json();
+          const txt = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (txt) {
+            const parsed = JSON.parse(txt);
+            document.getElementById('preview-food-name').value = parsed.name || rawInput;
+            document.getElementById('preview-food-kcal').value = Math.round(parsed.kcal || 0);
+            document.getElementById('preview-food-protein').value = Number(parsed.protein || 0).toFixed(1);
+            document.getElementById('preview-food-carbs').value = Number(parsed.carbs || 0).toFixed(1);
+            document.getElementById('preview-food-fats').value = Number(parsed.fats || 0).toFixed(1);
+            document.getElementById('preview-food-fibre').value = Number(parsed.fibre || 0).toFixed(1);
+            document.getElementById('text-food-source-tag').textContent = 'Gemini AI Estimate';
+            showToast('AI calculated macros!', 'success');
+            return;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      // Fallback: populate name & let user tweak estimated default numbers
+      document.getElementById('preview-food-name').value = rawInput;
+      document.getElementById('preview-food-kcal').value = 250;
+      document.getElementById('preview-food-protein').value = '15.0';
+      document.getElementById('preview-food-carbs').value = '25.0';
+      document.getElementById('preview-food-fats').value = '8.0';
+      document.getElementById('preview-food-fibre').value = '3.0';
+      document.getElementById('text-food-source-tag').textContent = 'Custom Estimate (Adjust below)';
+      showToast('Custom item ready — review macros below and tap Add.', 'info');
+    }
+
+    function addPreviewedFoodToLog() {
+      const name = document.getElementById('preview-food-name').value.trim();
+      const kcal = parseFloat(document.getElementById('preview-food-kcal').value) || 0;
+      const protein = parseFloat(document.getElementById('preview-food-protein').value) || 0;
+      const carbs = parseFloat(document.getElementById('preview-food-carbs').value) || 0;
+      const fats = parseFloat(document.getElementById('preview-food-fats').value) || 0;
+      const fibre = parseFloat(document.getElementById('preview-food-fibre').value) || 0;
+
+      if (!name) return;
+
+      const activeDate = appState.activeNutritionDate || getTodayISO();
+      if (!appState.foodLogsByDate[activeDate]) {
+        appState.foodLogsByDate[activeDate] = [];
+      }
+
+      appState.foodLogsByDate[activeDate].unshift({
+        id: 'food-' + Date.now(),
+        name,
+        kcal,
+        protein,
+        carbs,
+        fats,
+        fibre,
+        source: 'Text Calc'
+      });
+
+      saveState();
+      document.getElementById('food-text-input').value = '';
+      renderNutritionTab();
+      showToast(`Added "${name}" (${Math.round(kcal)} kcal) to log!`, 'success');
+    }
+
+    function deleteFoodItem(id) {
+      const activeDate = appState.activeNutritionDate || getTodayISO();
+      if (!appState.foodLogsByDate[activeDate]) return;
+      appState.foodLogsByDate[activeDate] = appState.foodLogsByDate[activeDate].filter(f => f.id !== id);
+      saveState();
+      renderNutritionTab();
+      showToast('Food item removed.', 'info');
+    }
+
+    // ---------------------------------------------------------
+    // 10. FEATURE B: PHOTO MEAL UPLOAD & MACRO + FIBRE ANALYZER
+    // ---------------------------------------------------------
+    let uploadedPhotoBase64 = null;
+    let uploadedPhotoMime = 'image/jpeg';
+    let currentPhotoAnalysis = { ...PHOTO_MEAL_PRESETS.chicken_rice };
+
+    function handleMealPhotoUpload(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      uploadedPhotoMime = file.type || 'image/jpeg';
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const dataUrl = evt.target.result;
+        uploadedPhotoBase64 = dataUrl.split(',')[1];
+        document.getElementById('meal-photo-img').src = dataUrl;
+        document.getElementById('meal-photo-placeholder').classList.add('hidden');
+        document.getElementById('meal-photo-preview-wrap').classList.remove('hidden');
+        showToast('Meal photo loaded! Tap Analyze Photo to calculate macros & fibre.', 'info');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function applyPhotoMealPreset() {
+      const key = document.getElementById('photo-meal-preset').value;
+      const scale = parseFloat(document.getElementById('photo-portion-scale').value) || 1.0;
+      const base = PHOTO_MEAL_PRESETS[key] || PHOTO_MEAL_PRESETS.chicken_rice;
+
+      currentPhotoAnalysis = {
+        name: scale !== 1.0 ? `${base.name} (${scale}x)` : base.name,
+        kcal: Math.round(base.kcal * scale),
+        protein: Number((base.protein * scale).toFixed(1)),
+        carbs: Number((base.carbs * scale).toFixed(1)),
+        fats: Number((base.fats * scale).toFixed(1)),
+        fibre: Number((base.fibre * scale).toFixed(1))
+      };
+
+      updatePhotoResultUI('Visual Preset');
+    }
+
+    function updatePhotoResultUI(badgeLabel) {
+      document.getElementById('photo-result-title').textContent = currentPhotoAnalysis.name;
+      document.getElementById('photo-result-badge').textContent = badgeLabel;
+      document.getElementById('photo-res-kcal').textContent = currentPhotoAnalysis.kcal;
+      document.getElementById('photo-res-protein').textContent = `${currentPhotoAnalysis.protein}g`;
+      document.getElementById('photo-res-carbs').textContent = `${currentPhotoAnalysis.carbs}g`;
+      document.getElementById('photo-res-fats').textContent = `${currentPhotoAnalysis.fats}g`;
+      document.getElementById('photo-res-fibre').textContent = `${currentPhotoAnalysis.fibre}g`;
+    }
+
+    async function analyzeUploadedMealPhoto() {
+      const apiKey = appState.nutritionProfile.geminiApiKey;
+      const btnText = document.getElementById('analyze-photo-btn-text');
+
+      if (uploadedPhotoBase64 && apiKey) {
+        try {
+          btnText.textContent = 'Analyzing Photo with Gemini AI...';
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                parts: [
+                  {
+                    text: 'Analyze this meal photo and estimate total calories, protein (g), carbohydrates (g), fats (g), and dietary fibre (g). Return ONLY valid JSON with keys: name (short descriptive meal name), kcal (number), protein (number), carbs (number), fats (number), fibre (number).'
+                  },
+                  {
+                    inlineData: {
+                      mimeType: uploadedPhotoMime,
+                      data: uploadedPhotoBase64
+                    }
+                  }
+                ]
+              }],
+              generationConfig: { responseMimeType: 'application/json' }
+            })
+          });
+
+          const data = await res.json();
+          const txt = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (txt) {
+            const parsed = JSON.parse(txt);
+            currentPhotoAnalysis = {
+              name: parsed.name || 'Analyzed Photo Meal',
+              kcal: Math.round(parsed.kcal || 0),
+              protein: Number((parsed.protein || 0).toFixed(1)),
+              carbs: Number((parsed.carbs || 0).toFixed(1)),
+              fats: Number((parsed.fats || 0).toFixed(1)),
+              fibre: Number((parsed.fibre || 0).toFixed(1))
+            };
+            updatePhotoResultUI('Gemini AI Vision');
+            btnText.textContent = 'Analyze Photo & Calculate Macros + Fibre';
+            showToast('AI Vision calculated meal macros & fibre!', 'success');
+            return;
+          }
+        } catch (err) {
+          console.error(err);
+          showToast('AI Vision error—using selected visual meal preset.', 'info');
+        } finally {
+          btnText.textContent = 'Analyze Photo & Calculate Macros + Fibre';
+        }
+      }
+
+      // Offline / No-Key Visual Preset calculation
+      applyPhotoMealPreset();
+      showToast(
+        uploadedPhotoBase64
+          ? 'Photo analyzed using selected Visual Meal Preset (add Gemini API key in Settings for automatic AI object recognition).'
+          : 'Calculated macros & fibre from selected meal preset!',
+        'success'
+      );
+    }
+
+    function logAnalyzedPhotoMeal() {
+      const activeDate = appState.activeNutritionDate || getTodayISO();
+      if (!appState.foodLogsByDate[activeDate]) {
+        appState.foodLogsByDate[activeDate] = [];
+      }
+
+      appState.foodLogsByDate[activeDate].unshift({
+        id: 'photo-food-' + Date.now(),
+        name: currentPhotoAnalysis.name,
+        kcal: currentPhotoAnalysis.kcal,
+        protein: currentPhotoAnalysis.protein,
+        carbs: currentPhotoAnalysis.carbs,
+        fats: currentPhotoAnalysis.fats,
+        fibre: currentPhotoAnalysis.fibre,
+        source: 'Photo Scan'
+      });
+
+      saveState();
+      renderNutritionTab();
+      showToast(`Logged "${currentPhotoAnalysis.name}" (${currentPhotoAnalysis.kcal} kcal, ${currentPhotoAnalysis.fibre}g fibre)!`, 'success');
+    }
+
+    // ---------------------------------------------------------
+    // 11. FEATURE E: DAILY SUPPLEMENTS DROPDOWN & CHECKLIST
+    // ---------------------------------------------------------
+    function getCurrentTimeLabel() {
+      return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function logSupplementFromDropdown() {
+      const suppName = document.getElementById('supplement-dropdown').value;
+      const activeDate = appState.activeNutritionDate || getTodayISO();
+      if (!appState.supplementsByDate[activeDate]) {
+        appState.supplementsByDate[activeDate] = {};
+      }
+      appState.supplementsByDate[activeDate][suppName] = getCurrentTimeLabel();
+      saveState();
+      renderSupplementsChecklist(activeDate);
+      showToast(`Logged "${suppName}" taken!`, 'success');
+    }
+
+    function toggleSupplementItem(suppName) {
+      const activeDate = appState.activeNutritionDate || getTodayISO();
+      if (!appState.supplementsByDate[activeDate]) {
+        appState.supplementsByDate[activeDate] = {};
+      }
+      if (appState.supplementsByDate[activeDate][suppName]) {
+        delete appState.supplementsByDate[activeDate][suppName];
+      } else {
+        appState.supplementsByDate[activeDate][suppName] = getCurrentTimeLabel();
+      }
+      saveState();
+      renderSupplementsChecklist(activeDate);
+    }
+
+    function markAllSupplementsTaken() {
+      const activeDate = appState.activeNutritionDate || getTodayISO();
+      if (!appState.supplementsByDate[activeDate]) {
+        appState.supplementsByDate[activeDate] = {};
+      }
+      const timeNow = getCurrentTimeLabel();
+      SUPPLEMENT_LIST.forEach(s => {
+        if (!appState.supplementsByDate[activeDate][s]) {
+          appState.supplementsByDate[activeDate][s] = timeNow;
+        }
+      });
+      saveState();
+      renderSupplementsChecklist(activeDate);
+      showToast('All 10 daily supplements marked as taken!', 'success');
+    }
+
+    function renderSupplementsChecklist(activeDate) {
+      const takenMap = appState.supplementsByDate[activeDate] || {};
+      const takenCount = SUPPLEMENT_LIST.filter(s => Boolean(takenMap[s])).length;
+      document.getElementById('supplements-progress-badge').textContent = `${takenCount} / ${SUPPLEMENT_LIST.length}`;
+
+      document.getElementById('supplements-checklist').innerHTML = SUPPLEMENT_LIST.map(supp => {
+        const timeTaken = takenMap[supp];
+        const isTaken = Boolean(timeTaken);
+        return `
+          <button onclick="toggleSupplementItem('${supp.replace(/'/g, "\\'")}')"
+            class="w-full flex items-center justify-between px-3 py-2 rounded-xl border text-left transition ${
+              isTaken
+                ? 'bg-emerald-950/35 border-emerald-500/40 text-white'
+                : 'bg-af-dark/60 border-af-border/70 text-slate-300 hover:bg-af-surface/60'
+            }">
+            <div class="flex items-center gap-2.5">
+              <span class="w-5 h-5 rounded-md flex items-center justify-center border ${
+                isTaken ? 'bg-emerald-500 border-emerald-400 text-slate-950' : 'bg-af-surface border-af-border text-transparent'
+              }">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              </span>
+              <span class="text-xs font-semibold ${isTaken ? 'line-through text-slate-300' : 'text-white'}">${supp}</span>
+            </div>
+            <span class="text-[11px] font-mono ${isTaken ? 'text-emerald-400 font-bold' : 'text-slate-500'}">
+              ${isTaken ? timeTaken : 'Pending'}
+            </span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    // ---------------------------------------------------------
+    // 12. WORKOUT PLAN GENERATOR & LOGGER LOGIC
     // ---------------------------------------------------------
     function handlePlanConfigChange() {
       appState.config.branch = document.getElementById('branch-select').value;
@@ -1145,12 +2103,10 @@
     function renderWorkoutTab() {
       const { branch, split, goal, activeDay, variationIndex } = appState.config;
 
-      // Sync dropdown values
       document.getElementById('branch-select').value = branch;
       document.getElementById('split-select').value = split;
       document.getElementById('goal-select').value = goal;
 
-      // Render Branch Intel Box
       const bInfo = BRANCH_DATA[branch];
       document.getElementById('branch-intel-box').innerHTML = `
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -1164,11 +2120,9 @@
         <p class="text-amber-300/90 text-[11px] font-medium">💡 ${bInfo.peakTip}</p>
       `;
 
-      // Build 3-day plan
       const plan = buildWorkoutTemplates(branch, split, variationIndex);
       const goalInfo = GOAL_PRESETS[goal];
 
-      // Update Day Pills
       plan.forEach((day, idx) => {
         const pill = document.getElementById(`day-pill-${idx}`);
         const shortLabel = split === 'ppl'
@@ -1184,7 +2138,6 @@
 
       const currentDay = plan[activeDay] || plan[0];
 
-      // Render Active Day Header Banner
       document.getElementById('active-day-header').innerHTML = `
         <div>
           <div class="flex flex-wrap items-center gap-2">
@@ -1202,29 +2155,14 @@
         </div>
       `;
 
-      // Render Exercise Cards
       const container = document.getElementById('exercise-list-container');
       container.innerHTML = '';
 
       currentDay.exercises.forEach((ex, exIdx) => {
         const user1RM = appState.oneRMs[ex.liftKey] || 60;
-        const pctMultiplier = ex.tier === 'compound'
-          ? goalInfo.compoundPct
-          : ex.tier === 'secondary'
-          ? goalInfo.secondaryPct
-          : goalInfo.accessoryPct;
-
-        const pctLabel = ex.tier === 'compound'
-          ? goalInfo.compoundPctText
-          : ex.tier === 'secondary'
-          ? goalInfo.secondaryPctText
-          : goalInfo.accessoryPctText;
-
-        const repRange = ex.tier === 'compound'
-          ? goalInfo.compoundReps
-          : ex.tier === 'secondary'
-          ? goalInfo.secondaryReps
-          : goalInfo.accessoryReps;
+        const pctMultiplier = ex.tier === 'compound' ? goalInfo.compoundPct : ex.tier === 'secondary' ? goalInfo.secondaryPct : goalInfo.accessoryPct;
+        const pctLabel = ex.tier === 'compound' ? goalInfo.compoundPctText : ex.tier === 'secondary' ? goalInfo.secondaryPctText : goalInfo.accessoryPctText;
+        const repRange = ex.tier === 'compound' ? goalInfo.compoundReps : ex.tier === 'secondary' ? goalInfo.secondaryReps : goalInfo.accessoryReps;
 
         const prescribedWeight = roundToPlate(user1RM * pctMultiplier);
         const lastSessionText = getLastSessionForExercise(ex.name);
@@ -1244,10 +2182,8 @@
 
           setsRowsHtml += `
             <div class="grid grid-cols-12 items-center gap-2 p-2.5 rounded-xl border ${rowBg} transition">
-              <div class="col-span-2 sm:col-span-2 text-xs font-extrabold text-slate-300 pl-1">
-                Set ${s + 1}
-              </div>
-              <div class="col-span-4 sm:col-span-4">
+              <div class="col-span-2 text-xs font-extrabold text-slate-300 pl-1">Set ${s + 1}</div>
+              <div class="col-span-4">
                 <div class="relative">
                   <input type="number" step="0.5" min="0" value="${savedSet.weight}"
                     onchange="updateSetLog('${logKey}', 'weight', this.value)"
@@ -1255,7 +2191,7 @@
                   <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-slate-400">kg</span>
                 </div>
               </div>
-              <div class="col-span-4 sm:col-span-4">
+              <div class="col-span-4">
                 <div class="relative">
                   <input type="number" step="1" min="0" value="${savedSet.reps}"
                     onchange="updateSetLog('${logKey}', 'reps', this.value)"
@@ -1263,7 +2199,7 @@
                   <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-slate-400">reps</span>
                 </div>
               </div>
-              <div class="col-span-2 sm:col-span-2 flex justify-end pr-1">
+              <div class="col-span-2 flex justify-end pr-1">
                 <button onclick="toggleSetComplete('${logKey}', ${goalInfo.restSeconds})"
                   class="w-9 h-9 rounded-lg flex items-center justify-center border transition ${
                     savedSet.completed
@@ -1297,7 +2233,6 @@
               </div>
             </div>
 
-            <!-- Prescribed Target Box -->
             <div class="flex items-center gap-3 bg-af-dark/80 border border-af-border rounded-xl px-3.5 py-2 shrink-0">
               <div>
                 <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Your 1RM</div>
@@ -1311,7 +2246,6 @@
             </div>
           </div>
 
-          <!-- Sets Header -->
           <div class="grid grid-cols-12 gap-2 px-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
             <div class="col-span-2">Set</div>
             <div class="col-span-4">Weight (kg)</div>
@@ -1319,10 +2253,7 @@
             <div class="col-span-2 text-right">Done</div>
           </div>
 
-          <!-- Sets Rows -->
-          <div class="space-y-2">
-            ${setsRowsHtml}
-          </div>
+          <div class="space-y-2">${setsRowsHtml}</div>
         `;
         container.appendChild(card);
       });
@@ -1341,7 +2272,6 @@
     }
 
     function toggleSetComplete(logKey, recommendedRestSeconds) {
-      // Ensure default values are captured if user clicks check without editing inputs
       const parts = logKey.split('_');
       const split = parts[0];
       const dayIdx = parseInt(parts[1], 10);
@@ -1406,7 +2336,6 @@
 
       const loggedExercises = [];
       let totalVolume = 0;
-      let completedSetsCount = 0;
 
       currentDay.exercises.forEach((ex, exIdx) => {
         const user1RM = appState.oneRMs[ex.liftKey] || 60;
@@ -1420,10 +2349,8 @@
         for (let s = 0; s < ex.sets; s++) {
           const logKey = `${split}_${activeDay}_${exIdx}_${s}`;
           const entry = appState.activeLogs[logKey];
-          // Include completed sets, or if user didn't tick checkboxes, capture their entered values
           const w = entry ? entry.weight : defWeight;
           const r = entry ? entry.reps : defReps;
-          if (entry && entry.completed) completedSetsCount++;
           setsArray.push({ weight: w, reps: r });
           totalVolume += w * r;
         }
@@ -1435,10 +2362,9 @@
         });
       });
 
-      const todayStr = new Date().toISOString().split('T')[0];
       const newSession = {
         id: 'hist-' + Date.now(),
-        date: todayStr,
+        date: getTodayISO(),
         branch: branch,
         dayTitle: currentDay.dayTitle,
         goal: goalInfo.label,
@@ -1448,11 +2374,9 @@
 
       appState.history.unshift(newSession);
 
-      // Clear active checkmarks for this day so next week starts fresh
       currentDay.exercises.forEach((ex, exIdx) => {
         for (let s = 0; s < ex.sets; s++) {
-          const logKey = `${split}_${activeDay}_${exIdx}_${s}`;
-          delete appState.activeLogs[logKey];
+          delete appState.activeLogs[`${split}_${activeDay}_${exIdx}_${s}`];
         }
       });
 
@@ -1463,7 +2387,7 @@
     }
 
     // ---------------------------------------------------------
-    // 8. 1RM HUB & EPLEY / BRZYCKI ESTIMATOR
+    // 13. 1RM HUB & EPLEY / BRZYCKI ESTIMATOR
     // ---------------------------------------------------------
     function renderOneRMTab() {
       const liftSelect = document.getElementById('calc-lift-select');
@@ -1525,19 +2449,16 @@
         document.getElementById('calc-result-main').textContent = `${weight.toFixed(1)} kg`;
         document.getElementById('calc-result-breakdown').textContent = 'Actual 1-Rep Max';
       } else {
-        // Epley: w * (1 + r/30)
         const epley = weight * (1 + reps / 30);
-        // Brzycki: w * (36 / (37 - r))
         const clampedReps = Math.min(reps, 30);
         const brzycki = weight * (36 / (37 - clampedReps));
         const avg = (epley + brzycki) / 2;
-        latestCalculated1RM = Math.round(avg * 2) / 2; // round to nearest 0.5kg
+        latestCalculated1RM = Math.round(avg * 2) / 2;
 
         document.getElementById('calc-result-main').textContent = `${latestCalculated1RM.toFixed(1)} kg`;
         document.getElementById('calc-result-breakdown').textContent = `Epley: ${epley.toFixed(1)} kg • Brzycki: ${brzycki.toFixed(1)} kg`;
       }
 
-      // Update percentage zones preview
       const zones = [
         { pct: '90% (Peak)', w: roundToPlate(latestCalculated1RM * 0.90) },
         { pct: '85% (Str)', w: roundToPlate(latestCalculated1RM * 0.85) },
@@ -1594,7 +2515,7 @@
     }
 
     // ---------------------------------------------------------
-    // 9. WORKOUT HISTORY LOG
+    // 14. WORKOUT HISTORY LOG
     // ---------------------------------------------------------
     function updateHistoryBadge() {
       document.getElementById('history-count-badge').textContent = appState.history.length;
@@ -1613,7 +2534,6 @@
         return matchBranch && matchSearch;
       });
 
-      // Summary KPIs
       const totalSessions = appState.history.length;
       const totalLifetimeVol = appState.history.reduce((acc, s) => acc + (s.totalVolume || 0), 0);
       const bugisCount = appState.history.filter(s => s.branch === 'bugis').length;
@@ -1702,10 +2622,10 @@
     }
 
     // ---------------------------------------------------------
-    // 10. DAILY VITALS & BODY WEIGHT TRACKER + CANVAS CHART
+    // 15. DAILY VITALS & BODY WEIGHT TRACKER + CANVAS CHART
     // ---------------------------------------------------------
     function initVitalsFormDate() {
-      document.getElementById('vital-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('vital-date').value = getTodayISO();
     }
 
     function saveDailyVital(e) {
@@ -1719,7 +2639,6 @@
 
       if (!date || !weight) return;
 
-      // Replace if entry for same date exists, else add
       const existingIdx = appState.vitals.findIndex(v => v.date === date);
       const record = {
         id: existingIdx >= 0 ? appState.vitals[existingIdx].id : 'v-' + Date.now(),
@@ -1737,19 +2656,20 @@
         appState.vitals.push(record);
       }
 
-      // Sort chronologically
       appState.vitals.sort((a, b) => a.date.localeCompare(b.date));
       saveState();
 
       document.getElementById('vital-notes').value = '';
       renderVitalsTab();
-      showToast(`Recorded ${weight.toFixed(1)} kg for ${date}.`, 'success');
+      renderNutritionTab();
+      showToast(`Recorded ${weight.toFixed(1)} kg & recalculated daily calorie budget!`, 'success');
     }
 
     function deleteVitalEntry(id) {
       appState.vitals = appState.vitals.filter(v => v.id !== id);
       saveState();
       renderVitalsTab();
+      renderNutritionTab();
       showToast('Vital entry removed.', 'info');
     }
 
@@ -1761,7 +2681,6 @@
       const deltaSign = delta > 0 ? '+' : '';
       const deltaColor = delta <= 0 ? 'text-emerald-400' : 'text-amber-400';
 
-      // 7-day rolling avg
       const last7 = sorted.slice(-7);
       const avg7 = last7.length ? (last7.reduce((s, v) => s + v.weight, 0) / last7.length) : 0;
 
@@ -1772,12 +2691,12 @@
         <div class="bg-af-card border border-af-border rounded-2xl p-4">
           <div class="text-xs text-slate-400 font-semibold">Current Weight</div>
           <div class="text-2xl font-extrabold text-white mt-1">${latest ? latest.weight.toFixed(1) + ' kg' : '--'}</div>
-          <div class="text-[11px] text-slate-400 mt-0.5">${latest ? latest.date : ''}</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">Target: ${appState.nutritionProfile.targetWeightKg} kg</div>
         </div>
         <div class="bg-af-card border border-af-border rounded-2xl p-4">
           <div class="text-xs text-slate-400 font-semibold">7-Day Average</div>
           <div class="text-2xl font-extrabold text-purple-400 mt-1">${avg7 ? avg7.toFixed(1) + ' kg' : '--'}</div>
-          <div class="text-[11px] text-slate-400 mt-0.5">Smoothed trend</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">Drives calorie formula</div>
         </div>
         <div class="bg-af-card border border-af-border rounded-2xl p-4">
           <div class="text-xs text-slate-400 font-semibold">Total Change</div>
@@ -1791,7 +2710,6 @@
         </div>
       `;
 
-      // Render Table (newest first)
       const reversed = [...sorted].reverse();
       document.getElementById('vitals-table-body').innerHTML = reversed.map(v => `
         <tr class="hover:bg-af-surface/40 transition">
@@ -1856,7 +2774,6 @@
       const chartW = width - padLeft - padRight;
       const chartH = height - padTop - padBottom;
 
-      // Horizontal grid lines
       ctx.strokeStyle = '#1E293B';
       ctx.lineWidth = 1;
       ctx.fillStyle = '#64748B';
@@ -1879,7 +2796,6 @@
         : padLeft + (idx / (data.length - 1)) * chartW;
       const getY = (w) => padTop + chartH - ((w - minW) / rangeW) * chartH;
 
-      // Rolling 3-point average curve (emerald)
       if (data.length >= 2) {
         ctx.beginPath();
         ctx.strokeStyle = '#34D399';
@@ -1897,7 +2813,6 @@
         ctx.setLineDash([]);
       }
 
-      // Gradient fill under daily weight line
       if (data.length >= 2) {
         const grad = ctx.createLinearGradient(0, padTop, 0, padTop + chartH);
         grad.addColorStop(0, 'rgba(124, 58, 237, 0.35)');
@@ -1917,7 +2832,6 @@
         ctx.fill();
       }
 
-      // Daily weight main line (purple)
       ctx.beginPath();
       ctx.strokeStyle = '#8B5CF6';
       ctx.lineWidth = 3;
@@ -1929,7 +2843,6 @@
       });
       ctx.stroke();
 
-      // Data points & X-axis labels
       ctx.textAlign = 'center';
       data.forEach((d, idx) => {
         const x = getX(idx);
@@ -1943,7 +2856,6 @@
         ctx.strokeStyle = '#A78BFA';
         ctx.stroke();
 
-        // Date label (MM-DD)
         if (data.length <= 8 || idx % 2 === 0 || idx === data.length - 1) {
           ctx.fillStyle = '#94A3B8';
           ctx.font = '10px Inter, sans-serif';
@@ -1959,7 +2871,7 @@
     });
 
     // ---------------------------------------------------------
-    // 11. SMART REST TIMER ("REST BUTTON") + WEB AUDIO CHIME
+    // 16. SMART REST TIMER ("REST BUTTON") + WEB AUDIO CHIME
     // ---------------------------------------------------------
     let restTotalSeconds = 90;
     let restRemainingSeconds = 90;
@@ -1973,7 +2885,6 @@
         const ctx = new AudioCtx();
         const now = ctx.currentTime;
 
-        // Gentle 3-note uplifting synth chime
         [523.25, 659.25, 783.99].forEach((freq, idx) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
@@ -1989,9 +2900,7 @@
           osc.start(now + idx * 0.14);
           osc.stop(now + idx * 0.14 + 0.5);
         });
-      } catch (e) {
-        // Ignore if audio context blocked
-      }
+      } catch (e) {}
     }
 
     function updateRestUI() {
@@ -2088,11 +2997,12 @@
     }
 
     // ---------------------------------------------------------
-    // 12. INITIALIZE APP ON LOAD
+    // 17. INITIALIZE APP ON LOAD
     // ---------------------------------------------------------
     function initUI() {
       initVitalsFormDate();
       renderWorkoutTab();
+      renderNutritionTab();
       renderOneRMTab();
       renderHistory();
       renderVitalsTab();
