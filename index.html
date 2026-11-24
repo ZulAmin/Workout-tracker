@@ -2,25 +2,28 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AF SG Strength &amp; Fuel</title>
   <meta name="theme-color" content="#0B0F19" />
-  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="AF SG Tracker" />
-  <title>AF SG Strength &amp; Fuel</title>
-  <link id="pwa-manifest-link" rel="manifest" href="" />
+  <link id="pwa-manifest" rel="manifest" href="" />
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
+            sans: ['Inter', 'sans-serif']
           },
           colors: {
             af: {
@@ -37,530 +40,527 @@
       }
     };
   </script>
+
   <style>
     body {
       background-color: #0B0F19;
       color: #F8FAFC;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      padding-bottom: 120px;
-      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      padding-bottom: 108px;
+      -webkit-tap-highlight-color: transparent;
     }
-    /* Custom scrollbar for clean dark appearance */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
     }
-    ::-webkit-scrollbar-track {
-      background: #0B0F19;
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
-    ::-webkit-scrollbar-thumb {
-      background: #2A3652;
-      border-radius: 9999px;
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #7C3AED;
+    input[type="number"] {
+      -moz-appearance: textfield;
     }
-    .tabular-nums {
-      font-variant-numeric: tabular-nums;
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-in {
+      animation: fadeSlideUp 0.22s ease-out forwards;
     }
   </style>
 </head>
-<body class="bg-af-dark text-slate-100 min-h-screen antialiased selection:bg-af-purple selection:text-white">
+<body class="min-h-screen bg-af-dark text-slate-100 selection:bg-af-purple selection:text-white">
 
-  <!-- Toast Notification Banner (No alert() used anywhere) -->
-  <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none w-full max-w-sm px-4"></div>
 
   <!-- Top Header -->
-  <header class="sticky top-0 z-30 bg-af-dark/90 backdrop-blur-md border-b border-af-border">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-af-purple to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-950/60 shrink-0">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6.5 6.5v11M17.5 6.5v11M4 9.5v5M20 9.5v5M6.5 12h11" />
-          </svg>
-        </div>
-        <div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <h1 class="text-lg sm:text-xl font-black tracking-tight text-white">
+  <header class="sticky top-0 z-30 bg-af-dark/95 backdrop-blur-md border-b border-af-border">
+    <div class="max-w-4xl mx-auto px-4 pt-3.5 pb-2">
+      <div class="flex items-center justify-between gap-3">
+        <!-- App Brand -->
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-af-purple to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-950/60 shrink-0">
+            <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6.5 6.5v11" />
+              <path d="M17.5 6.5v11" />
+              <path d="M3.5 8.5v7" />
+              <path d="M20.5 8.5v7" />
+              <path d="M6.5 12h11" />
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white truncate">
               AF SG <span class="text-af-purpleLight">Strength &amp; Fuel</span>
             </h1>
-            <span id="header-cal-badge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 tabular-nums">
-              -- kcal left
-            </span>
+            <p class="text-[11px] sm:text-xs text-slate-400 truncate">
+              Yishun &bull; Tiong Bahru &bull; Bugis &bull; 89kg &rarr; 80kg Cut
+            </p>
           </div>
-          <p class="text-xs text-slate-400">
-            Anytime Fitness SG (Bugis &bull; Tiong Bahru &bull; Yishun) &bull; 182 cm &bull; 89.0 kg &rarr; 80.0 kg
-          </p>
         </div>
-      </div>
 
-      <div class="flex items-center gap-2">
-        <button onclick="resetDemoData()" class="px-3 py-1.5 rounded-xl bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-semibold text-slate-300 transition flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5 text-af-purpleLight" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        <!-- Reset Demo Action -->
+        <button onclick="resetDemoData()" class="px-3 py-1.5 rounded-xl bg-af-card hover:bg-af-surface border border-af-border text-xs font-semibold text-slate-300 hover:text-white transition flex items-center gap-1.5 shrink-0">
+          <svg class="w-3.5 h-3.5 text-af-purpleLight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
           </svg>
           <span>Reset Demo</span>
         </button>
       </div>
-    </div>
 
-    <!-- Main 4-Tab Navigation -->
-    <nav class="max-w-6xl mx-auto px-4 flex gap-1.5 overflow-x-auto no-scrollbar pt-1" aria-label="Primary Tabs">
-      <button id="tab-btn-workout" onclick="switchTab('workout')" class="tab-btn px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-af-purple text-white bg-af-card/70 transition whitespace-nowrap flex items-center gap-2">
-        <span>Workout</span>
-      </button>
-      <button id="tab-btn-nutrition" onclick="switchTab('nutrition')" class="tab-btn px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition whitespace-nowrap flex items-center gap-2">
-        <span>Nutrition &amp; Supps</span>
-      </button>
-      <button id="tab-btn-1rm" onclick="switchTab('1rm')" class="tab-btn px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition whitespace-nowrap flex items-center gap-2">
-        <span>1RM Hub</span>
-      </button>
-      <button id="tab-btn-vitals" onclick="switchTab('vitals')" class="tab-btn px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition whitespace-nowrap flex items-center gap-2">
-        <span>Vitals</span>
-      </button>
-    </nav>
+      <!-- Primary Tab Bar -->
+      <nav class="flex items-center gap-1 mt-3 overflow-x-auto no-scrollbar border-b border-af-border/50 -mx-4 px-4">
+        <button id="tab-btn-workout" onclick="switchTab('workout')" class="tab-btn relative px-3.5 py-2.5 text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 text-white border-b-2 border-af-purple">
+          <svg class="w-4 h-4 text-af-purpleLight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="8" y="2" width="8" height="4" rx="1" />
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+          </svg>
+          <span>Workout</span>
+        </button>
+
+        <button id="tab-btn-nutrition" onclick="switchTab('nutrition')" class="tab-btn relative px-3.5 py-2.5 text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+          </svg>
+          <span>Nutrition &amp; Supps</span>
+          <span id="nav-cal-badge" class="ml-1 px-2 py-0.5 text-[11px] font-extrabold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            865 left
+          </span>
+        </button>
+
+        <button id="tab-btn-1rm" onclick="switchTab('1rm')" class="tab-btn relative px-3.5 py-2.5 text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20V10" />
+            <path d="M18 20V4" />
+            <path d="M6 20v-4" />
+          </svg>
+          <span>1RM Hub</span>
+        </button>
+
+        <button id="tab-btn-vitals" onclick="switchTab('vitals')" class="tab-btn relative px-3.5 py-2.5 text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+          </svg>
+          <span>Vitals</span>
+        </button>
+      </nav>
+    </div>
   </header>
 
-  <!-- Main Content Container -->
-  <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+  <!-- Main Content Area -->
+  <main class="max-w-4xl mx-auto px-4 pt-5 space-y-5">
 
     <!-- ========================================================= -->
-    <!-- TAB 1: WORKOUT GENERATOR, % 1RM & SET/REP LOGGER           -->
+    <!-- TAB 1: WORKOUT GENERATOR & SET LOGGER                      -->
     <!-- ========================================================= -->
-    <section id="tab-workout" class="space-y-6">
-      <!-- Branch & Split Configuration Card -->
-      <div class="bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <section id="view-workout" class="space-y-5 animate-fade-in">
+
+      <!-- Outlet Selector & Refresh Exercises Controls -->
+      <div class="bg-af-card border border-af-border rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-af-purpleLight">Anytime Fitness Singapore</span>
-            <h2 class="text-xl font-extrabold text-white mt-0.5">3-Day Training Plan &amp; % 1RM Logger</h2>
-            <p id="branch-club-notes" class="text-xs text-slate-400 mt-1"></p>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-af-purpleLight">Anytime Fitness SG Outlet</span>
+            <h2 class="text-lg font-extrabold text-white">Club Equipment &amp; Exercise Shuffle</h2>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2">
-            <label for="workout-goal-select" class="text-xs font-bold text-slate-300">Intensity:</label>
-            <select id="workout-goal-select" onchange="changeWorkoutGoal(this.value)" class="bg-af-surface border border-af-border rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-af-purple">
-              <option value="strength">Strength Focus (75–85% 1RM)</option>
-              <option value="hypertrophy" selected>Hypertrophy + Strength (65–80% 1RM)</option>
-              <option value="conditioning">Athletic Conditioning (55–70% 1RM)</option>
-            </select>
-          </div>
+          <!-- Refresh / Shuffle All Exercises Button -->
+          <button onclick="refreshAllDayExercises()" class="px-4 py-2.5 rounded-xl bg-af-purple hover:bg-af-purpleHover active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-lg shadow-purple-950/60 transition flex items-center justify-center gap-2 shrink-0">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+              <path d="M16 16h5v5" />
+            </svg>
+            <span>Refresh Exercises</span>
+          </button>
         </div>
 
-        <!-- Club Location Selector -->
-        <div>
-          <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Select Anytime Fitness Club</p>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-            <button id="branch-btn-bugis" onclick="selectBranch('bugis')" class="branch-btn text-left p-3 rounded-xl border transition">
-              <div class="font-bold text-sm text-white">AF Bugis (51 Middle Rd)</div>
-              <div class="text-xs text-slate-400 mt-0.5">Central CBD &bull; Platforms, racks &amp; cables</div>
-            </button>
-            <button id="branch-btn-tiongbahru" onclick="selectBranch('tiongbahru')" class="branch-btn text-left p-3 rounded-xl border transition">
-              <div class="font-bold text-sm text-white">AF Tiong Bahru Plaza</div>
-              <div class="text-xs text-slate-400 mt-0.5">Mall club &bull; Dumbbells, turf &amp; machines</div>
-            </button>
-            <button id="branch-btn-yishun" onclick="selectBranch('yishun')" class="branch-btn text-left p-3 rounded-xl border transition">
-              <div class="font-bold text-sm text-white">AF Yishun</div>
-              <div class="text-xs text-slate-400 mt-0.5">North hub &bull; Power racks, benches &amp; free weights</div>
-            </button>
-          </div>
+        <!-- Outlet Pills -->
+        <div class="grid grid-cols-3 gap-2">
+          <button id="outlet-Yishun" onclick="selectOutlet('Yishun')" class="outlet-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border transition text-center">
+            Yishun
+          </button>
+          <button id="outlet-Tiong Bahru" onclick="selectOutlet('Tiong Bahru')" class="outlet-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border transition text-center">
+            Tiong Bahru
+          </button>
+          <button id="outlet-Bugis" onclick="selectOutlet('Bugis')" class="outlet-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border transition text-center">
+            Bugis
+          </button>
+        </div>
+
+        <!-- Outlet Equipment Note -->
+        <div id="outlet-note-banner" class="bg-af-surface/80 border border-af-border rounded-xl px-3.5 py-2.5 text-xs text-slate-300 flex items-start gap-2">
+          <span class="text-af-purpleLight font-bold">Gym Setup:</span>
+          <span id="outlet-note-text">3 Power Racks, Dual Cable Stack, Plate-Loaded Hack Squat &amp; Dumbbells up to 50kg.</span>
         </div>
 
         <!-- 3-Day Split Selector -->
-        <div class="grid grid-cols-3 gap-2.5 pt-1">
-          <button id="day-btn-1" onclick="selectWorkoutDay(1)" class="day-btn py-3 px-3 rounded-xl border text-center transition">
-            <div class="text-[11px] font-bold uppercase tracking-wider opacity-80">Day 1</div>
-            <div class="text-xs sm:text-sm font-extrabold mt-0.5">Push (Chest / Delts / Tri)</div>
+        <div class="grid grid-cols-3 gap-2 pt-1">
+          <button id="day-btn-1" onclick="selectWorkoutDay(1)" class="day-btn p-2.5 sm:p-3 rounded-xl border text-left transition">
+            <div class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider opacity-75">Day 1</div>
+            <div class="text-xs sm:text-sm font-extrabold mt-0.5 truncate">Push &amp; Core</div>
           </button>
-          <button id="day-btn-2" onclick="selectWorkoutDay(2)" class="day-btn py-3 px-3 rounded-xl border text-center transition">
-            <div class="text-[11px] font-bold uppercase tracking-wider opacity-80">Day 2</div>
-            <div class="text-xs sm:text-sm font-extrabold mt-0.5">Pull (Back / Rear Delts / Bi)</div>
+          <button id="day-btn-2" onclick="selectWorkoutDay(2)" class="day-btn p-2.5 sm:p-3 rounded-xl border text-left transition">
+            <div class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider opacity-75">Day 2</div>
+            <div class="text-xs sm:text-sm font-extrabold mt-0.5 truncate">Legs &amp; Posterior</div>
           </button>
-          <button id="day-btn-3" onclick="selectWorkoutDay(3)" class="day-btn py-3 px-3 rounded-xl border text-center transition">
-            <div class="text-[11px] font-bold uppercase tracking-wider opacity-80">Day 3</div>
-            <div class="text-xs sm:text-sm font-extrabold mt-0.5">Legs &amp; Core (Quads / Ham / Glutes)</div>
+          <button id="day-btn-3" onclick="selectWorkoutDay(3)" class="day-btn p-2.5 sm:p-3 rounded-xl border text-left transition">
+            <div class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider opacity-75">Day 3</div>
+            <div class="text-xs sm:text-sm font-extrabold mt-0.5 truncate">Pull &amp; Cond.</div>
           </button>
         </div>
       </div>
 
-      <!-- Active Day Exercises & Set/Rep Logger -->
-      <div id="active-workout-container" class="space-y-4"></div>
+      <!-- Active Workout Exercises List -->
+      <div id="workout-exercises-list" class="space-y-4"></div>
 
-      <!-- Save Session Bar -->
-      <div class="bg-af-card border border-af-border rounded-2xl p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-lg">
-        <div>
-          <h3 class="text-sm font-extrabold text-white">Finish &amp; Archive Today's Session</h3>
-          <p class="text-xs text-slate-400">Saves your completed sets, weights, and % 1RM targets to Workout History below.</p>
+      <!-- Complete Workout Session Button -->
+      <div class="bg-af-card border border-af-border rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="text-center sm:text-left">
+          <h3 class="text-sm font-extrabold text-white">Done with today's session?</h3>
+          <p class="text-xs text-slate-400">Save completed sets &amp; total tonnage to your training log.</p>
         </div>
-        <button onclick="saveCompletedWorkoutSession()" class="px-5 py-3 rounded-xl bg-af-purple hover:bg-af-purpleHover text-white text-sm font-bold shadow-lg shadow-purple-950/60 transition flex items-center justify-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-          <span>Save Workout to History</span>
+        <button onclick="saveWorkoutSession()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-extrabold shadow-lg shadow-emerald-950/50 transition">
+          Save Session to History
         </button>
       </div>
 
-      <!-- Workout History Section -->
-      <div class="bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-af-purpleLight">Training Log</span>
-            <h3 class="text-lg font-extrabold text-white">Saved Workout History</h3>
+      <!-- Collapsible Workout History Log -->
+      <div class="bg-af-card border border-af-border rounded-2xl overflow-hidden">
+        <button onclick="toggleHistoryDrawer()" class="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-af-surface/40 transition">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-af-purple"></span>
+            <span class="text-sm font-extrabold text-white">Workout History Log</span>
+            <span id="history-count-badge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-af-surface text-slate-300 border border-af-border">0</span>
           </div>
-          <span id="history-count-badge" class="px-2.5 py-1 rounded-full text-xs font-bold bg-af-surface border border-af-border text-slate-300 tabular-nums">0 sessions</span>
-        </div>
-        <div id="workout-history-list" class="space-y-3"></div>
+          <svg id="history-chevron" class="w-4 h-4 text-slate-400 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+        <div id="history-drawer" class="hidden border-t border-af-border px-5 py-4 space-y-3"></div>
       </div>
     </section>
 
     <!-- ========================================================= -->
-    <!-- TAB 2: NUTRITION, PHOTO MEAL, TEXT PARSER & SUPPLEMENTS     -->
+    <!-- TAB 2: NUTRITION & SUPPLEMENTS HUB (NO PHOTO UPLOAD)       -->
     <!-- ========================================================= -->
-    <section id="tab-nutrition" class="hidden space-y-6">
+    <section id="view-nutrition" class="hidden space-y-5 animate-fade-in">
 
-      <!-- Dynamic Weight-Linked Calorie & Remaining Macros Card -->
-      <div class="bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-5">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <!-- Weight-Linked Calorie Engine & Remaining Macros Dashboard -->
+      <div class="bg-af-card border border-af-border rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+        <div class="flex flex-wrap items-start justify-between gap-2">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-af-purpleLight">Weight-Linked Calorie Engine</span>
-            <h2 class="text-xl font-extrabold text-white mt-0.5">Daily Targets &amp; Remaining Intake</h2>
-            <p id="calorie-formula-summary" class="text-xs text-slate-400 mt-1 tabular-nums"></p>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-af-purpleLight">Weight-Linked Calorie Engine</span>
+            <h2 class="text-lg sm:text-xl font-extrabold text-white">Daily Macro &amp; Fibre Budget</h2>
+            <p id="calorie-engine-subtitle" class="text-xs text-slate-400 mt-0.5">
+              182cm &bull; 7-Day Avg: <strong class="text-slate-200">89.0 kg</strong> &rarr; Target: <strong class="text-emerald-400">80.0 kg</strong>
+            </p>
           </div>
-
-          <div class="flex flex-wrap items-center gap-2">
-            <label for="nutrition-date-picker" class="text-xs font-bold text-slate-300">Log Date:</label>
-            <input type="date" id="nutrition-date-picker" onchange="changeNutritionDate(this.value)" class="bg-af-surface border border-af-border rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-af-purple tabular-nums">
-            <button onclick="toggleNutritionSettings()" class="px-3 py-2 rounded-xl bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-purple-300 transition">
-              Calorie Formula
-            </button>
+          <div class="px-3 py-1.5 rounded-xl bg-af-surface border border-af-border text-right">
+            <div class="text-[10px] uppercase font-bold text-slate-400">Daily Cut Target</div>
+            <div id="target-kcal-display" class="text-sm sm:text-base font-black text-af-purpleLight">1,850 kcal</div>
           </div>
         </div>
 
-        <!-- Collapsible Formula Settings -->
-        <div id="nutrition-settings-drawer" class="hidden bg-af-dark/80 border border-af-border rounded-xl p-4 space-y-3">
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <!-- Hero Calories Remaining Bar -->
+        <div class="bg-af-surface/90 border border-af-border rounded-xl p-4 space-y-2.5">
+          <div class="flex items-baseline justify-between">
             <div>
-              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Height (cm)</label>
-              <input type="number" id="prof-height" value="182" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-bold text-white tabular-nums">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Calories Remaining</span>
+              <div class="flex items-baseline gap-2 mt-0.5">
+                <span id="rem-kcal-big" class="text-2xl sm:text-3xl font-black text-emerald-400">865</span>
+                <span class="text-xs font-semibold text-slate-400">kcal left today</span>
+              </div>
             </div>
-            <div>
-              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Target Weight (kg)</label>
-              <input type="number" id="prof-target-weight" value="80.0" step="0.5" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-bold text-white tabular-nums">
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Age (yrs)</label>
-              <input type="number" id="prof-age" value="35" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-bold text-white tabular-nums">
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Weight Basis</label>
-              <select id="prof-weight-basis" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-semibold text-white">
-                <option value="avg7" selected>7-Day Avg Weight</option>
-                <option value="latest">Latest Weigh-In</option>
-              </select>
+            <div class="text-right text-xs text-slate-300 font-semibold">
+              <span id="consumed-kcal-text">985</span> / <span id="goal-kcal-text">1,850</span> kcal
             </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Activity Multiplier</label>
-              <select id="prof-activity" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-semibold text-white">
-                <option value="1.375">Lightly Active (1.375x)</option>
-                <option value="1.50" selected>Moderately Active — 3-Day AF Lifting (1.50x)</option>
-                <option value="1.625">Active — High Steps + Lifting (1.625x)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Daily Calorie Deficit</label>
-              <select id="prof-deficit" onchange="saveNutritionProfile()" class="w-full bg-af-surface border border-af-border rounded-lg px-3 py-2 text-sm font-semibold text-white">
-                <option value="350">Lean Recomp (-350 kcal/day)</option>
-                <option value="500" selected>Steady Cut (-500 kcal/day)</option>
-                <option value="650">Faster Cut (-650 kcal/day)</option>
-              </select>
-            </div>
+          <div class="w-full h-3 rounded-full bg-af-dark overflow-hidden border border-af-border/60">
+            <div id="bar-kcal" class="h-full bg-gradient-to-r from-af-purple to-emerald-400 rounded-full transition-all duration-300" style="width: 53%;"></div>
           </div>
         </div>
 
-        <!-- Remaining Calories Hero Strip -->
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <div class="col-span-2 sm:col-span-1 bg-af-surface border border-af-border rounded-xl p-3.5">
-            <div class="text-[11px] font-bold uppercase text-slate-400">Calories Left</div>
-            <div id="rem-kcal" class="text-2xl font-black text-emerald-400 mt-1 tabular-nums">0</div>
-            <div id="sub-kcal" class="text-[11px] text-slate-400 mt-0.5 tabular-nums">0 / 0 kcal</div>
+        <!-- 4 Macro Breakdown Cards: Protein, Carbs, Fats, Fibre -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <!-- Protein -->
+          <div class="bg-af-surface/70 border border-af-border rounded-xl p-3 space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-blue-300">Protein</span>
+              <span id="rem-pro" class="font-extrabold text-white">76g left</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-af-dark overflow-hidden">
+              <div id="bar-pro" class="h-full bg-blue-500 rounded-full transition-all duration-300" style="width: 60%;"></div>
+            </div>
+            <div id="sub-pro" class="text-[11px] text-slate-400 font-medium">114 / 190g</div>
           </div>
-          <div class="bg-af-surface border border-af-border rounded-xl p-3.5">
-            <div class="text-[11px] font-bold uppercase text-blue-400">Protein Left</div>
-            <div id="rem-protein" class="text-xl font-black text-white mt-1 tabular-nums">0g</div>
-            <div id="sub-protein" class="text-[11px] text-slate-400 mt-0.5 tabular-nums">0 / 0g</div>
+
+          <!-- Carbs -->
+          <div class="bg-af-surface/70 border border-af-border rounded-xl p-3 space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-amber-300">Carbs</span>
+              <span id="rem-carb" class="font-extrabold text-white">77g left</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-af-dark overflow-hidden">
+              <div id="bar-carb" class="h-full bg-amber-400 rounded-full transition-all duration-300" style="width: 53%;"></div>
+            </div>
+            <div id="sub-carb" class="text-[11px] text-slate-400 font-medium">88 / 165g</div>
           </div>
-          <div class="bg-af-surface border border-af-border rounded-xl p-3.5">
-            <div class="text-[11px] font-bold uppercase text-amber-400">Carbs Left</div>
-            <div id="rem-carbs" class="text-xl font-black text-white mt-1 tabular-nums">0g</div>
-            <div id="sub-carbs" class="text-[11px] text-slate-400 mt-0.5 tabular-nums">0 / 0g</div>
+
+          <!-- Fats -->
+          <div class="bg-af-surface/70 border border-af-border rounded-xl p-3 space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-rose-300">Fats</span>
+              <span id="rem-fat" class="font-extrabold text-white">28g left</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-af-dark overflow-hidden">
+              <div id="bar-fat" class="h-full bg-rose-400 rounded-full transition-all duration-300" style="width: 42%;"></div>
+            </div>
+            <div id="sub-fat" class="text-[11px] text-slate-400 font-medium">20 / 48g</div>
           </div>
-          <div class="bg-af-surface border border-af-border rounded-xl p-3.5">
-            <div class="text-[11px] font-bold uppercase text-rose-400">Fats Left</div>
-            <div id="rem-fats" class="text-xl font-black text-white mt-1 tabular-nums">0g</div>
-            <div id="sub-fats" class="text-[11px] text-slate-400 mt-0.5 tabular-nums">0 / 0g</div>
-          </div>
-          <div class="bg-af-surface border border-af-border rounded-xl p-3.5">
-            <div class="text-[11px] font-bold uppercase text-emerald-400">Fibre Left</div>
-            <div id="rem-fibre" class="text-xl font-black text-white mt-1 tabular-nums">0g</div>
-            <div id="sub-fibre" class="text-[11px] text-slate-400 mt-0.5 tabular-nums">0 / 0g</div>
+
+          <!-- Fibre -->
+          <div class="bg-af-surface/70 border border-af-border rounded-xl p-3 space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-emerald-300">Fibre</span>
+              <span id="rem-fib" class="font-extrabold text-white">16g left</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-af-dark overflow-hidden">
+              <div id="bar-fib" class="h-full bg-emerald-400 rounded-full transition-all duration-300" style="width: 47%;"></div>
+            </div>
+            <div id="sub-fib" class="text-[11px] text-slate-400 font-medium">14 / 30g</div>
           </div>
         </div>
       </div>
 
       <!-- Smart Text Food Macro Calculator -->
-      <div class="bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
+      <div class="bg-af-card border border-af-border rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
         <div>
-          <span class="text-xs font-bold uppercase tracking-wider text-af-purpleLight">Quick Text Lookup</span>
-          <h3 class="text-lg font-extrabold text-white mt-0.5">Smart Text Food Macro Calculator</h3>
-          <p class="text-xs text-slate-400 mt-0.5">Type an item like <span class="text-slate-200 font-semibold">"200ml low fat meiji milk"</span>, <span class="text-slate-200 font-semibold">"180g chicken breast"</span>, or <span class="text-slate-200 font-semibold">"2 eggs"</span>.</p>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-af-purpleLight">Instant SG &amp; Fitness Food Parser</span>
+          <h3 class="text-lg font-extrabold text-white">Smart Text Food Macro Calculator</h3>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Type any food with quantity (e.g., <span class="text-slate-200 font-semibold">"200ml low fat meiji milk"</span> or <span class="text-slate-200 font-semibold">"1 scoop whey + 40g oats"</span>).
+          </p>
         </div>
 
-        <div class="flex gap-2">
-          <input type="text" id="text-food-query" onkeydown="if(event.key==='Enter'){calculateTextFoodMacros();}" placeholder="e.g., 200ml low fat meiji milk" class="flex-1 bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-semibold text-white placeholder-slate-400 focus:outline-none focus:border-af-purple">
-          <button onclick="calculateTextFoodMacros()" class="px-4 py-2.5 rounded-xl bg-af-purple hover:bg-af-purpleHover text-white text-sm font-bold transition shrink-0">
-            Calculate
+        <!-- Text Input + Parse Button -->
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <input
+            type="text"
+            id="food-text-input"
+            placeholder="e.g. 200ml low fat meiji milk"
+            onkeydown="if(event.key==='Enter') parseFoodText()"
+            class="flex-1 bg-af-surface border border-af-border focus:border-af-purple rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none"
+          />
+          <button onclick="parseFoodText()" class="px-5 py-3 rounded-xl bg-af-purple hover:bg-af-purpleHover text-white text-sm font-bold shadow-lg shadow-purple-950/50 transition shrink-0">
+            Calculate Macros
           </button>
         </div>
 
-        <!-- Quick Sample Chips -->
+        <!-- Quick Tap Preset Chips -->
         <div class="flex flex-wrap gap-1.5">
-          <button onclick="quickFillFoodQuery('200ml low fat meiji milk')" class="px-2.5 py-1 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-[11px] font-semibold text-slate-300 transition">200ml low fat meiji milk</button>
-          <button onclick="quickFillFoodQuery('150g white rice')" class="px-2.5 py-1 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-[11px] font-semibold text-slate-300 transition">150g white rice</button>
-          <button onclick="quickFillFoodQuery('200g chicken breast')" class="px-2.5 py-1 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-[11px] font-semibold text-slate-300 transition">200g chicken breast</button>
-          <button onclick="quickFillFoodQuery('1 scoop whey protein')" class="px-2.5 py-1 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-[11px] font-semibold text-slate-300 transition">1 scoop whey</button>
-        </div>
-
-        <!-- Calculated Preview Card -->
-        <div class="space-y-3 bg-af-surface/70 border border-af-border rounded-xl p-3.5">
-          <div class="flex items-center justify-between gap-2">
-            <span class="text-[11px] font-bold uppercase text-slate-400">Calculated Item</span>
-            <span id="text-food-match-badge" class="text-[11px] font-bold text-emerald-400">Ready</span>
-          </div>
-          <input type="text" id="text-food-name" value="200ml Low Fat Meiji Milk" class="w-full bg-af-card border border-af-border rounded-lg px-3 py-2 text-sm font-semibold text-white">
-
-          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
-            <div>
-              <label for="text-food-kcal" class="block text-[11px] font-bold text-slate-300 mb-1">Calories</label>
-              <input type="number" id="text-food-kcal" value="96" class="w-full bg-af-card border border-af-border rounded-lg px-2.5 py-1.5 text-sm font-bold text-white tabular-nums">
-            </div>
-            <div>
-              <label for="text-food-protein" class="block text-[11px] font-bold text-blue-400 mb-1">Protein (g)</label>
-              <input type="number" id="text-food-protein" value="6.8" step="0.1" class="w-full bg-af-card border border-af-border rounded-lg px-2.5 py-1.5 text-sm font-bold text-blue-300 tabular-nums">
-            </div>
-            <div>
-              <label for="text-food-carbs" class="block text-[11px] font-bold text-amber-400 mb-1">Carbs (g)</label>
-              <input type="number" id="text-food-carbs" value="10.2" step="0.1" class="w-full bg-af-card border border-af-border rounded-lg px-2.5 py-1.5 text-sm font-bold text-amber-300 tabular-nums">
-            </div>
-            <div>
-              <label for="text-food-fats" class="block text-[11px] font-bold text-rose-400 mb-1">Fats (g)</label>
-              <input type="number" id="text-food-fats" value="2.8" step="0.1" class="w-full bg-af-card border border-af-border rounded-lg px-2.5 py-1.5 text-sm font-bold text-rose-300 tabular-nums">
-            </div>
-            <div>
-              <label for="text-food-fibre" class="block text-[11px] font-bold text-emerald-400 mb-1">Fibre (g)</label>
-              <input type="number" id="text-food-fibre" value="0.0" step="0.1" class="w-full bg-af-card border border-af-border rounded-lg px-2.5 py-1.5 text-sm font-bold text-emerald-300 tabular-nums">
-            </div>
-          </div>
-
-          <button onclick="logCalculatedTextFood()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold transition">
-            + Add Food to Today's Log
+          <button onclick="quickParseFood('200ml low fat meiji milk')" class="px-2.5 py-1 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-[11px] font-semibold text-slate-300 transition">
+            + 200ml low fat meiji milk
+          </button>
+          <button onclick="quickParseFood('150g chicken breast')" class="px-2.5 py-1 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-[11px] font-semibold text-slate-300 transition">
+            + 150g chicken breast
+          </button>
+          <button onclick="quickParseFood('1 scoop whey + 40g oats')" class="px-2.5 py-1 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-[11px] font-semibold text-slate-300 transition">
+            + 1 scoop whey + 40g oats
+          </button>
+          <button onclick="quickParseFood('200g NTUC roasted chicken')" class="px-2.5 py-1 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-[11px] font-semibold text-slate-300 transition">
+            + 200g NTUC roasted chicken
+          </button>
+          <button onclick="quickParseFood('100g shelled edamame')" class="px-2.5 py-1 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-[11px] font-semibold text-slate-300 transition">
+            + 100g shelled edamame
           </button>
         </div>
-      </div>
 
-      <!-- Logged Meals List for Selected Day -->
-      <div class="bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-3">
-        <div class="flex items-center justify-between">
-          <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-af-purpleLight">Daily Intake</span>
-            <h3 class="text-lg font-extrabold text-white">Logged Foods</h3>
+        <!-- Parsed Preview & Editable Confirm Box -->
+        <div id="parsed-food-preview" class="bg-af-surface/90 border border-af-purple/40 rounded-xl p-4 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-af-purpleLight">Calculated Macros (Editable)</span>
+            <span id="parsed-match-hint" class="text-[11px] text-slate-400">Ready to log</span>
           </div>
-          <span id="food-log-count" class="text-xs font-bold text-slate-400 tabular-nums">0 items</span>
+
+          <input
+            type="text"
+            id="preview-food-name"
+            value="200ml Low Fat Meiji Milk"
+            class="w-full bg-af-dark border border-af-border rounded-lg px-3 py-2 text-sm font-bold text-white focus:outline-none focus:border-af-purple"
+          />
+
+          <div class="grid grid-cols-5 gap-2">
+            <div class="bg-af-dark border border-af-border rounded-lg p-2 text-center">
+              <label class="block text-[10px] font-bold uppercase text-slate-400">Kcal</label>
+              <input type="number" id="preview-food-kcal" value="96" class="w-full bg-transparent text-center text-sm font-extrabold text-white mt-0.5 focus:outline-none" />
+            </div>
+            <div class="bg-af-dark border border-af-border rounded-lg p-2 text-center">
+              <label class="block text-[10px] font-bold uppercase text-blue-300">Prot (g)</label>
+              <input type="number" step="0.1" id="preview-food-pro" value="6.8" class="w-full bg-transparent text-center text-sm font-extrabold text-blue-300 mt-0.5 focus:outline-none" />
+            </div>
+            <div class="bg-af-dark border border-af-border rounded-lg p-2 text-center">
+              <label class="block text-[10px] font-bold uppercase text-amber-300">Carb (g)</label>
+              <input type="number" step="0.1" id="preview-food-carb" value="10.2" class="w-full bg-transparent text-center text-sm font-extrabold text-amber-300 mt-0.5 focus:outline-none" />
+            </div>
+            <div class="bg-af-dark border border-af-border rounded-lg p-2 text-center">
+              <label class="block text-[10px] font-bold uppercase text-rose-300">Fat (g)</label>
+              <input type="number" step="0.1" id="preview-food-fat" value="2.8" class="w-full bg-transparent text-center text-sm font-extrabold text-rose-300 mt-0.5 focus:outline-none" />
+            </div>
+            <div class="bg-af-dark border border-af-border rounded-lg p-2 text-center">
+              <label class="block text-[10px] font-bold uppercase text-emerald-300">Fibre (g)</label>
+              <input type="number" step="0.1" id="preview-food-fib" value="0" class="w-full bg-transparent text-center text-sm font-extrabold text-emerald-300 mt-0.5 focus:outline-none" />
+            </div>
+          </div>
+
+          <button onclick="addPreviewFoodToToday()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-extrabold shadow-md transition">
+            + Log Meal to Today's Calories
+          </button>
         </div>
-        <div id="food-log-list" class="space-y-2.5"></div>
+
+        <!-- Today's Logged Meals List -->
+        <div class="pt-2 border-t border-af-border space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Today's Logged Meals</h4>
+            <span id="meals-count-label" class="text-xs font-semibold text-slate-400">0 items</span>
+          </div>
+          <div id="today-meals-list" class="space-y-2"></div>
+        </div>
       </div>
 
-      <!-- Daily Supplements Dropdown & Checklist -->
-      <div class="bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <!-- Daily Supplements Dropdown & Stack Checklist -->
+      <div id="supplements-section" class="bg-af-card border border-af-border rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-af-purpleLight">Daily Stack</span>
-            <h3 class="text-lg font-extrabold text-white mt-0.5">Supplements Taken Today</h3>
-            <p class="text-xs text-slate-400 mt-0.5">Select from the dropdown or toggle items directly in your daily supplement checklist.</p>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-af-purpleLight">Daily Recovery &amp; Joint Stack</span>
+            <h3 class="text-lg font-extrabold text-white">Supplements Checklist</h3>
           </div>
-          <span id="supp-progress-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-af-purple/20 text-af-purpleLight border border-af-purple/40 tabular-nums self-start sm:self-auto">
-            0 / 10 taken
+          <span id="supps-progress-pill" class="px-3 py-1 rounded-full text-xs font-extrabold bg-af-purple/20 text-af-purpleLight border border-af-purple/40">
+            0 / 10 Taken
           </span>
         </div>
 
-        <!-- Dropdown Selector to Mark Supplement Taken -->
+        <!-- Dropdown Quick Log -->
         <div class="flex flex-col sm:flex-row gap-2.5">
           <select id="supplement-dropdown" class="flex-1 bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-semibold text-white focus:outline-none focus:border-af-purple">
-            <option value="Multi vitamins">Multi vitamins</option>
-            <option value="UC II">UC II</option>
-            <option value="Panax ginseng">Panax ginseng</option>
-            <option value="Omega 3">Omega 3</option>
-            <option value="Vit K + D">Vit K + D</option>
-            <option value="Cherry tart">Cherry tart</option>
-            <option value="Magnesium glycinate">Magnesium glycinate</option>
-            <option value="Hyaluronic acid powder">Hyaluronic acid powder</option>
-            <option value="Preworkout">Preworkout</option>
-            <option value="Sunflower lecithin">Sunflower lecithin</option>
+            <option value="">-- Select supplement taken --</option>
           </select>
-          <button onclick="markSupplementFromDropdown()" class="px-4 py-2.5 rounded-xl bg-af-purple hover:bg-af-purpleHover text-white text-sm font-bold transition shrink-0">
-            Mark Taken
+          <button onclick="logSupplementFromDropdown()" class="px-4 py-2.5 rounded-xl bg-af-purple hover:bg-af-purpleHover text-white text-xs sm:text-sm font-bold transition shrink-0">
+            Mark Taken Now
           </button>
         </div>
 
-        <!-- Interactive Checklist Grid for All 10 Supplements -->
-        <div id="supplements-checklist" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5"></div>
+        <!-- 10-Item Interactive Grid -->
+        <div id="supplements-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
       </div>
     </section>
 
     <!-- ========================================================= -->
-    <!-- TAB 3: 1RM HUB & ESTIMATOR (EPLEY / BRZYCKI)               -->
+    <!-- TAB 3: 1RM HUB & STRENGTH ESTIMATOR                       -->
     <!-- ========================================================= -->
-    <section id="tab-1rm" class="hidden space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <section id="view-1rm" class="hidden space-y-5 animate-fade-in">
 
-        <!-- 1RM Estimator Calculator -->
-        <div class="lg:col-span-5 bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
+      <!-- Interactive 1RM Estimator -->
+      <div class="bg-af-card border border-af-border rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-af-purpleLight">Epley &amp; Brzycki Formula</span>
+          <h2 class="text-lg sm:text-xl font-extrabold text-white">1-Rep Max Estimator</h2>
+          <p class="text-xs text-slate-400">Calculate your estimated 1RM and view working load percentages.</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-af-purpleLight">Strength Calculator</span>
-            <h2 class="text-xl font-extrabold text-white mt-0.5">1RM Estimator</h2>
-            <p class="text-xs text-slate-400 mt-0.5">Estimate your 1-rep max from any working weight and reps completed.</p>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Weight Lifted (kg)</label>
+            <input type="number" id="calc-1rm-weight" value="80" step="2.5" oninput="calculate1RMHub()" class="w-full bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-base font-extrabold text-white focus:outline-none focus:border-af-purple" />
           </div>
-
-          <div class="space-y-3">
-            <div>
-              <label for="est-lift-select" class="block text-xs font-bold text-slate-300 mb-1">Lift / Exercise</label>
-              <select id="est-lift-select" onchange="update1RMEstimatePreview()" class="w-full bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-semibold text-white">
-                <option value="Barbell Bench Press">Barbell Bench Press</option>
-                <option value="Barbell Back Squat">Barbell Back Squat</option>
-                <option value="Romanian Deadlift">Romanian Deadlift</option>
-                <option value="Overhead Press">Overhead Press</option>
-                <option value="Chest-Supported Row">Chest-Supported Row</option>
-                <option value="Lat Pulldown">Lat Pulldown</option>
-              </select>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label for="est-weight-input" class="block text-xs font-bold text-slate-300 mb-1">Weight Lifted (kg)</label>
-                <input type="number" id="est-weight-input" value="70" step="2.5" min="1" oninput="update1RMEstimatePreview()" class="w-full bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-bold text-white tabular-nums">
-              </div>
-              <div>
-                <label for="est-reps-input" class="block text-xs font-bold text-slate-300 mb-1">Reps Completed (1–15)</label>
-                <input type="number" id="est-reps-input" value="6" min="1" max="15" oninput="update1RMEstimatePreview()" class="w-full bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-bold text-white tabular-nums">
-              </div>
-            </div>
-
-            <div>
-              <label for="est-formula-select" class="block text-xs font-bold text-slate-300 mb-1">Estimation Formula</label>
-              <select id="est-formula-select" onchange="update1RMEstimatePreview()" class="w-full bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-semibold text-white">
-                <option value="epley" selected>Epley Formula: w &times; (1 + reps / 30)</option>
-                <option value="brzycki">Brzycki Formula: w &times; 36 / (37 - reps)</option>
-                <option value="average">Average of Epley &amp; Brzycki</option>
-              </select>
-            </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Reps Completed</label>
+            <input type="number" id="calc-1rm-reps" value="6" min="1" max="20" oninput="calculate1RMHub()" class="w-full bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-base font-extrabold text-white focus:outline-none focus:border-af-purple" />
           </div>
-
-          <div class="bg-af-surface border border-af-border rounded-xl p-4 flex items-center justify-between">
-            <div>
-              <div class="text-xs font-bold uppercase text-slate-400">Estimated 1RM</div>
-              <div id="est-1rm-result" class="text-3xl font-black text-af-purpleLight mt-0.5 tabular-nums">84.0 kg</div>
-            </div>
-            <button onclick="applyEstimated1RM()" class="px-4 py-2.5 rounded-xl bg-af-purple hover:bg-af-purpleHover text-white text-xs font-bold transition">
-              Save to 1RM
-            </button>
+          <div class="col-span-2 sm:col-span-1 bg-af-surface border border-af-purple/40 rounded-xl p-3 flex flex-col justify-center items-center">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-af-purpleLight">Estimated 1RM</span>
+            <span id="calc-1rm-output" class="text-2xl font-black text-white mt-0.5">95.0 kg</span>
           </div>
         </div>
 
-        <!-- Recorded 1RMs & % Training Reference Table -->
-        <div class="lg:col-span-7 bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
-          <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-af-purpleLight">Recorded Maxes</span>
-            <h2 class="text-xl font-extrabold text-white mt-0.5">Your 1RM Table &amp; % Zones</h2>
-            <p class="text-xs text-slate-400 mt-0.5">Updating any 1RM automatically recalculates your working weights in the Workout tab (rounded to 2.5 kg).</p>
-          </div>
-          <div id="one-rm-cards-list" class="space-y-3"></div>
+        <!-- 60% - 95% Training Load Table -->
+        <div id="one-rm-percentages-grid" class="grid grid-cols-4 sm:grid-cols-8 gap-2 pt-1"></div>
+      </div>
+
+      <!-- Saved 1RM Profiles Driving Workout Tab -->
+      <div class="bg-af-card border border-af-border rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-af-purpleLight">Auto-Load Sync</span>
+          <h3 class="text-lg font-extrabold text-white">Saved Main Lift 1RMs</h3>
+          <p class="text-xs text-slate-400">Updating any value below automatically recalculates your prescribed kg in the Workout tab.</p>
         </div>
 
+        <div id="saved-1rm-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
       </div>
     </section>
 
     <!-- ========================================================= -->
-    <!-- TAB 4: DAILY VITALS & BODY WEIGHT TREND                    -->
+    <!-- TAB 4: VITALS & BODYWEIGHT PROGRESS                       -->
     <!-- ========================================================= -->
-    <section id="tab-vitals" class="hidden space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <section id="view-vitals" class="hidden space-y-5 animate-fade-in">
 
-        <!-- Log Daily Weight & Vitals Form -->
-        <div class="lg:col-span-5 bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
+      <!-- Cut Goal Progress Card -->
+      <div class="bg-af-card border border-af-border rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-af-purpleLight">Morning Check-In</span>
-            <h2 class="text-xl font-extrabold text-white mt-0.5">Log Weight &amp; Vitals</h2>
-            <p class="text-xs text-slate-400 mt-0.5">Your weight updates your 7-day rolling average and daily calorie target.</p>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-af-purpleLight">89.0 kg &rarr; 80.0 kg Cut Tracker</span>
+            <h2 class="text-lg sm:text-xl font-extrabold text-white">Morning Weight &amp; Trend</h2>
           </div>
-
-          <form onsubmit="saveVitalEntry(event)" class="space-y-3">
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label for="vital-date" class="block text-xs font-bold text-slate-300 mb-1">Date</label>
-                <input type="date" id="vital-date" required class="w-full bg-af-surface border border-af-border rounded-xl px-3 py-2 text-sm font-semibold text-white tabular-nums">
-              </div>
-              <div>
-                <label for="vital-weight" class="block text-xs font-bold text-slate-300 mb-1">Body Weight (kg)</label>
-                <input type="number" id="vital-weight" step="0.1" min="35" max="250" value="89.0" required class="w-full bg-af-surface border border-af-border rounded-xl px-3 py-2 text-sm font-bold text-white tabular-nums">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label for="vital-hr" class="block text-xs font-bold text-slate-300 mb-1">Resting HR (bpm)</label>
-                <input type="number" id="vital-hr" min="35" max="140" value="62" class="w-full bg-af-surface border border-af-border rounded-xl px-3 py-2 text-sm font-semibold text-white tabular-nums">
-              </div>
-              <div>
-                <label for="vital-sleep" class="block text-xs font-bold text-slate-300 mb-1">Sleep (hrs)</label>
-                <input type="number" id="vital-sleep" step="0.5" min="0" max="16" value="7.5" class="w-full bg-af-surface border border-af-border rounded-xl px-3 py-2 text-sm font-semibold text-white tabular-nums">
-              </div>
-            </div>
-
-            <div>
-              <label for="vital-notes" class="block text-xs font-bold text-slate-300 mb-1">Notes</label>
-              <input type="text" id="vital-notes" placeholder="e.g., Fasted morning weigh-in after AF Bugis" class="w-full bg-af-surface border border-af-border rounded-xl px-3 py-2 text-sm font-semibold text-white placeholder-slate-400">
-            </div>
-
-            <button type="submit" class="w-full py-3 rounded-xl bg-af-purple hover:bg-af-purpleHover text-white text-sm font-bold shadow-lg shadow-purple-950/60 transition">
-              Save Daily Vitals
-            </button>
-          </form>
-        </div>
-
-        <!-- Weight Summary & History -->
-        <div class="lg:col-span-7 bg-af-card border border-af-border rounded-2xl p-5 shadow-xl space-y-4">
-          <div class="grid grid-cols-3 gap-3">
-            <div class="bg-af-surface border border-af-border rounded-xl p-3.5">
-              <div class="text-[11px] font-bold uppercase text-slate-400">Latest Weight</div>
-              <div id="vital-latest-kg" class="text-2xl font-black text-white mt-1 tabular-nums">89.0 kg</div>
-            </div>
-            <div class="bg-af-surface border border-af-border rounded-xl p-3.5">
-              <div class="text-[11px] font-bold uppercase text-af-purpleLight">7-Day Avg</div>
-              <div id="vital-avg7-kg" class="text-2xl font-black text-af-purpleLight mt-1 tabular-nums">89.0 kg</div>
-            </div>
-            <div class="bg-af-surface border border-af-border rounded-xl p-3.5">
-              <div class="text-[11px] font-bold uppercase text-emerald-400">To 80.0 kg Goal</div>
-              <div id="vital-remaining-kg" class="text-2xl font-black text-emerald-400 mt-1 tabular-nums">9.0 kg</div>
-            </div>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-300 mb-2.5">Recent Weigh-Ins</h3>
-            <div id="vitals-history-list" class="space-y-2"></div>
+          <div class="px-3 py-1.5 rounded-xl bg-af-surface border border-af-border text-right">
+            <div class="text-[10px] uppercase font-bold text-slate-400">7-Day Rolling Avg</div>
+            <div id="vitals-avg-display" class="text-base font-black text-emerald-400">89.0 kg</div>
           </div>
         </div>
 
+        <!-- Progress toward 80.0 kg -->
+        <div class="bg-af-surface/80 border border-af-border rounded-xl p-3.5 space-y-2">
+          <div class="flex justify-between text-xs font-bold">
+            <span class="text-slate-400">Start: 89.0 kg</span>
+            <span id="vitals-to-go-text" class="text-af-purpleLight">9.0 kg to target</span>
+            <span class="text-emerald-400">Goal: 80.0 kg</span>
+          </div>
+          <div class="w-full h-3 rounded-full bg-af-dark overflow-hidden border border-af-border/60">
+            <div id="vitals-progress-bar" class="h-full bg-gradient-to-r from-af-purple to-emerald-400 rounded-full transition-all duration-300" style="width: 5%;"></div>
+          </div>
+        </div>
+
+        <!-- Visual SVG Weight Trend Chart -->
+        <div class="bg-af-dark/80 border border-af-border rounded-xl p-3">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Weight Trend (kg)</div>
+          <div id="weight-chart-container" class="w-full h-36"></div>
+        </div>
+
+        <!-- Log Morning Weight Form -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+          <input type="date" id="vital-date-input" class="bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-semibold text-white focus:outline-none focus:border-af-purple" />
+          <input type="number" step="0.1" id="vital-weight-input" placeholder="Weight (kg) e.g. 88.6" class="bg-af-surface border border-af-border rounded-xl px-3.5 py-2.5 text-sm font-bold text-white placeholder-slate-500 focus:outline-none focus:border-af-purple" />
+          <button onclick="logMorningWeight()" class="py-2.5 px-4 rounded-xl bg-af-purple hover:bg-af-purpleHover text-white text-sm font-extrabold shadow-lg shadow-purple-950/50 transition">
+            Log Morning Weight
+          </button>
+        </div>
+
+        <!-- Weight History Log -->
+        <div class="pt-2 border-t border-af-border space-y-2">
+          <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Weigh-In History</h4>
+          <div id="vitals-history-list" class="space-y-2"></div>
+        </div>
       </div>
     </section>
 
@@ -569,43 +569,186 @@
   <!-- ========================================================= -->
   <!-- DOCKED SMART REST TIMER BAR                               -->
   <!-- ========================================================= -->
-  <div id="docked-rest-bar" class="fixed bottom-0 inset-x-0 z-40 bg-af-card/95 backdrop-blur-md border-t border-af-border shadow-2xl">
-    <div class="w-full h-1 bg-af-surface overflow-hidden">
-      <div id="rest-progress-bar" class="h-full bg-af-purple transition-all duration-300" style="width: 100%;"></div>
-    </div>
-
-    <div class="max-w-6xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <button id="rest-toggle-btn" onclick="toggleRestTimer()" class="px-4 py-2 rounded-xl bg-af-purple hover:bg-af-purpleHover text-white text-xs sm:text-sm font-extrabold transition flex items-center gap-1.5 shadow-md">
-          <span id="rest-toggle-icon">&#9654;</span>
-          <span id="rest-toggle-label">Rest</span>
+  <div class="fixed bottom-0 inset-x-0 z-40 bg-af-card/95 backdrop-blur-lg border-t border-af-border shadow-2xl">
+    <div class="max-w-4xl mx-auto px-4 py-2.5 flex items-center justify-between gap-2">
+      <!-- Timer Display + Start/Pause -->
+      <div class="flex items-center gap-2.5">
+        <button id="rest-start-btn" onclick="toggleRestTimer()" class="px-3.5 py-2 rounded-xl bg-af-purple hover:bg-af-purpleHover text-white text-xs sm:text-sm font-extrabold flex items-center gap-1.5 shadow-md transition">
+          <svg id="rest-play-icon" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          <span id="rest-btn-label">Rest</span>
         </button>
 
         <div>
-          <div class="flex items-center gap-2">
-            <span id="rest-countdown-display" class="text-xl sm:text-2xl font-black text-white tracking-wider tabular-nums">01:30</span>
-            <span id="rest-status-label" class="text-[11px] font-bold uppercase px-2 py-0.5 rounded-md bg-af-surface text-slate-300">READY</span>
+          <div class="flex items-baseline gap-1.5">
+            <span id="rest-timer-display" class="text-xl sm:text-2xl font-black tracking-tight text-white tabular-nums">01:30</span>
+            <span id="rest-timer-status" class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">READY</span>
           </div>
         </div>
       </div>
 
-      <!-- Adjust & Preset Buttons -->
-      <div class="flex items-center gap-1.5 flex-wrap">
-        <button onclick="adjustRestTimer(-15)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-200 transition tabular-nums">-15s</button>
-        <button onclick="adjustRestTimer(15)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-200 transition tabular-nums">+15s</button>
-        <button onclick="setRestPreset(60)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-300 transition tabular-nums">60s</button>
-        <button onclick="setRestPreset(90)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-300 transition tabular-nums">90s</button>
-        <button onclick="setRestPreset(120)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-300 transition tabular-nums">2m</button>
-        <button onclick="setRestPreset(180)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-300 transition tabular-nums">3m</button>
+      <!-- Adjust & Preset Pills -->
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+        <button onclick="adjustRestSeconds(-15)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-300">-15s</button>
+        <button onclick="adjustRestSeconds(15)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-300">+15s</button>
+        <button onclick="setRestPreset(60)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-200">60s</button>
+        <button onclick="setRestPreset(90)" class="px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-200">90s</button>
+        <button onclick="setRestPreset(120)" class="hidden sm:inline-block px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-200">2m</button>
+        <button onclick="setRestPreset(180)" class="hidden sm:inline-block px-2.5 py-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-200">3m</button>
+        <button onclick="resetRestTimer()" title="Reset Timer" class="p-1.5 rounded-lg bg-af-surface hover:bg-slate-700 border border-af-border text-slate-400 hover:text-white">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
+          </svg>
+        </button>
       </div>
     </div>
   </div>
 
+  <!-- ========================================================= -->
+  <!-- APPLICATION LOGIC                                         -->
+  <!-- ========================================================= -->
   <script>
     // ---------------------------------------------------------
-    // CONSTANTS & DEFAULT DATA
+    // 1. PWA MANIFEST & ANDROID APP SHORTCUTS
     // ---------------------------------------------------------
-    const STORAGE_KEY = 'af_sg_strength_fuel_v1';
+    (function setupPWAManifest() {
+      const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#7C3AED"/><path d="M144 152v208M368 152v208M88 192v128M424 192v128M144 256h224" stroke="#FFFFFF" stroke-width="38" stroke-linecap="round"/></svg>`;
+      const iconUri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgIcon);
+      const baseUrl = window.location.origin + window.location.pathname;
+
+      const manifest = {
+        name: 'AF SG Strength & Fuel',
+        short_name: 'AF SG Fuel',
+        start_url: baseUrl,
+        display: 'standalone',
+        background_color: '#0B0F19',
+        theme_color: '#7C3AED',
+        icons: [
+          { src: iconUri, sizes: '192x192', type: 'image/svg+xml' },
+          { src: iconUri, sizes: '512x512', type: 'image/svg+xml' }
+        ],
+        shortcuts: [
+          { name: 'Log Food', short_name: 'Log Food', url: baseUrl + '?tab=nutrition', icons: [{ src: iconUri, sizes: '192x192', type: 'image/svg+xml' }] },
+          { name: 'Morning Weight', short_name: 'Weight', url: baseUrl + '?tab=vitals', icons: [{ src: iconUri, sizes: '192x192', type: 'image/svg+xml' }] },
+          { name: 'Supplements', short_name: 'Supps', url: baseUrl + '?tab=supplements', icons: [{ src: iconUri, sizes: '192x192', type: 'image/svg+xml' }] },
+          { name: 'Start Workout', short_name: 'Workout', url: baseUrl + '?tab=workout', icons: [{ src: iconUri, sizes: '192x192', type: 'image/svg+xml' }] }
+        ]
+      };
+
+      const manifestUri = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
+      const linkEl = document.getElementById('pwa-manifest');
+      if (linkEl) linkEl.setAttribute('href', manifestUri);
+    })();
+
+    // ---------------------------------------------------------
+    // 2. DATA STRUCTURES & OUTLET EXERCISE POOLS
+    // ---------------------------------------------------------
+    const STORAGE_KEY = 'af_sg_strength_fuel_v2';
+
+    const OUTLET_NOTES = {
+      'Yishun': '3 Power Racks, Dual Adjustable Pulley, Plate-Loaded Hack Squat & Dumbbells up to 50kg.',
+      'Tiong Bahru': '2 Squat Racks, Smith Machine, Cable Crossover, Seated Leg Press & Dumbbells up to 45kg.',
+      'Bugis': '4 Half-Racks, Lifting Platforms, Functional Turf, Concept2 Rowers & Dumbbells up to 50kg.'
+    };
+
+    // Exercise Pools by Day & Slot (each slot has multiple equipment-matched variants for Refresh & Swap)
+    const EXERCISE_POOLS = {
+      1: [
+        // Slot 0: Primary Horizontal Push
+        [
+          { name: 'Barbell Bench Press', muscle: 'Chest • Primary', liftKey: 'Bench Press', pct: 0.78, sets: 4, reps: '6–8', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Incline Barbell Bench Press', muscle: 'Upper Chest', liftKey: 'Bench Press', pct: 0.72, sets: 4, reps: '6–8', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Flat Dumbbell Bench Press', muscle: 'Chest • Stabilizers', liftKey: 'Bench Press', pct: 0.68, sets: 4, reps: '8–10', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Smith Machine Incline Press', muscle: 'Upper Chest', liftKey: 'Bench Press', pct: 0.74, sets: 4, reps: '8–10', outlets: ['Tiong Bahru', 'Yishun'] }
+        ],
+        // Slot 1: Vertical Shoulder Press
+        [
+          { name: 'Standing Overhead Barbell Press', muscle: 'Shoulders • Primary', liftKey: 'Overhead Press', pct: 0.75, sets: 3, reps: '6–8', outlets: ['Yishun', 'Bugis', 'Tiong Bahru'] },
+          { name: 'Seated Dumbbell Shoulder Press', muscle: 'Front & Side Delts', liftKey: 'Overhead Press', pct: 0.68, sets: 3, reps: '8–10', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Landmine Single-Arm Press', muscle: 'Shoulders & Core', liftKey: 'Overhead Press', pct: 0.62, sets: 3, reps: '10 / side', outlets: ['Bugis', 'Yishun'] }
+        ],
+        // Slot 2: Secondary Chest / Incline
+        [
+          { name: 'Incline Dumbbell Press', muscle: 'Upper Chest', liftKey: 'Bench Press', pct: 0.62, sets: 3, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'High-to-Low Cable Chest Fly', muscle: 'Lower & Inner Chest', liftKey: 'Bench Press', pct: 0.35, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Weighted Chest Dips', muscle: 'Chest & Triceps', liftKey: 'Bench Press', pct: 0.25, sets: 3, reps: '8–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+        ],
+        // Slot 3: Lateral Delts & Triceps
+        [
+          { name: 'Cable Lateral Raises', muscle: 'Side Delts', liftKey: 'Overhead Press', pct: 0.22, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Dumbbell Lateral Raises', muscle: 'Side Delts', liftKey: 'Overhead Press', pct: 0.24, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Rope Cable Tricep Pushdowns', muscle: 'Triceps', liftKey: 'Bench Press', pct: 0.35, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Overhead Cable Tricep Extension', muscle: 'Triceps Long Head', liftKey: 'Bench Press', pct: 0.30, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+        ],
+        // Slot 4: Core
+        [
+          { name: 'Hanging Knee / Leg Raises', muscle: 'Lower Abs & Core', liftKey: 'Squat', pct: 0.0, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Kneeling Cable Rope Crunches', muscle: 'Upper & Lower Abs', liftKey: 'Deadlift', pct: 0.28, sets: 3, reps: '15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Ab Wheel Rollouts', muscle: 'Anti-Extension Core', liftKey: 'Squat', pct: 0.0, sets: 3, reps: '10–12', outlets: ['Bugis', 'Yishun', 'Tiong Bahru'] }
+        ]
+      ],
+      2: [
+        // Slot 0: Primary Quad Compound
+        [
+          { name: 'Barbell Back Squat', muscle: 'Quads & Glutes', liftKey: 'Squat', pct: 0.78, sets: 4, reps: '6–8', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Plate-Loaded Hack Squat', muscle: 'Quads • Controlled', liftKey: 'Squat', pct: 0.85, sets: 4, reps: '8–10', outlets: ['Yishun'] },
+          { name: '45° Leg Press', muscle: 'Quads & Glutes', liftKey: 'Squat', pct: 1.35, sets: 4, reps: '10–12', outlets: ['Tiong Bahru', 'Yishun', 'Bugis'] },
+          { name: 'Barbell Front Squat', muscle: 'Quads & Upper Back', liftKey: 'Squat', pct: 0.65, sets: 4, reps: '6–8', outlets: ['Bugis', 'Yishun'] }
+        ],
+        // Slot 1: Posterior Chain Hinge
+        [
+          { name: 'Romanian Deadlift (RDL)', muscle: 'Hamstrings & Glutes', liftKey: 'Deadlift', pct: 0.70, sets: 3, reps: '8–10', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Conventional Barbell Deadlift', muscle: 'Full Posterior Chain', liftKey: 'Deadlift', pct: 0.80, sets: 3, reps: '5–6', outlets: ['Bugis', 'Yishun'] },
+          { name: 'Dumbbell Romanian Deadlift', muscle: 'Hamstrings', liftKey: 'Deadlift', pct: 0.45, sets: 3, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+        ],
+        // Slot 2: Unilateral Leg Work
+        [
+          { name: 'Dumbbell Walking Lunges', muscle: 'Quads & Glutes', liftKey: 'Squat', pct: 0.35, sets: 3, reps: '10 / leg', outlets: ['Bugis', 'Yishun', 'Tiong Bahru'] },
+          { name: 'Bulgarian Split Squats', muscle: 'Single-Leg Strength', liftKey: 'Squat', pct: 0.32, sets: 3, reps: '8–10 / leg', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Step-Ups (Knee-High Box)', muscle: 'Glutes & Balance', liftKey: 'Squat', pct: 0.28, sets: 3, reps: '10 / leg', outlets: ['Bugis', 'Tiong Bahru'] }
+        ],
+        // Slot 3: Hamstring / Calf Isolation
+        [
+          { name: 'Seated / Lying Leg Curls', muscle: 'Hamstrings', liftKey: 'Deadlift', pct: 0.32, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Leg Extensions', muscle: 'Quads Isolation', liftKey: 'Squat', pct: 0.42, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Standing Calf Raises', muscle: 'Calves', liftKey: 'Squat', pct: 0.60, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+        ]
+      ],
+      3: [
+        // Slot 0: Vertical Pull
+        [
+          { name: 'Wide-Grip Lat Pulldown', muscle: 'Lats & Upper Back', liftKey: 'Lat Pulldown', pct: 0.78, sets: 4, reps: '8–10', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Weighted Pull-Ups / Chin-Ups', muscle: 'Lats & Biceps', liftKey: 'Lat Pulldown', pct: 0.20, sets: 4, reps: '6–8', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Neutral-Grip Mag Pulldown', muscle: 'Mid & Lower Lats', liftKey: 'Lat Pulldown', pct: 0.80, sets: 4, reps: '8–10', outlets: ['Yishun', 'Bugis', 'Tiong Bahru'] }
+        ],
+        // Slot 1: Horizontal Row
+        [
+          { name: 'Bent-Over Barbell Row', muscle: 'Mid-Back & Lats', liftKey: 'Barbell Row', pct: 0.75, sets: 4, reps: '6–8', outlets: ['Yishun', 'Bugis', 'Tiong Bahru'] },
+          { name: 'Seated Cable Row (V-Bar)', muscle: 'Rhomboids & Lats', liftKey: 'Barbell Row', pct: 0.78, sets: 4, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Chest-Supported Dumbbell Row', muscle: 'Upper Back', liftKey: 'Barbell Row', pct: 0.62, sets: 4, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+        ],
+        // Slot 2: Rear Delts & Traps
+        [
+          { name: 'Cable Rope Face Pulls', muscle: 'Rear Delts & Rotators', liftKey: 'Barbell Row', pct: 0.32, sets: 3, reps: '15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Reverse Pec-Deck Flyes', muscle: 'Rear Delts', liftKey: 'Barbell Row', pct: 0.40, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Single-Arm Cable Rear Delt Fly', muscle: 'Rear Delts', liftKey: 'Barbell Row', pct: 0.18, sets: 3, reps: '12–15 / side', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+        ],
+        // Slot 3: Biceps
+        [
+          { name: 'Incline Dumbbell Bicep Curls', muscle: 'Biceps Long Head', liftKey: 'Barbell Row', pct: 0.32, sets: 3, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'EZ-Bar / Straight-Bar Curls', muscle: 'Biceps Brachii', liftKey: 'Barbell Row', pct: 0.42, sets: 3, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
+          { name: 'Dumbbell Hammer Curls', muscle: 'Brachialis & Forearms', liftKey: 'Barbell Row', pct: 0.36, sets: 3, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+        ],
+        // Slot 4: Conditioning Finisher
+        [
+          { name: 'Heavy Dumbbell Farmer\'s Carries', muscle: 'Grip, Core & Conditioning', liftKey: 'Deadlift', pct: 0.42, sets: 3, reps: '40m walk', outlets: ['Bugis', 'Yishun', 'Tiong Bahru'] },
+          { name: 'Concept2 Rower 30s/30s Intervals', muscle: 'Metabolic Finisher', liftKey: 'Deadlift', pct: 0.0, sets: 8, reps: '30s sprint', outlets: ['Bugis', 'Yishun', 'Tiong Bahru'] },
+          { name: '15% Incline Treadmill Power Walk', muscle: 'Fat-Burn Cardio', liftKey: 'Squat', pct: 0.0, sets: 1, reps: '15 mins', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+        ]
+      ]
+    };
 
     const SUPPLEMENTS_LIST = [
       'Multi vitamins',
@@ -620,274 +763,99 @@
       'Sunflower lecithin'
     ];
 
-    const BRANCH_INFO = {
-      bugis: {
-        name: 'AF Bugis (51 Middle Rd)',
-        notes: 'Club Notes (51 Middle Rd): Plenty of lifting platforms, barbell racks, and cable stations. Great for heavy compounds and supersets.'
-      },
-      tiongbahru: {
-        name: 'AF Tiong Bahru Plaza',
-        notes: 'Club Notes (Tiong Bahru Plaza): Compact mall layout with dumbbells, turf lane, and selectorized machines—clean swaps for peak mall hours.'
-      },
-      yishun: {
-        name: 'AF Yishun',
-        notes: 'Club Notes (Yishun): Solid free-weight floor, power racks, and benches with straightforward equipment access.'
-      }
-    };
-
-    const WORKOUT_SPLITS = {
-      1: {
-        title: 'Day 1 — Push (Chest, Shoulders & Triceps)',
-        exercises: [
-          {
-            id: 'd1-e1',
-            name: 'Barbell Bench Press',
-            liftKey: 'Barbell Bench Press',
-            sets: 4,
-            reps: '5–8',
-            pctByGoal: { strength: 0.82, hypertrophy: 0.75, conditioning: 0.65 },
-            restSec: 150,
-            tip: 'Retract shoulder blades, drive feet into the floor, and pause lightly on chest.'
-          },
-          {
-            id: 'd1-e2',
-            name: 'Overhead Press',
-            liftKey: 'Overhead Press',
-            sets: 3,
-            reps: '6–10',
-            pctByGoal: { strength: 0.78, hypertrophy: 0.70, conditioning: 0.60 },
-            restSec: 120,
-            tip: 'Brace core and glutes; press slightly back so head clears smoothly.'
-          },
-          {
-            id: 'd1-e3',
-            name: 'Incline Dumbbell Press',
-            liftKey: 'Barbell Bench Press',
-            sets: 3,
-            reps: '8–12',
-            pctByGoal: { strength: 0.70, hypertrophy: 0.65, conditioning: 0.55 },
-            restSec: 90,
-            tip: 'Set bench to 30 degrees; control eccentric lowering for upper chest stretch.'
-          },
-          {
-            id: 'd1-e4',
-            name: 'Cable Lateral Raise & Tricep Pushdown',
-            liftKey: 'Overhead Press',
-            sets: 3,
-            reps: '12–15',
-            pctByGoal: { strength: 0.55, hypertrophy: 0.50, conditioning: 0.45 },
-            restSec: 60,
-            tip: 'Lead lateral raises with elbows; keep upper arms pinned on pushdowns.'
-          }
-        ]
-      },
-      2: {
-        title: 'Day 2 — Pull (Back, Rear Delts & Biceps)',
-        exercises: [
-          {
-            id: 'd2-e1',
-            name: 'Chest-Supported Row',
-            liftKey: 'Chest-Supported Row',
-            sets: 4,
-            reps: '6–10',
-            pctByGoal: { strength: 0.80, hypertrophy: 0.72, conditioning: 0.62 },
-            restSec: 120,
-            tip: 'Keep chest padded throughout; squeeze shoulder blades back without shrugging.'
-          },
-          {
-            id: 'd2-e2',
-            name: 'Lat Pulldown',
-            liftKey: 'Lat Pulldown',
-            sets: 3,
-            reps: '8–12',
-            pctByGoal: { strength: 0.75, hypertrophy: 0.68, conditioning: 0.58 },
-            restSec: 90,
-            tip: 'Pull bar toward upper chest with slight torso lean; control return.'
-          },
-          {
-            id: 'd2-e3',
-            name: 'Romanian Deadlift (Light/Technical Pull)',
-            liftKey: 'Romanian Deadlift',
-            sets: 3,
-            reps: '8–10',
-            pctByGoal: { strength: 0.72, hypertrophy: 0.65, conditioning: 0.55 },
-            restSec: 120,
-            tip: 'Push hips back until hamstrings tighten; maintain neutral spine.'
-          },
-          {
-            id: 'd2-e4',
-            name: 'Face Pulls & Incline Dumbbell Curl',
-            liftKey: 'Lat Pulldown',
-            sets: 3,
-            reps: '12–15',
-            pctByGoal: { strength: 0.55, hypertrophy: 0.50, conditioning: 0.45 },
-            restSec: 60,
-            tip: 'Pull rope toward forehead with external rotation for rear delt health.'
-          }
-        ]
-      },
-      3: {
-        title: 'Day 3 — Legs & Core (Quads, Hamstrings & Glutes)',
-        exercises: [
-          {
-            id: 'd3-e1',
-            name: 'Barbell Back Squat',
-            liftKey: 'Barbell Back Squat',
-            sets: 4,
-            reps: '5–8',
-            pctByGoal: { strength: 0.82, hypertrophy: 0.74, conditioning: 0.62 },
-            restSec: 180,
-            tip: 'Brace 360 degrees before descending; drive knees tracking over toes.'
-          },
-          {
-            id: 'd3-e2',
-            name: 'Romanian Deadlift',
-            liftKey: 'Romanian Deadlift',
-            sets: 3,
-            reps: '6–10',
-            pctByGoal: { strength: 0.78, hypertrophy: 0.70, conditioning: 0.60 },
-            restSec: 120,
-            tip: 'Keep bar grazing legs; stand tall without hyperextending lower back.'
-          },
-          {
-            id: 'd3-e3',
-            name: 'Leg Press or Walking Lunges',
-            liftKey: 'Barbell Back Squat',
-            sets: 3,
-            reps: '10–12',
-            pctByGoal: { strength: 0.70, hypertrophy: 0.65, conditioning: 0.55 },
-            restSec: 90,
-            tip: 'Full controlled range of motion; keep steady breathing through each rep.'
-          },
-          {
-            id: 'd3-e4',
-            name: 'Hanging Knee Raise & Cable Crunch',
-            liftKey: 'Barbell Back Squat',
-            sets: 3,
-            reps: '12–15',
-            pctByGoal: { strength: 0.55, hypertrophy: 0.50, conditioning: 0.45 },
-            restSec: 60,
-            tip: 'Curl pelvis up rather than swinging legs; exhale hard at contraction.'
-          }
-        ]
-      }
-    };
-
-    const FOOD_DATABASE = [
-      { keywords: ['meiji', 'low fat milk', 'milk'], name: 'Low Fat Milk', unitType: 'volume', baseQty: 200, kcal: 96, protein: 6.8, carbs: 10.2, fats: 2.8, fibre: 0.0 },
-      { keywords: ['chicken breast'], name: 'Chicken Breast (Cooked)', unitType: 'weight', baseQty: 100, kcal: 165, protein: 31.0, carbs: 0.0, fats: 3.6, fibre: 0.0 },
-      { keywords: ['white rice', 'rice'], name: 'Steamed White Rice', unitType: 'weight', baseQty: 100, kcal: 130, protein: 2.7, carbs: 28.2, fats: 0.3, fibre: 0.4 },
-      { keywords: ['brown rice'], name: 'Steamed Brown Rice', unitType: 'weight', baseQty: 100, kcal: 123, protein: 2.7, carbs: 25.6, fats: 1.0, fibre: 1.8 },
-      { keywords: ['egg', 'eggs'], name: 'Whole Egg (Large)', unitType: 'unit', baseQty: 1, kcal: 72, protein: 6.3, carbs: 0.4, fats: 4.8, fibre: 0.0 },
-      { keywords: ['whey', 'protein shake'], name: 'Whey Protein Scoop', unitType: 'unit', baseQty: 1, kcal: 120, protein: 24.0, carbs: 3.0, fats: 1.5, fibre: 0.5 },
-      { keywords: ['banana'], name: 'Banana (Medium)', unitType: 'unit', baseQty: 1, kcal: 105, protein: 1.3, carbs: 27.0, fats: 0.4, fibre: 3.1 },
-      { keywords: ['oats', 'oatmeal'], name: 'Rolled Oats (Dry)', unitType: 'weight', baseQty: 100, kcal: 379, protein: 13.2, carbs: 67.7, fats: 6.5, fibre: 10.1 },
-      { keywords: ['salmon'], name: 'Salmon Fillet (Cooked)', unitType: 'weight', baseQty: 100, kcal: 208, protein: 20.4, carbs: 0.0, fats: 13.4, fibre: 0.0 },
-      { keywords: ['broccoli'], name: 'Broccoli Florets', unitType: 'weight', baseQty: 100, kcal: 35, protein: 2.4, carbs: 7.2, fats: 0.4, fibre: 3.3 }
+    // SG & Fitness Food Nutrition Database (per 100g / 100ml / 1 unit)
+    const FOOD_DB = [
+      { keys: ['low fat meiji milk', 'meiji low fat milk', 'meiji milk', 'low fat milk'], label: 'Low Fat Meiji Milk', unitType: 'ml', baseQty: 100, kcal: 48, pro: 3.4, carb: 5.1, fat: 1.4, fib: 0 },
+      { keys: ['full cream milk', 'fresh milk'], label: 'Fresh Milk', unitType: 'ml', baseQty: 100, kcal: 64, pro: 3.3, carb: 4.8, fat: 3.6, fib: 0 },
+      { keys: ['chicken breast', 'steamed chicken breast', 'poached chicken'], label: 'Chicken Breast (Cooked)', unitType: 'g', baseQty: 100, kcal: 165, pro: 31.0, carb: 0.0, fat: 3.6, fib: 0 },
+      { keys: ['ntuc roasted chicken', 'roasted chicken', 'roast chicken'], label: 'NTUC Roasted Chicken', unitType: 'g', baseQty: 100, kcal: 195, pro: 27.0, carb: 1.5, fat: 8.8, fib: 0 },
+      { keys: ['whey', 'whey protein', 'protein shake'], label: 'Whey Protein Isolate/Blend', unitType: 'scoop', baseQty: 1, kcal: 120, pro: 24.0, carb: 3.0, fat: 1.5, fib: 0.5 },
+      { keys: ['oats', 'rolled oats', 'oatmeal'], label: 'Rolled Oats', unitType: 'g', baseQty: 100, kcal: 379, pro: 13.2, carb: 67.7, fat: 6.5, fib: 10.1 },
+      { keys: ['white rice', 'steamed rice', 'jasmine rice', 'rice'], label: 'Steamed Jasmine Rice', unitType: 'g', baseQty: 100, kcal: 130, pro: 2.7, carb: 28.2, fat: 0.3, fib: 0.4 },
+      { keys: ['brown rice'], label: 'Steamed Brown Rice', unitType: 'g', baseQty: 100, kcal: 123, pro: 2.7, carb: 25.6, fat: 1.0, fib: 1.8 },
+      { keys: ['shelled edamame', 'edamame'], label: 'Shelled Edamame', unitType: 'g', baseQty: 100, kcal: 121, pro: 11.9, carb: 8.9, fat: 5.2, fib: 5.2 },
+      { keys: ['egg', 'eggs', 'whole egg', 'hard boiled egg'], label: 'Whole Egg (Large)', unitType: 'unit', baseQty: 1, kcal: 72, pro: 6.3, carb: 0.4, fat: 4.8, fib: 0 },
+      { keys: ['egg white', 'egg whites'], label: 'Egg White', unitType: 'unit', baseQty: 1, kcal: 17, pro: 3.6, carb: 0.2, fat: 0.1, fib: 0 },
+      { keys: ['banana'], label: 'Banana (Medium)', unitType: 'unit', baseQty: 1, kcal: 105, pro: 1.3, carb: 27.0, fat: 0.4, fib: 3.1 },
+      { keys: ['salmon', 'grilled salmon'], label: 'Salmon Fillet', unitType: 'g', baseQty: 100, kcal: 208, pro: 20.4, carb: 0.0, fat: 13.4, fib: 0 },
+      { keys: ['chia seeds', 'chia'], label: 'Chia Seeds', unitType: 'g', baseQty: 100, kcal: 486, pro: 16.5, carb: 42.1, fat: 30.7, fib: 34.4 },
+      { keys: ['broccoli'], label: 'Steamed Broccoli', unitType: 'g', baseQty: 100, kcal: 35, pro: 2.4, carb: 7.2, fat: 0.4, fib: 3.3 },
+      { keys: ['chicken rice'], label: 'SG Steamed Chicken Rice (Less Rice)', unitType: 'unit', baseQty: 1, kcal: 540, pro: 42.0, carb: 58.0, fat: 14.0, fib: 3.5 },
+      { keys: ['kopi c kosong', 'kopi o kosong', 'americano'], label: 'Kopi O Kosong / Black Coffee', unitType: 'unit', baseQty: 1, kcal: 5, pro: 0.3, carb: 0.8, fat: 0.0, fib: 0 },
+      { keys: ['greek yogurt', 'yogurt'], label: 'Low-Fat Greek Yogurt', unitType: 'g', baseQty: 100, kcal: 73, pro: 10.0, carb: 4.0, fat: 1.9, fib: 0 }
     ];
 
+    // ---------------------------------------------------------
+    // 3. STATE MANAGEMENT & DEMO SEEDING
+    // ---------------------------------------------------------
     function getTodayISO() {
       const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth() + 1).padStart(2, '0');
-      const d = String(now.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
+      return now.toISOString().split('T')[0];
     }
 
-    function getOffsetDateISO(daysAgo) {
-      const dt = new Date();
-      dt.setDate(dt.getDate() - daysAgo);
-      const y = dt.getFullYear();
-      const m = String(dt.getMonth() + 1).padStart(2, '0');
-      const d = String(dt.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
+    function getPastDateISO(daysAgo) {
+      const d = new Date();
+      d.setDate(d.getDate() - daysAgo);
+      return d.toISOString().split('T')[0];
     }
 
-    function createDefaultState() {
-      const today = getTodayISO();
+    function getDefaultState() {
       return {
-        activeTab: 'workout',
-        selectedBranch: 'bugis',
-        selectedDay: 1,
-        workoutGoal: 'hypertrophy',
-        oneRMs: {
-          'Barbell Bench Press': 85,
-          'Barbell Back Squat': 110,
-          'Romanian Deadlift': 115,
-          'Overhead Press': 55,
-          'Chest-Supported Row': 75,
-          'Lat Pulldown': 70
+        outlet: 'Yishun',
+        activeDay: 1,
+        // Selected variant index per day & slot: { 1: [0,0,0,0,0], 2: [0,0,0,0], 3: [0,0,0,0,0] }
+        selectedVariants: {
+          1: [0, 0, 0, 0, 0],
+          2: [0, 0, 0, 0],
+          3: [0, 0, 0, 0, 0]
         },
-        setLogs: {},
+        // Set completion state keyed by "day-slot-variant-setIdx"
+        setLogs: {
+          '1-0-0-0': { done: true, weight: 75, reps: 8 },
+          '1-0-0-1': { done: true, weight: 75, reps: 7 }
+        },
+        oneRMs: {
+          'Bench Press': 95,
+          'Squat': 125,
+          'Deadlift': 145,
+          'Overhead Press': 60,
+          'Barbell Row': 85,
+          'Lat Pulldown': 80
+        },
         workoutHistory: [
           {
-            id: 'sample-wk-1',
-            date: getOffsetDateISO(2),
-            branch: 'AF Bugis (51 Middle Rd)',
-            dayTitle: 'Day 1 — Push (Chest, Shoulders & Triceps)',
-            completedSets: 11,
-            totalSets: 13,
-            summary: 'Bench Press 65kg x 8, OHP 40kg x 8, Incline DB 25kg x 10'
-          }
-        ],
-        nutritionProfile: {
-          heightCm: 182,
-          startWeightKg: 89.0,
-          targetWeightKg: 80.0,
-          age: 35,
-          activityMultiplier: 1.50,
-          deficitKcal: 500,
-          weightBasis: 'avg7'
-        },
-        activeNutritionDate: today,
-        foodLogsByDate: {
-          [today]: [
-            {
-              id: 'sample-food-1',
-              name: '200ml Low Fat Meiji Milk',
-              kcal: 96,
-              protein: 6.8,
-              carbs: 10.2,
-              fats: 2.8,
-              fibre: 0.0,
-              source: 'Text Parser'
-            },
-            {
-              id: 'sample-food-2',
-              name: '200g Chicken Breast & 150g White Rice',
-              kcal: 525,
-              protein: 66.1,
-              carbs: 42.3,
-              fats: 7.7,
-              fibre: 0.6,
-              source: 'Meal Log'
-            }
-          ]
-        },
-        supplementsByDate: {
-          [today]: {
-            'Omega 3': '08:00',
-            'Vit K + D': '08:00',
-            'Multi vitamins': '08:05'
-          }
-        },
-        vitals: [
-          {
-            id: 'sample-vit-1',
-            date: today,
-            weightKg: 89.0,
-            restingHr: 62,
-            sleepHrs: 7.5,
-            notes: 'Starting weight check-in'
+            id: 'wh-1',
+            date: getPastDateISO(2),
+            outlet: 'Bugis',
+            dayTitle: 'Day 3: Pull & Conditioning',
+            setsCompleted: 17,
+            totalVolumeKg: 6420
           },
           {
-            id: 'sample-vit-2',
-            date: getOffsetDateISO(3),
-            weightKg: 89.4,
-            restingHr: 64,
-            sleepHrs: 7.0,
-            notes: 'Pre-cut baseline'
+            id: 'wh-2',
+            date: getPastDateISO(4),
+            outlet: 'Yishun',
+            dayTitle: 'Day 2: Legs & Posterior',
+            setsCompleted: 13,
+            totalVolumeKg: 7850
           }
+        ],
+        meals: [
+          { id: 'm-1', name: '200ml Low Fat Meiji Milk + 1 Scoop Whey', kcal: 216, pro: 30.8, carb: 13.2, fat: 4.3, fib: 0.5 },
+          { id: 'm-2', name: '200g NTUC Roasted Chicken + 120g Jasmine Rice', kcal: 546, pro: 57.2, carb: 36.8, fat: 18.0, fib: 0.5 },
+          { id: 'm-3', name: '100g Shelled Edamame + 1 Medium Banana', kcal: 226, pro: 13.2, carb: 35.9, fat: 5.6, fib: 8.3 }
+        ],
+        supplementsTaken: {
+          'Multi vitamins': '08:15 AM',
+          'Omega 3': '08:15 AM',
+          'Vit K + D': '08:15 AM',
+          'UC II': '08:16 AM'
+        },
+        weights: [
+          { date: getPastDateISO(6), weight: 89.6 },
+          { date: getPastDateISO(4), weight: 89.2 },
+          { date: getPastDateISO(2), weight: 88.9 },
+          { date: getTodayISO(), weight: 88.5 }
         ]
       };
     }
@@ -897,215 +865,269 @@
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return createDefaultState();
+        if (!raw) return getDefaultState();
         const parsed = JSON.parse(raw);
-        return { ...createDefaultState(), ...parsed };
-      } catch (err) {
-        console.warn('Error loading saved state:', err);
-        return createDefaultState();
+        return { ...getDefaultState(), ...parsed };
+      } catch (e) {
+        return getDefaultState();
       }
     }
 
     function saveState() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-      } catch (err) {
-        console.warn('Error saving state:', err);
+      } catch (e) {
+        console.warn('Could not save to localStorage', e);
       }
     }
 
     function resetDemoData() {
-      appState = createDefaultState();
+      localStorage.removeItem(STORAGE_KEY);
+      appState = getDefaultState();
       saveState();
-      initUI();
-      showToast('Demo data restored to defaults.', 'info');
+      renderAll();
+      showToast('Demo data restored to defaults!');
     }
 
     // ---------------------------------------------------------
-    // TOAST HELPER
+    // 4. TOAST NOTIFICATIONS (NO ALERT())
     // ---------------------------------------------------------
-    function showToast(message, type = 'info') {
+    function showToast(message, type = 'purple') {
       const container = document.getElementById('toast-container');
-      if (!container) return;
-      const colorMap = {
-        success: 'bg-emerald-950/95 border-emerald-500/60 text-emerald-200',
-        error: 'bg-rose-950/95 border-rose-500/60 text-rose-200',
-        info: 'bg-af-card/95 border-af-purple/60 text-slate-100'
-      };
-      const el = document.createElement('div');
-      el.className = `px-4 py-3 rounded-xl border text-xs font-bold shadow-2xl transition ${colorMap[type] || colorMap.info}`;
-      el.textContent = message;
-      container.appendChild(el);
+      const toast = document.createElement('div');
+      const borderCol = type === 'green' ? 'border-emerald-500/60 bg-emerald-950/90 text-emerald-100' : 'border-af-purple/70 bg-af-card/95 text-white';
+      toast.className = `px-4 py-2.5 rounded-xl border ${borderCol} shadow-2xl text-xs font-bold text-center animate-fade-in`;
+      toast.textContent = message;
+      container.appendChild(toast);
       setTimeout(() => {
-        el.remove();
-      }, 3200);
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.25s ease';
+        setTimeout(() => toast.remove(), 260);
+      }, 2400);
     }
 
     // ---------------------------------------------------------
-    // TAB NAVIGATION
+    // 5. TAB NAVIGATION & SHORTCUT DEEP LINKS
     // ---------------------------------------------------------
     function switchTab(tabName) {
-      appState.activeTab = tabName;
-      saveState();
-
-      const tabs = ['workout', 'nutrition', '1rm', 'vitals'];
-      tabs.forEach(t => {
-        const section = document.getElementById(`tab-${t}`);
-        const btn = document.getElementById(`tab-btn-${t}`);
-        if (section) section.classList.toggle('hidden', t !== tabName);
-        if (btn) {
-          if (t === tabName) {
-            btn.className = 'tab-btn px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-af-purple text-white bg-af-card/70 transition whitespace-nowrap flex items-center gap-2';
+      const actualTab = tabName === 'supplements' ? 'nutrition' : tabName;
+      const views = ['workout', 'nutrition', '1rm', 'vitals'];
+      views.forEach(v => {
+        const viewEl = document.getElementById(`view-${v}`);
+        const btnEl = document.getElementById(`tab-btn-${v}`);
+        if (viewEl) viewEl.classList.toggle('hidden', v !== actualTab);
+        if (btnEl) {
+          if (v === actualTab) {
+            btnEl.classList.remove('text-slate-400', 'border-transparent');
+            btnEl.classList.add('text-white', 'border-af-purple');
           } else {
-            btn.className = 'tab-btn px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition whitespace-nowrap flex items-center gap-2';
+            btnEl.classList.remove('text-white', 'border-af-purple');
+            btnEl.classList.add('text-slate-400', 'border-transparent');
           }
         }
       });
 
-      if (tabName === 'nutrition') renderNutritionTab();
-      if (tabName === '1rm') renderOneRMTab();
-      if (tabName === 'vitals') renderVitalsTab();
-      if (tabName === 'workout') renderWorkoutTab();
+      if (tabName === 'supplements') {
+        setTimeout(() => {
+          const suppEl = document.getElementById('supplements-section');
+          if (suppEl) suppEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
     }
 
     // ---------------------------------------------------------
-    // WORKOUT GENERATOR, % 1RM & SET/REP LOGGER
+    // 6. WORKOUT TAB: OUTLET, REFRESH EXERCISES, INDIVIDUAL SWAP & SETS
     // ---------------------------------------------------------
-    function roundToPlate(weightKg) {
-      return Math.max(0, Math.round(weightKg / 2.5) * 2.5);
+    function roundTo2Point5(val) {
+      return Math.round(val / 2.5) * 2.5;
     }
 
-    function selectBranch(branchKey) {
-      appState.selectedBranch = branchKey;
+    function selectOutlet(outletName) {
+      appState.outlet = outletName;
       saveState();
       renderWorkoutTab();
+      showToast(`Switched to AF ${outletName}`);
     }
 
     function selectWorkoutDay(dayNum) {
-      appState.selectedDay = dayNum;
+      appState.activeDay = dayNum;
       saveState();
       renderWorkoutTab();
     }
 
-    function changeWorkoutGoal(goalKey) {
-      appState.workoutGoal = goalKey;
+    // Refresh ALL exercises in the active day to fresh variations
+    function refreshAllDayExercises() {
+      const day = appState.activeDay;
+      const slots = EXERCISE_POOLS[day];
+      const currentIndices = appState.selectedVariants[day] || slots.map(() => 0);
+
+      const nextIndices = slots.map((variants, slotIdx) => {
+        if (variants.length <= 1) return 0;
+        // Prefer variants compatible with current outlet
+        const compatibleIndices = variants
+          .map((v, idx) => ({ v, idx }))
+          .filter(item => item.v.outlets.includes(appState.outlet))
+          .map(item => item.idx);
+
+        const pool = compatibleIndices.length > 1 ? compatibleIndices : variants.map((_, i) => i);
+        const curr = currentIndices[slotIdx] || 0;
+        const pos = pool.indexOf(curr);
+        return pool[(pos + 1) % pool.length];
+      });
+
+      appState.selectedVariants[day] = nextIndices;
       saveState();
       renderWorkoutTab();
+      showToast(`Refreshed Day ${day} exercises for AF ${appState.outlet}!`);
     }
 
-    function getSetLogEntry(dayNum, exId, setIndex, prescribedWeight, prescribedReps) {
-      const key = `${appState.selectedBranch}-d${dayNum}-${exId}-s${setIndex}`;
-      if (!appState.setLogs[key]) {
-        appState.setLogs[key] = {
-          weight: prescribedWeight,
-          reps: prescribedReps,
-          done: false
-        };
+    // Swap a SINGLE exercise slot without affecting the rest of the workout
+    function swapSingleExercise(slotIdx) {
+      const day = appState.activeDay;
+      const variants = EXERCISE_POOLS[day][slotIdx];
+      if (!variants || variants.length <= 1) return;
+
+      const compatibleIndices = variants
+        .map((v, idx) => ({ v, idx }))
+        .filter(item => item.v.outlets.includes(appState.outlet))
+        .map(item => item.idx);
+
+      const pool = compatibleIndices.length > 1 ? compatibleIndices : variants.map((_, i) => i);
+      const curr = appState.selectedVariants[day][slotIdx] || 0;
+      const pos = pool.indexOf(curr);
+      const nextIdx = pool[(pos + 1) % pool.length];
+
+      appState.selectedVariants[day][slotIdx] = nextIdx;
+      saveState();
+      renderWorkoutTab();
+      showToast(`Swapped to ${variants[nextIdx].name}`);
+    }
+
+    function toggleSetCompleted(setKey, defaultWeight, defaultReps) {
+      const existing = appState.setLogs[setKey];
+      const nextDone = !(existing && existing.done);
+      appState.setLogs[setKey] = {
+        done: nextDone,
+        weight: existing ? existing.weight : defaultWeight,
+        reps: existing ? existing.reps : defaultReps
+      };
+      saveState();
+      renderWorkoutTab();
+
+      if (nextDone) {
+        setRestPreset(90);
+        showToast('Set logged! 90s rest timer started.', 'green');
       }
-      return { key, entry: appState.setLogs[key] };
     }
 
-    function updateSetWeight(key, val) {
-      if (!appState.setLogs[key]) return;
-      appState.setLogs[key].weight = parseFloat(val) || 0;
+    function updateSetField(setKey, field, value, defaultWeight, defaultReps) {
+      const existing = appState.setLogs[setKey] || { done: false, weight: defaultWeight, reps: defaultReps };
+      existing[field] = parseFloat(value) || 0;
+      appState.setLogs[setKey] = existing;
       saveState();
-    }
-
-    function updateSetReps(key, val) {
-      if (!appState.setLogs[key]) return;
-      appState.setLogs[key].reps = val;
-      saveState();
-    }
-
-    function toggleSetDone(key, restSeconds) {
-      if (!appState.setLogs[key]) return;
-      const nextDone = !appState.setLogs[key].done;
-      appState.setLogs[key].done = nextDone;
-      saveState();
-      renderWorkoutTab();
-      if (nextDone && restSeconds) {
-        startRestWithSeconds(restSeconds);
-        showToast(`Set logged! Rest timer started (${restSeconds}s).`, 'success');
-      }
     }
 
     function renderWorkoutTab() {
-      const branch = BRANCH_INFO[appState.selectedBranch] || BRANCH_INFO.bugis;
-      document.getElementById('branch-club-notes').textContent = branch.notes;
-      document.getElementById('workout-goal-select').value = appState.workoutGoal;
-
-      ['bugis', 'tiongbahru', 'yishun'].forEach(b => {
-        const btn = document.getElementById(`branch-btn-${b}`);
+      // Outlet buttons
+      ['Yishun', 'Tiong Bahru', 'Bugis'].forEach(outlet => {
+        const btn = document.getElementById(`outlet-${outlet}`);
         if (!btn) return;
-        if (b === appState.selectedBranch) {
-          btn.className = 'branch-btn text-left p-3 rounded-xl border border-af-purple bg-af-purple/15 transition';
+        if (appState.outlet === outlet) {
+          btn.className = 'outlet-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold border border-af-purple bg-af-purple/20 text-white shadow-sm transition text-center';
         } else {
-          btn.className = 'branch-btn text-left p-3 rounded-xl border border-af-border bg-af-surface/60 hover:bg-af-surface transition';
+          btn.className = 'outlet-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border border-af-border bg-af-surface/60 text-slate-400 hover:text-white transition text-center';
         }
       });
 
+      document.getElementById('outlet-note-text').textContent = OUTLET_NOTES[appState.outlet] || '';
+
+      // Day buttons
       [1, 2, 3].forEach(d => {
         const btn = document.getElementById(`day-btn-${d}`);
         if (!btn) return;
-        if (d === appState.selectedDay) {
-          btn.className = 'day-btn py-3 px-3 rounded-xl border border-af-purple bg-af-purple text-white text-center transition shadow-md';
+        if (appState.activeDay === d) {
+          btn.className = 'day-btn p-2.5 sm:p-3 rounded-xl border border-af-purple bg-af-purple text-white text-left shadow-lg shadow-purple-950/50 transition';
         } else {
-          btn.className = 'day-btn py-3 px-3 rounded-xl border border-af-border bg-af-surface hover:bg-slate-700 text-slate-300 text-center transition';
+          btn.className = 'day-btn p-2.5 sm:p-3 rounded-xl border border-af-border bg-af-surface/70 text-slate-300 hover:bg-af-surface text-left transition';
         }
       });
 
-      const split = WORKOUT_SPLITS[appState.selectedDay] || WORKOUT_SPLITS[1];
-      const container = document.getElementById('active-workout-container');
+      // Render Exercise Cards
+      const day = appState.activeDay;
+      const slots = EXERCISE_POOLS[day];
+      const selectedIndices = appState.selectedVariants[day] || slots.map(() => 0);
+      const container = document.getElementById('workout-exercises-list');
       container.innerHTML = '';
 
-      split.exercises.forEach(ex => {
-        const oneRM = appState.oneRMs[ex.liftKey] || 60;
-        const pct = ex.pctByGoal[appState.workoutGoal] || 0.7;
-        const pctLabel = Math.round(pct * 100);
-        const targetWeight = roundToPlate(oneRM * pct);
-        const defaultRepsNum = ex.reps.split('–')[0] || ex.reps;
+      slots.forEach((variants, slotIdx) => {
+        const variantIdx = selectedIndices[slotIdx] || 0;
+        const ex = variants[variantIdx] || variants[0];
+        const base1RM = appState.oneRMs[ex.liftKey] || 80;
+        const calcWeight = ex.pct > 0 ? roundTo2Point5(base1RM * ex.pct) : 0;
+        const defaultRepsNum = parseInt(ex.reps, 10) || 10;
 
-        let setsRowsHtml = '';
-        for (let s = 1; s <= ex.sets; s++) {
-          const { key, entry } = getSetLogEntry(appState.selectedDay, ex.id, s, targetWeight, defaultRepsNum);
-          setsRowsHtml += `
-            <div class="grid grid-cols-12 items-center gap-2 py-2 px-3 rounded-xl ${entry.done ? 'bg-emerald-950/35 border border-emerald-500/30' : 'bg-af-surface/80 border border-af-border/70'}">
-              <div class="col-span-2 text-xs font-extrabold text-slate-300">Set ${s}</div>
-              <div class="col-span-4 flex items-center gap-1">
-                <input type="number" step="2.5" min="0" value="${entry.weight}" onchange="updateSetWeight('${key}', this.value)" class="w-full bg-af-card border border-af-border rounded-lg px-2 py-1 text-xs font-bold text-white tabular-nums">
-                <span class="text-[11px] text-slate-400">kg</span>
-              </div>
-              <div class="col-span-3 flex items-center gap-1">
-                <input type="text" value="${entry.reps}" onchange="updateSetReps('${key}', this.value)" class="w-full bg-af-card border border-af-border rounded-lg px-2 py-1 text-xs font-bold text-white tabular-nums">
-                <span class="text-[11px] text-slate-400">reps</span>
-              </div>
-              <div class="col-span-3 flex justify-end">
-                <button onclick="toggleSetDone('${key}', ${ex.restSec})" class="px-2.5 py-1.5 rounded-lg text-xs font-extrabold transition ${entry.done ? 'bg-emerald-600 text-white' : 'bg-af-card hover:bg-af-purple text-slate-200 border border-af-border'}">
-                  ${entry.done ? 'Done' : 'Log'}
+        let setsHtml = '';
+        for (let s = 0; s < ex.sets; s++) {
+          const setKey = `${day}-${slotIdx}-${variantIdx}-${s}`;
+          const log = appState.setLogs[setKey] || { done: false, weight: calcWeight, reps: defaultRepsNum };
+          setsHtml += `
+            <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl border ${log.done ? 'bg-emerald-950/30 border-emerald-500/40' : 'bg-af-dark/70 border-af-border/70'} transition">
+              <div class="flex items-center gap-2.5">
+                <button onclick="toggleSetCompleted('${setKey}', ${calcWeight}, ${defaultRepsNum})" class="w-6 h-6 rounded-lg flex items-center justify-center border transition ${log.done ? 'bg-emerald-500 border-emerald-400 text-slate-950' : 'bg-af-surface border-af-border text-transparent hover:border-af-purple'}">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
                 </button>
+                <span class="text-xs font-extrabold ${log.done ? 'text-emerald-300' : 'text-slate-300'}">Set ${s + 1}</span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <div class="flex items-center bg-af-surface border border-af-border rounded-lg px-2 py-1">
+                  <input type="number" step="2.5" value="${log.weight}" onchange="updateSetField('${setKey}', 'weight', this.value, ${calcWeight}, ${defaultRepsNum})" class="w-12 bg-transparent text-right text-xs font-extrabold text-white focus:outline-none" />
+                  <span class="text-[10px] text-slate-400 ml-1 font-bold">kg</span>
+                </div>
+                <span class="text-slate-500 text-xs font-bold">&times;</span>
+                <div class="flex items-center bg-af-surface border border-af-border rounded-lg px-2 py-1">
+                  <input type="number" value="${log.reps}" onchange="updateSetField('${setKey}', 'reps', this.value, ${calcWeight}, ${defaultRepsNum})" class="w-9 bg-transparent text-right text-xs font-extrabold text-white focus:outline-none" />
+                  <span class="text-[10px] text-slate-400 ml-1 font-bold">reps</span>
+                </div>
               </div>
             </div>
           `;
         }
 
+        const loadBadge = ex.pct > 0
+          ? `<span class="px-2.5 py-1 rounded-lg bg-af-purple/20 border border-af-purple/40 text-af-purpleLight text-[11px] font-extrabold">${Math.round(ex.pct * 100)}% 1RM &bull; ${calcWeight} kg</span>`
+          : `<span class="px-2.5 py-1 rounded-lg bg-slate-800 border border-af-border text-slate-300 text-[11px] font-bold">Bodyweight / Pace</span>`;
+
         const card = document.createElement('div');
-        card.className = 'bg-af-card border border-af-border rounded-2xl p-5 shadow-lg space-y-3';
+        card.className = 'bg-af-card border border-af-border rounded-2xl p-4 sm:p-5 shadow-lg space-y-3.5 animate-fade-in';
         card.innerHTML = `
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <h4 class="text-base font-extrabold text-white">${ex.name}</h4>
-              <p class="text-xs text-slate-400 mt-0.5">${ex.tip}</p>
+          <div class="flex items-start justify-between gap-3">
+            <div class="space-y-1">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded-md bg-af-surface text-[10px] font-bold uppercase tracking-wider text-slate-300">${ex.muscle}</span>
+                <span class="text-xs font-bold text-slate-400">${ex.sets} sets &times; ${ex.reps}</span>
+              </div>
+              <h3 class="text-base sm:text-lg font-extrabold text-white">${ex.name}</h3>
+              <div class="pt-0.5">${loadBadge}</div>
             </div>
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-af-purple/20 text-af-purpleLight border border-af-purple/40 tabular-nums">
-                ${pctLabel}% of ${oneRM} kg 1RM
-              </span>
-              <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-af-surface text-white border border-af-border tabular-nums">
-                Target: ${targetWeight} kg &times; ${ex.reps}
-              </span>
-            </div>
+
+            <!-- Individual Swap Exercise Button -->
+            <button onclick="swapSingleExercise(${slotIdx})" title="Swap just this exercise" class="px-3 py-2 rounded-xl bg-af-surface hover:bg-af-purple/25 border border-af-border hover:border-af-purple text-xs font-bold text-slate-200 hover:text-white transition flex items-center gap-1.5 shrink-0">
+              <svg class="w-3.5 h-3.5 text-af-purpleLight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m16 3 4 4-4 4" />
+                <path d="M20 7H4" />
+                <path d="m8 21-4-4 4-4" />
+                <path d="M4 17h16" />
+              </svg>
+              <span>Swap</span>
+            </button>
           </div>
-          <div class="space-y-2">${setsRowsHtml}</div>
+
+          <div class="space-y-2">
+            ${setsHtml}
+          </div>
         `;
         container.appendChild(card);
       });
@@ -1113,691 +1135,629 @@
       renderWorkoutHistory();
     }
 
-    function saveCompletedWorkoutSession() {
-      const split = WORKOUT_SPLITS[appState.selectedDay] || WORKOUT_SPLITS[1];
-      const branch = BRANCH_INFO[appState.selectedBranch] || BRANCH_INFO.bugis;
-      let totalSets = 0;
-      let completedSets = 0;
-      const highlights = [];
+    function saveWorkoutSession() {
+      const day = appState.activeDay;
+      const dayNames = { 1: 'Day 1: Push & Core', 2: 'Day 2: Legs & Posterior', 3: 'Day 3: Pull & Conditioning' };
+      const slots = EXERCISE_POOLS[day];
+      const selectedIndices = appState.selectedVariants[day] || slots.map(() => 0);
 
-      split.exercises.forEach(ex => {
-        const oneRM = appState.oneRMs[ex.liftKey] || 60;
-        const pct = ex.pctByGoal[appState.workoutGoal] || 0.7;
-        const targetWeight = roundToPlate(oneRM * pct);
-        const defaultRepsNum = ex.reps.split('–')[0] || ex.reps;
-        let doneInEx = 0;
-        let lastWeight = targetWeight;
-        let lastReps = defaultRepsNum;
+      let setsCompleted = 0;
+      let totalVolumeKg = 0;
 
-        for (let s = 1; s <= ex.sets; s++) {
-          totalSets++;
-          const key = `${appState.selectedBranch}-d${appState.selectedDay}-${ex.id}-s${s}`;
-          const log = appState.setLogs[key];
+      slots.forEach((variants, slotIdx) => {
+        const variantIdx = selectedIndices[slotIdx] || 0;
+        const ex = variants[variantIdx] || variants[0];
+        for (let s = 0; s < ex.sets; s++) {
+          const setKey = `${day}-${slotIdx}-${variantIdx}-${s}`;
+          const log = appState.setLogs[setKey];
           if (log && log.done) {
-            completedSets++;
-            doneInEx++;
-            lastWeight = log.weight;
-            lastReps = log.reps;
+            setsCompleted++;
+            totalVolumeKg += (Number(log.weight) || 0) * (Number(log.reps) || 0);
           }
-        }
-        if (doneInEx > 0) {
-          highlights.push(`${ex.name}: ${lastWeight}kg x ${lastReps} (${doneInEx}/${ex.sets})`);
         }
       });
 
+      if (setsCompleted === 0) {
+        showToast('Check off at least 1 completed set first!');
+        return;
+      }
+
       appState.workoutHistory.unshift({
-        id: 'wk-' + Date.now(),
+        id: 'wh-' + Date.now(),
         date: getTodayISO(),
-        branch: branch.name,
-        dayTitle: split.title,
-        completedSets,
-        totalSets,
-        summary: highlights.length ? highlights.join(' • ') : 'Session logged'
+        outlet: appState.outlet,
+        dayTitle: dayNames[day],
+        setsCompleted,
+        totalVolumeKg: Math.round(totalVolumeKg)
       });
 
       saveState();
       renderWorkoutHistory();
-      showToast(`Saved ${split.title} (${completedSets}/${totalSets} sets done).`, 'success');
+      showToast(`Saved ${dayNames[day]} (${setsCompleted} sets)!`, 'green');
+    }
+
+    function toggleHistoryDrawer() {
+      const drawer = document.getElementById('history-drawer');
+      const chevron = document.getElementById('history-chevron');
+      drawer.classList.toggle('hidden');
+      chevron.classList.toggle('rotate-180');
     }
 
     function renderWorkoutHistory() {
-      const listEl = document.getElementById('workout-history-list');
-      const badgeEl = document.getElementById('history-count-badge');
-      const items = appState.workoutHistory || [];
-      badgeEl.textContent = `${items.length} ${items.length === 1 ? 'session' : 'sessions'}`;
+      const badge = document.getElementById('history-count-badge');
+      const drawer = document.getElementById('history-drawer');
+      badge.textContent = appState.workoutHistory.length;
 
-      if (!items.length) {
-        listEl.innerHTML = '<div class="text-xs text-slate-400 py-4 text-center">No saved workout sessions yet.</div>';
+      if (appState.workoutHistory.length === 0) {
+        drawer.innerHTML = '<p class="text-xs text-slate-400">No saved sessions yet.</p>';
         return;
       }
 
-      listEl.innerHTML = items.map(item => `
-        <div class="bg-af-surface/80 border border-af-border rounded-xl p-3.5 space-y-1">
-          <div class="flex items-center justify-between gap-2 flex-wrap">
-            <span class="text-sm font-extrabold text-white">${item.dayTitle}</span>
-            <span class="text-xs font-bold text-af-purpleLight tabular-nums">${item.date} &bull; ${item.branch}</span>
+      drawer.innerHTML = appState.workoutHistory.map(item => `
+        <div class="bg-af-surface/70 border border-af-border rounded-xl p-3 flex items-center justify-between gap-2">
+          <div>
+            <div class="text-xs font-extrabold text-white">${item.dayTitle}</div>
+            <div class="text-[11px] text-slate-400">${item.date} &bull; AF ${item.outlet}</div>
           </div>
-          <div class="text-xs text-emerald-400 font-semibold tabular-nums">Sets Completed: ${item.completedSets} / ${item.totalSets}</div>
-          <div class="text-xs text-slate-300">${item.summary}</div>
+          <div class="text-right">
+            <div class="text-xs font-extrabold text-emerald-400">${item.setsCompleted} sets</div>
+            <div class="text-[11px] text-slate-400">${item.totalVolumeKg.toLocaleString()} kg vol</div>
+          </div>
         </div>
       `).join('');
     }
 
     // ---------------------------------------------------------
-    // DOCKED SMART REST TIMER
+    // 7. NUTRITION ENGINE, TEXT FOOD PARSER & SUPPLEMENTS
     // ---------------------------------------------------------
-    let restTotalSeconds = 90;
-    let restRemainingSeconds = 90;
-    let isRestRunning = false;
-    let restInterval = null;
-
-    function formatTimeMMSS(sec) {
-      const s = Math.max(0, Math.floor(sec));
-      const m = Math.floor(s / 60);
-      const rem = s % 60;
-      return `${String(m).padStart(2, '0')}:${String(rem).padStart(2, '0')}`;
+    function getRolling7DayWeight() {
+      if (!appState.weights || appState.weights.length === 0) return 89.0;
+      const sorted = [...appState.weights].sort((a, b) => b.date.localeCompare(a.date));
+      const last7 = sorted.slice(0, 7);
+      const sum = last7.reduce((acc, w) => acc + Number(w.weight), 0);
+      return Number((sum / last7.length).toFixed(1));
     }
 
-    function playRestChime() {
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
-        const notes = [587.33, 880]; // D5 -> A5 chime
-        notes.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0.12, ctx.currentTime + idx * 0.16);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.16 + 0.35);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + idx * 0.16);
-          osc.stop(ctx.currentTime + idx * 0.16 + 0.36);
-        });
-      } catch (err) {
-        console.warn('Audio chime unavailable:', err);
-      }
+    function computeDailyMacroTargets() {
+      const avgWeight = getRolling7DayWeight();
+      // Baseline: at 89.0kg -> ~1850 kcal cut; scales dynamically with rolling weight
+      const weightDelta = avgWeight - 89.0;
+      const targetKcal = Math.max(1550, Math.round(1850 + weightDelta * 22));
+      const targetPro = 190;
+      const targetFat = Math.max(40, Math.round(48 + weightDelta * 0.5));
+      const targetCarb = Math.max(110, Math.round((targetKcal - targetPro * 4 - targetFat * 9) / 4));
+      const targetFib = 30;
+      return { avgWeight, targetKcal, targetPro, targetCarb, targetFat, targetFib };
     }
 
-    function updateRestUI() {
-      document.getElementById('rest-countdown-display').textContent = formatTimeMMSS(restRemainingSeconds);
-      const statusEl = document.getElementById('rest-status-label');
-      const labelEl = document.getElementById('rest-toggle-label');
-      const iconEl = document.getElementById('rest-toggle-icon');
-      const barEl = document.getElementById('rest-progress-bar');
-
-      if (isRestRunning) {
-        statusEl.textContent = 'RESTING';
-        statusEl.className = 'text-[11px] font-bold uppercase px-2 py-0.5 rounded-md bg-af-purple/25 text-af-purpleLight';
-        labelEl.textContent = 'Pause';
-        iconEl.innerHTML = '&#10074;&#10074;';
-      } else {
-        statusEl.textContent = restRemainingSeconds === 0 ? 'DONE' : 'READY';
-        statusEl.className = restRemainingSeconds === 0
-          ? 'text-[11px] font-bold uppercase px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300'
-          : 'text-[11px] font-bold uppercase px-2 py-0.5 rounded-md bg-af-surface text-slate-300';
-        labelEl.textContent = 'Rest';
-        iconEl.innerHTML = '&#9654;';
-      }
-
-      const pct = restTotalSeconds > 0 ? Math.max(0, Math.min(100, (restRemainingSeconds / restTotalSeconds) * 100)) : 0;
-      barEl.style.width = `${pct}%`;
+    function quickParseFood(sampleText) {
+      const input = document.getElementById('food-text-input');
+      input.value = sampleText;
+      parseFoodText();
     }
 
-    function startRestWithSeconds(seconds) {
-      clearInterval(restInterval);
-      restTotalSeconds = Math.max(15, seconds);
-      restRemainingSeconds = restTotalSeconds;
-      isRestRunning = true;
-      updateRestUI();
-
-      restInterval = setInterval(() => {
-        restRemainingSeconds--;
-        if (restRemainingSeconds <= 0) {
-          restRemainingSeconds = 0;
-          isRestRunning = false;
-          clearInterval(restInterval);
-          updateRestUI();
-          playRestChime();
-          showToast('Rest complete — next set ready!', 'success');
-        } else {
-          updateRestUI();
-        }
-      }, 1000);
-    }
-
-    function toggleRestTimer() {
-      if (isRestRunning) {
-        isRestRunning = false;
-        clearInterval(restInterval);
-        updateRestUI();
-      } else {
-        if (restRemainingSeconds <= 0) {
-          restRemainingSeconds = restTotalSeconds;
-        }
-        startRestWithSeconds(restRemainingSeconds);
-      }
-    }
-
-    function adjustRestTimer(deltaSec) {
-      restRemainingSeconds = Math.max(0, restRemainingSeconds + deltaSec);
-      if (restRemainingSeconds > restTotalSeconds) {
-        restTotalSeconds = restRemainingSeconds;
-      }
-      updateRestUI();
-    }
-
-    function setRestPreset(seconds) {
-      startRestWithSeconds(seconds);
-    }
-
-    // ---------------------------------------------------------
-    // NUTRITION, WEIGHT-LINKED CALORIES, PHOTO, TEXT & SUPPS
-    // ---------------------------------------------------------
-    function getEffectiveWeightKg() {
-      const prof = appState.nutritionProfile;
-      const vitals = [...(appState.vitals || [])].sort((a, b) => b.date.localeCompare(a.date));
-      if (!vitals.length) return prof.startWeightKg || 89.0;
-
-      if (prof.weightBasis === 'latest') {
-        return Number(vitals[0].weightKg) || prof.startWeightKg || 89.0;
-      }
-
-      const recent7 = vitals.slice(0, 7);
-      const sum = recent7.reduce((acc, v) => acc + (Number(v.weightKg) || 0), 0);
-      return recent7.length ? Number((sum / recent7.length).toFixed(1)) : (prof.startWeightKg || 89.0);
-    }
-
-    function calculateDailyMacroTargets() {
-      const prof = appState.nutritionProfile;
-      const weightKg = getEffectiveWeightKg();
-      const heightCm = Number(prof.heightCm) || 182;
-      const age = Number(prof.age) || 35;
-      const activity = Number(prof.activityMultiplier) || 1.50;
-      const deficit = Number(prof.deficitKcal) || 500;
-
-      // Mifflin-St Jeor male baseline scaled cleanly to user's weight & 182cm height
-      const bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
-      const tdee = bmr * activity;
-      const targetCalories = Math.max(1500, Math.round(tdee - deficit));
-
-      // Protein anchored to target/current weight (~2.0g/kg target weight for muscle retention)
-      const proteinTarget = Math.round(Math.max(prof.targetWeightKg || 80, weightKg * 0.9) * 2.0);
-      const fatTarget = Math.round((targetCalories * 0.25) / 9);
-      const carbTarget = Math.max(80, Math.round((targetCalories - proteinTarget * 4 - fatTarget * 9) / 4));
-      const fibreTarget = Math.round(Math.max(28, (targetCalories / 1000) * 14));
-
-      return {
-        weightKg,
-        targetCalories,
-        proteinTarget,
-        carbTarget,
-        fatTarget,
-        fibreTarget
-      };
-    }
-
-    function toggleNutritionSettings() {
-      document.getElementById('nutrition-settings-drawer').classList.toggle('hidden');
-    }
-
-    function saveNutritionProfile() {
-      const prof = appState.nutritionProfile;
-      prof.heightCm = parseFloat(document.getElementById('prof-height').value) || 182;
-      prof.targetWeightKg = parseFloat(document.getElementById('prof-target-weight').value) || 80.0;
-      prof.age = parseInt(document.getElementById('prof-age').value, 10) || 35;
-      prof.weightBasis = document.getElementById('prof-weight-basis').value;
-      prof.activityMultiplier = parseFloat(document.getElementById('prof-activity').value) || 1.50;
-      prof.deficitKcal = parseInt(document.getElementById('prof-deficit').value, 10) || 500;
-      saveState();
-      renderNutritionTab();
-      showToast('Daily calorie & macro targets recalculated!', 'success');
-    }
-
-    function changeNutritionDate(dateStr) {
-      if (!dateStr) return;
-      appState.activeNutritionDate = dateStr;
-      saveState();
-      renderNutritionTab();
-    }
-
-    function quickFillFoodQuery(queryText) {
-      document.getElementById('text-food-query').value = queryText;
-      calculateTextFoodMacros();
-    }
-
-    function calculateTextFoodMacros() {
-      const rawQuery = document.getElementById('text-food-query').value.trim();
-      if (!rawQuery) {
-        showToast('Type a food item first (e.g., "200ml low fat meiji milk").', 'error');
+    function parseFoodText() {
+      const rawText = document.getElementById('food-text-input').value.trim();
+      if (!rawText) {
+        showToast('Type a food item first (e.g. 200ml low fat meiji milk)');
         return;
       }
 
-      const lower = rawQuery.toLowerCase();
-      const qtyMatch = lower.match(/(\d+(?:\.\d+)?)\s*(ml|l|g|kg|scoop|scoops|egg|eggs|pc|pcs)?/);
-      let qty = qtyMatch ? parseFloat(qtyMatch[1]) : 1;
-      const unit = qtyMatch && qtyMatch[2] ? qtyMatch[2] : '';
+      // Split multi-item queries separated by "+", "and", or ","
+      const parts = rawText.split(/\+|,|\band\b/i).map(p => p.trim()).filter(Boolean);
 
-      if (unit === 'l') qty = qty * 1000;
-      if (unit === 'kg') qty = qty * 1000;
+      let totalKcal = 0;
+      let totalPro = 0;
+      let totalCarb = 0;
+      let totalFat = 0;
+      let totalFib = 0;
+      let matchedLabels = [];
 
-      const matched = FOOD_DATABASE.find(item => item.keywords.some(kw => lower.includes(kw)));
+      parts.forEach(part => {
+        const lower = part.toLowerCase();
+        // Extract leading or inline quantity + unit (e.g., 200ml, 150g, 2 eggs, 1 scoop)
+        const qtyMatch = lower.match(/(\d+(?:\.\d+)?)\s*(ml|g|kg|l|scoop|scoops|egg|eggs|cup|cups|pc|pcs)?/);
+        const qty = qtyMatch ? parseFloat(qtyMatch[1]) : 1;
+        const unit = qtyMatch && qtyMatch[2] ? qtyMatch[2] : '';
 
-      if (matched) {
-        const multiplier = qty / matched.baseQty;
-        const displayName = rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1);
-        document.getElementById('text-food-name').value = displayName;
-        document.getElementById('text-food-kcal').value = Math.round(matched.kcal * multiplier);
-        document.getElementById('text-food-protein').value = (matched.protein * multiplier).toFixed(1);
-        document.getElementById('text-food-carbs').value = (matched.carbs * multiplier).toFixed(1);
-        document.getElementById('text-food-fats').value = (matched.fats * multiplier).toFixed(1);
-        document.getElementById('text-food-fibre').value = (matched.fibre * multiplier).toFixed(1);
-        document.getElementById('text-food-match-badge').textContent = `Matched: ${matched.name}`;
-        showToast(`Calculated macros for "${displayName}".`, 'success');
-      } else {
-        const estMultiplier = qtyMatch ? qty / 100 : 1;
-        document.getElementById('text-food-name').value = rawQuery;
-        document.getElementById('text-food-kcal').value = Math.round(220 * estMultiplier);
-        document.getElementById('text-food-protein').value = (15 * estMultiplier).toFixed(1);
-        document.getElementById('text-food-carbs').value = (24 * estMultiplier).toFixed(1);
-        document.getElementById('text-food-fats').value = (7 * estMultiplier).toFixed(1);
-        document.getElementById('text-food-fibre').value = (3 * estMultiplier).toFixed(1);
-        document.getElementById('text-food-match-badge').textContent = 'Custom Estimate';
-        showToast('Estimated macros filled — adjust if needed and log.', 'info');
-      }
-    }
+        // Find best matching food item in database
+        let bestFood = null;
+        let longestKeyLen = 0;
+        FOOD_DB.forEach(item => {
+          item.keys.forEach(k => {
+            if (lower.includes(k) && k.length > longestKeyLen) {
+              bestFood = item;
+              longestKeyLen = k.length;
+            }
+          });
+        });
 
-    function logCalculatedTextFood() {
-      const dateStr = appState.activeNutritionDate || getTodayISO();
-      const name = document.getElementById('text-food-name').value.trim() || 'Food Item';
-      const kcal = Math.max(0, parseFloat(document.getElementById('text-food-kcal').value) || 0);
-      const protein = Math.max(0, parseFloat(document.getElementById('text-food-protein').value) || 0);
-      const carbs = Math.max(0, parseFloat(document.getElementById('text-food-carbs').value) || 0);
-      const fats = Math.max(0, parseFloat(document.getElementById('text-food-fats').value) || 0);
-      const fibre = Math.max(0, parseFloat(document.getElementById('text-food-fibre').value) || 0);
+        if (bestFood) {
+          let multiplier = 1;
+          if (bestFood.unitType === 'ml' || bestFood.unitType === 'g') {
+            if (unit === 'kg' || unit === 'l') {
+              multiplier = (qty * 1000) / bestFood.baseQty;
+            } else if (unit === 'ml' || unit === 'g' || qty >= 15) {
+              multiplier = qty / bestFood.baseQty;
+            } else {
+              // e.g. "1 chicken breast" -> ~150g
+              multiplier = (qty * 150) / bestFood.baseQty;
+            }
+          } else {
+            // unit or scoop
+            multiplier = qty / bestFood.baseQty;
+          }
 
-      if (!appState.foodLogsByDate[dateStr]) appState.foodLogsByDate[dateStr] = [];
-      appState.foodLogsByDate[dateStr].unshift({
-        id: 'text-' + Date.now(),
-        name,
-        kcal: Math.round(kcal),
-        protein,
-        carbs,
-        fats,
-        fibre,
-        source: 'Text Parser'
+          totalKcal += bestFood.kcal * multiplier;
+          totalPro += bestFood.pro * multiplier;
+          totalCarb += bestFood.carb * multiplier;
+          totalFat += bestFood.fat * multiplier;
+          totalFib += bestFood.fib * multiplier;
+          matchedLabels.push(part);
+        } else {
+          // Intelligent fallback estimation if custom food not in dictionary
+          const fallbackMult = (unit === 'g' || unit === 'ml') ? qty / 100 : qty;
+          totalKcal += 180 * fallbackMult;
+          totalPro += 12 * fallbackMult;
+          totalCarb += 20 * fallbackMult;
+          totalFat += 5 * fallbackMult;
+          totalFib += 2 * fallbackMult;
+          matchedLabels.push(part);
+        }
       });
 
+      document.getElementById('preview-food-name').value = rawText.replace(/\b\w/g, c => c.toUpperCase());
+      document.getElementById('preview-food-kcal').value = Math.round(totalKcal);
+      document.getElementById('preview-food-pro').value = totalPro.toFixed(1);
+      document.getElementById('preview-food-carb').value = totalCarb.toFixed(1);
+      document.getElementById('preview-food-fat').value = totalFat.toFixed(1);
+      document.getElementById('preview-food-fib').value = totalFib.toFixed(1);
+      document.getElementById('parsed-match-hint').textContent = `${parts.length} item(s) calculated`;
+
+      showToast('Macros & fibre calculated! Tap Log Meal to save.');
+    }
+
+    function addPreviewFoodToToday() {
+      const name = document.getElementById('preview-food-name').value.trim() || 'Logged Meal';
+      const kcal = Math.max(0, parseFloat(document.getElementById('preview-food-kcal').value) || 0);
+      const pro = Math.max(0, parseFloat(document.getElementById('preview-food-pro').value) || 0);
+      const carb = Math.max(0, parseFloat(document.getElementById('preview-food-carb').value) || 0);
+      const fat = Math.max(0, parseFloat(document.getElementById('preview-food-fat').value) || 0);
+      const fib = Math.max(0, parseFloat(document.getElementById('preview-food-fib').value) || 0);
+
+      appState.meals.unshift({
+        id: 'm-' + Date.now(),
+        name,
+        kcal: Math.round(kcal),
+        pro: Number(pro.toFixed(1)),
+        carb: Number(carb.toFixed(1)),
+        fat: Number(fat.toFixed(1)),
+        fib: Number(fib.toFixed(1))
+      });
+
+      document.getElementById('food-text-input').value = '';
       saveState();
       renderNutritionTab();
-      showToast(`Added "${name}" to today's intake.`, 'success');
+      showToast(`Added "${name}" (+${Math.round(kcal)} kcal)`, 'green');
     }
 
-    function deleteFoodLogItem(id) {
-      const dateStr = appState.activeNutritionDate || getTodayISO();
-      if (!appState.foodLogsByDate[dateStr]) return;
-      appState.foodLogsByDate[dateStr] = appState.foodLogsByDate[dateStr].filter(item => item.id !== id);
+    function deleteMeal(mealId) {
+      appState.meals = appState.meals.filter(m => m.id !== mealId);
       saveState();
       renderNutritionTab();
+      showToast('Meal removed');
     }
 
-    function markSupplementFromDropdown() {
-      const suppName = document.getElementById('supplement-dropdown').value;
-      const dateStr = appState.activeNutritionDate || getTodayISO();
-      if (!appState.supplementsByDate[dateStr]) appState.supplementsByDate[dateStr] = {};
-      const now = new Date();
-      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-      appState.supplementsByDate[dateStr][suppName] = timeStr;
-      saveState();
-      renderSupplementsChecklist();
-      showToast(`${suppName} marked taken at ${timeStr}.`, 'success');
-    }
-
-    function toggleSupplementItem(suppName) {
-      const dateStr = appState.activeNutritionDate || getTodayISO();
-      if (!appState.supplementsByDate[dateStr]) appState.supplementsByDate[dateStr] = {};
-      if (appState.supplementsByDate[dateStr][suppName]) {
-        delete appState.supplementsByDate[dateStr][suppName];
+    function toggleSupplement(suppName) {
+      if (appState.supplementsTaken[suppName]) {
+        delete appState.supplementsTaken[suppName];
       } else {
-        const now = new Date();
-        appState.supplementsByDate[dateStr][suppName] = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        appState.supplementsTaken[suppName] = nowStr;
       }
       saveState();
-      renderSupplementsChecklist();
+      renderSupplements();
     }
 
-    function renderSupplementsChecklist() {
-      const dateStr = appState.activeNutritionDate || getTodayISO();
-      const takenMap = appState.supplementsByDate[dateStr] || {};
-      const takenCount = SUPPLEMENTS_LIST.filter(s => Boolean(takenMap[s])).length;
-      document.getElementById('supp-progress-badge').textContent = `${takenCount} / ${SUPPLEMENTS_LIST.length} taken`;
+    function logSupplementFromDropdown() {
+      const dropdown = document.getElementById('supplement-dropdown');
+      const val = dropdown.value;
+      if (!val) {
+        showToast('Choose a supplement from the dropdown first.');
+        return;
+      }
+      const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      appState.supplementsTaken[val] = nowStr;
+      dropdown.value = '';
+      saveState();
+      renderSupplements();
+      showToast(`${val} marked taken!`, 'green');
+    }
 
-      const grid = document.getElementById('supplements-checklist');
+    function renderSupplements() {
+      const dropdown = document.getElementById('supplement-dropdown');
+      dropdown.innerHTML = '<option value="">-- Select supplement taken --</option>' +
+        SUPPLEMENTS_LIST.map(s => `<option value="${s}">${s}${appState.supplementsTaken[s] ? ' (Taken)' : ''}</option>`).join('');
+
+      const takenCount = Object.keys(appState.supplementsTaken).length;
+      document.getElementById('supps-progress-pill').textContent = `${takenCount} / ${SUPPLEMENTS_LIST.length} Taken`;
+
+      const grid = document.getElementById('supplements-grid');
       grid.innerHTML = SUPPLEMENTS_LIST.map(supp => {
-        const takenAt = takenMap[supp];
-        const isTaken = Boolean(takenAt);
+        const timeTaken = appState.supplementsTaken[supp];
+        const isDone = Boolean(timeTaken);
         return `
-          <button onclick="toggleSupplementItem('${supp.replace(/'/g, "\\'")}')" class="text-left p-3 rounded-xl border transition flex items-center justify-between gap-2 ${isTaken ? 'bg-emerald-950/35 border-emerald-500/40 text-white' : 'bg-af-surface/75 border-af-border text-slate-300 hover:border-af-purple'}">
-            <div>
-              <div class="text-xs font-bold">${supp}</div>
-              <div class="text-[10px] ${isTaken ? 'text-emerald-300' : 'text-slate-400'} mt-0.5">${isTaken ? `Taken ${takenAt}` : 'Tap to mark'}</div>
+          <button onclick="toggleSupplement('${supp}')" class="p-3 rounded-xl border text-left flex items-center justify-between gap-2 transition ${isDone ? 'bg-emerald-950/30 border-emerald-500/40 text-white' : 'bg-af-surface/70 border-af-border text-slate-300 hover:border-af-purple'}">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="w-5 h-5 rounded-md flex items-center justify-center border shrink-0 ${isDone ? 'bg-emerald-500 border-emerald-400 text-slate-950' : 'bg-af-dark border-af-border text-transparent'}">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </span>
+              <span class="text-xs font-bold truncate">${supp}</span>
             </div>
-            <span class="w-5 h-5 rounded-md flex items-center justify-center text-xs font-black ${isTaken ? 'bg-emerald-500 text-slate-950' : 'bg-af-card border border-af-border text-transparent'}">&#10003;</span>
+            <span class="text-[10px] font-semibold shrink-0 ${isDone ? 'text-emerald-300' : 'text-slate-500'}">
+              ${isDone ? timeTaken : 'Pending'}
+            </span>
           </button>
         `;
       }).join('');
     }
 
     function renderNutritionTab() {
-      const dateStr = appState.activeNutritionDate || getTodayISO();
-      document.getElementById('nutrition-date-picker').value = dateStr;
+      const { avgWeight, targetKcal, targetPro, targetCarb, targetFat, targetFib } = computeDailyMacroTargets();
 
-      const prof = appState.nutritionProfile;
-      document.getElementById('prof-height').value = prof.heightCm;
-      document.getElementById('prof-target-weight').value = prof.targetWeightKg;
-      document.getElementById('prof-age').value = prof.age;
-      document.getElementById('prof-weight-basis').value = prof.weightBasis;
-      document.getElementById('prof-activity').value = String(prof.activityMultiplier);
-      document.getElementById('prof-deficit').value = String(prof.deficitKcal);
-
-      const targets = calculateDailyMacroTargets();
-      const foods = appState.foodLogsByDate[dateStr] || [];
-
-      const totals = foods.reduce((acc, f) => {
-        acc.kcal += Number(f.kcal) || 0;
-        acc.protein += Number(f.protein) || 0;
-        acc.carbs += Number(f.carbs) || 0;
-        acc.fats += Number(f.fats) || 0;
-        acc.fibre += Number(f.fibre) || 0;
+      const totals = appState.meals.reduce((acc, m) => {
+        acc.kcal += m.kcal;
+        acc.pro += m.pro;
+        acc.carb += m.carb;
+        acc.fat += m.fat;
+        acc.fib += m.fib;
         return acc;
-      }, { kcal: 0, protein: 0, carbs: 0, fats: 0, fibre: 0 });
+      }, { kcal: 0, pro: 0, carb: 0, fat: 0, fib: 0 });
 
-      const remKcal = Math.round(targets.targetCalories - totals.kcal);
-      const remProtein = (targets.proteinTarget - totals.protein).toFixed(1);
-      const remCarbs = (targets.carbTarget - totals.carbs).toFixed(1);
-      const remFats = (targets.fatTarget - totals.fats).toFixed(1);
-      const remFibre = (targets.fibreTarget - totals.fibre).toFixed(1);
+      const remKcal = Math.round(targetKcal - totals.kcal);
+      const remPro = Math.round(targetPro - totals.pro);
+      const remCarb = Math.round(targetCarb - totals.carb);
+      const remFat = Math.round(targetFat - totals.fat);
+      const remFib = Math.round(targetFib - totals.fib);
 
-      document.getElementById('calorie-formula-summary').textContent =
-        `Using ${targets.weightKg.toFixed(1)} kg (${prof.weightBasis === 'avg7' ? '7-day avg' : 'latest weigh-in'}) • ${prof.heightCm} cm • Target ${prof.targetWeightKg.toFixed(1)} kg • Daily Goal: ${targets.targetCalories} kcal`;
-
-      const remKcalEl = document.getElementById('rem-kcal');
-      remKcalEl.textContent = `${remKcal}`;
-      remKcalEl.className = `text-2xl font-black mt-1 tabular-nums ${remKcal >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
-      document.getElementById('sub-kcal').textContent = `${Math.round(totals.kcal)} / ${targets.targetCalories} kcal`;
-
-      document.getElementById('rem-protein').textContent = `${remProtein}g`;
-      document.getElementById('sub-protein').textContent = `${totals.protein.toFixed(1)} / ${targets.proteinTarget}g`;
-
-      document.getElementById('rem-carbs').textContent = `${remCarbs}g`;
-      document.getElementById('sub-carbs').textContent = `${totals.carbs.toFixed(1)} / ${targets.carbTarget}g`;
-
-      document.getElementById('rem-fats').textContent = `${remFats}g`;
-      document.getElementById('sub-fats').textContent = `${totals.fats.toFixed(1)} / ${targets.fatTarget}g`;
-
-      document.getElementById('rem-fibre').textContent = `${remFibre}g`;
-      document.getElementById('sub-fibre').textContent = `${totals.fibre.toFixed(1)} / ${targets.fibreTarget}g`;
-
-      const headerBadge = document.getElementById('header-cal-badge');
-      if (dateStr === getTodayISO()) {
-        headerBadge.textContent = `${remKcal} kcal left`;
-        headerBadge.className = `px-2 py-0.5 rounded-full text-[11px] font-bold border tabular-nums ${remKcal >= 0 ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}`;
+      // Update Header Badge
+      const navBadge = document.getElementById('nav-cal-badge');
+      navBadge.textContent = `${remKcal} left`;
+      if (remKcal < 0) {
+        navBadge.className = 'ml-1 px-2 py-0.5 text-[11px] font-extrabold rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30';
+      } else {
+        navBadge.className = 'ml-1 px-2 py-0.5 text-[11px] font-extrabold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
       }
 
-      document.getElementById('food-log-count').textContent = `${foods.length} ${foods.length === 1 ? 'item' : 'items'}`;
-      const listEl = document.getElementById('food-log-list');
-      if (!foods.length) {
-        listEl.innerHTML = '<div class="text-xs text-slate-400 py-4 text-center">No meals logged for this date yet.</div>';
+      document.getElementById('calorie-engine-subtitle').innerHTML =
+        `182cm &bull; 7-Day Avg: <strong class="text-slate-200">${avgWeight.toFixed(1)} kg</strong> &rarr; Target: <strong class="text-emerald-400">80.0 kg</strong>`;
+      document.getElementById('target-kcal-display').textContent = `${targetKcal.toLocaleString()} kcal`;
+
+      const remBigEl = document.getElementById('rem-kcal-big');
+      remBigEl.textContent = remKcal.toLocaleString();
+      remBigEl.className = `text-2xl sm:text-3xl font-black ${remKcal < 0 ? 'text-rose-400' : 'text-emerald-400'}`;
+
+      document.getElementById('consumed-kcal-text').textContent = Math.round(totals.kcal).toLocaleString();
+      document.getElementById('goal-kcal-text').textContent = targetKcal.toLocaleString();
+      document.getElementById('bar-kcal').style.width = `${Math.min(100, (totals.kcal / targetKcal) * 100)}%`;
+
+      // Macro breakdown cards
+      document.getElementById('rem-pro').textContent = `${remPro}g left`;
+      document.getElementById('bar-pro').style.width = `${Math.min(100, (totals.pro / targetPro) * 100)}%`;
+      document.getElementById('sub-pro').textContent = `${Math.round(totals.pro)} / ${targetPro}g`;
+
+      document.getElementById('rem-carb').textContent = `${remCarb}g left`;
+      document.getElementById('bar-carb').style.width = `${Math.min(100, (totals.carb / targetCarb) * 100)}%`;
+      document.getElementById('sub-carb').textContent = `${Math.round(totals.carb)} / ${targetCarb}g`;
+
+      document.getElementById('rem-fat').textContent = `${remFat}g left`;
+      document.getElementById('bar-fat').style.width = `${Math.min(100, (totals.fat / targetFat) * 100)}%`;
+      document.getElementById('sub-fat').textContent = `${Math.round(totals.fat)} / ${targetFat}g`;
+
+      document.getElementById('rem-fib').textContent = `${remFib}g left`;
+      document.getElementById('bar-fib').style.width = `${Math.min(100, (totals.fib / targetFib) * 100)}%`;
+      document.getElementById('sub-fib').textContent = `${Math.round(totals.fib)} / ${targetFib}g`;
+
+      // Today's Meals List
+      document.getElementById('meals-count-label').textContent = `${appState.meals.length} items`;
+      const mealsList = document.getElementById('today-meals-list');
+      if (appState.meals.length === 0) {
+        mealsList.innerHTML = '<p class="text-xs text-slate-400 py-2">No meals logged today yet.</p>';
       } else {
-        listEl.innerHTML = foods.map(f => `
-          <div class="bg-af-surface/80 border border-af-border rounded-xl p-3 flex items-center justify-between gap-3">
-            <div>
-              <div class="text-sm font-bold text-white">${f.name} <span class="text-[11px] font-semibold text-af-purpleLight ml-1">[${f.source}]</span></div>
-              <div class="text-xs text-slate-300 mt-0.5 tabular-nums">
-                <strong class="text-white">${Math.round(f.kcal)} kcal</strong> &bull;
-                P: <span class="text-blue-300">${Number(f.protein).toFixed(1)}g</span> &bull;
-                C: <span class="text-amber-300">${Number(f.carbs).toFixed(1)}g</span> &bull;
-                F: <span class="text-rose-300">${Number(f.fats).toFixed(1)}g</span> &bull;
-                Fibre: <span class="text-emerald-300">${Number(f.fibre).toFixed(1)}g</span>
+        mealsList.innerHTML = appState.meals.map(m => `
+          <div class="bg-af-surface/70 border border-af-border rounded-xl p-3 flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <div class="text-xs sm:text-sm font-bold text-white truncate">${m.name}</div>
+              <div class="flex flex-wrap items-center gap-2 text-[11px] text-slate-400 mt-0.5">
+                <span class="font-extrabold text-emerald-300">${m.kcal} kcal</span>
+                <span>P: <strong class="text-blue-300">${m.pro}g</strong></span>
+                <span>C: <strong class="text-amber-300">${m.carb}g</strong></span>
+                <span>F: <strong class="text-rose-300">${m.fat}g</strong></span>
+                <span>Fib: <strong class="text-emerald-300">${m.fib}g</strong></span>
               </div>
             </div>
-            <button onclick="deleteFoodLogItem('${f.id}')" class="px-2.5 py-1.5 rounded-lg bg-af-card hover:bg-rose-950 text-slate-400 hover:text-rose-300 border border-af-border text-xs font-bold transition">
-              Remove
+            <button onclick="deleteMeal('${m.id}')" title="Remove meal" class="p-1.5 rounded-lg bg-af-dark hover:bg-rose-950/60 border border-af-border text-slate-400 hover:text-rose-300 transition shrink-0">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
             </button>
           </div>
         `).join('');
       }
 
-      renderSupplementsChecklist();
+      renderSupplements();
     }
 
     // ---------------------------------------------------------
-    // 1RM HUB & ESTIMATOR (EPLEY / BRZYCKI)
+    // 8. 1RM HUB & STRENGTH CALCULATOR
     // ---------------------------------------------------------
-    function computeEstimated1RM(weight, reps, formula) {
-      const w = Math.max(0, parseFloat(weight) || 0);
-      const r = Math.max(1, Math.min(15, parseInt(reps, 10) || 1));
-      if (r === 1) return w;
-      const epley = w * (1 + r / 30);
-      const brzycki = r >= 37 ? w : w * (36 / (37 - r));
-      if (formula === 'brzycki') return Number(brzycki.toFixed(1));
-      if (formula === 'average') return Number(((epley + brzycki) / 2).toFixed(1));
-      return Number(epley.toFixed(1));
-    }
+    function calculate1RMHub() {
+      const w = parseFloat(document.getElementById('calc-1rm-weight').value) || 0;
+      const r = parseInt(document.getElementById('calc-1rm-reps').value, 10) || 1;
+      // Average of Epley & Brzycki
+      const epley = r === 1 ? w : w * (1 + r / 30);
+      const brzycki = r === 1 ? w : w * (36 / (37 - Math.min(r, 36)));
+      const est1RM = roundTo2Point5((epley + brzycki) / 2);
 
-    function update1RMEstimatePreview() {
-      const w = document.getElementById('est-weight-input').value;
-      const r = document.getElementById('est-reps-input').value;
-      const formula = document.getElementById('est-formula-select').value;
-      const est = computeEstimated1RM(w, r, formula);
-      document.getElementById('est-1rm-result').textContent = `${est.toFixed(1)} kg`;
-      return est;
-    }
+      document.getElementById('calc-1rm-output').textContent = `${est1RM.toFixed(1)} kg`;
 
-    function applyEstimated1RM() {
-      const lift = document.getElementById('est-lift-select').value;
-      const est = update1RMEstimatePreview();
-      const rounded = roundToPlate(est) || Math.round(est);
-      appState.oneRMs[lift] = rounded;
-      saveState();
-      renderOneRMTab();
-      renderWorkoutTab();
-      showToast(`Saved ${lift} 1RM as ${rounded} kg.`, 'success');
-    }
-
-    function updateDirect1RM(liftName, newVal) {
-      const val = parseFloat(newVal);
-      if (isNaN(val) || val <= 0) return;
-      appState.oneRMs[liftName] = val;
-      saveState();
-      renderOneRMTab();
-      renderWorkoutTab();
-    }
-
-    function renderOneRMTab() {
-      update1RMEstimatePreview();
-      const container = document.getElementById('one-rm-cards-list');
-      const lifts = Object.keys(appState.oneRMs);
-      container.innerHTML = lifts.map(lift => {
-        const maxKg = appState.oneRMs[lift];
-        const w85 = roundToPlate(maxKg * 0.85);
-        const w75 = roundToPlate(maxKg * 0.75);
-        const w65 = roundToPlate(maxKg * 0.65);
+      const pcts = [60, 65, 70, 75, 80, 85, 90, 95];
+      const grid = document.getElementById('one-rm-percentages-grid');
+      grid.innerHTML = pcts.map(p => {
+        const load = roundTo2Point5(est1RM * (p / 100));
         return `
-          <div class="bg-af-surface/80 border border-af-border rounded-xl p-3.5 space-y-2">
-            <div class="flex items-center justify-between gap-3">
-              <span class="text-sm font-extrabold text-white">${lift}</span>
-              <div class="flex items-center gap-1.5">
-                <input type="number" step="2.5" min="5" value="${maxKg}" onchange="updateDirect1RM('${lift.replace(/'/g, "\\'")}', this.value)" class="w-24 bg-af-card border border-af-border rounded-lg px-2.5 py-1 text-sm font-extrabold text-af-purpleLight text-right tabular-nums">
-                <span class="text-xs font-bold text-slate-400">kg</span>
-              </div>
-            </div>
-            <div class="flex flex-wrap gap-2 text-[11px] font-bold text-slate-300 tabular-nums">
-              <span class="px-2 py-0.5 rounded bg-af-card border border-af-border">85%: ${w85} kg</span>
-              <span class="px-2 py-0.5 rounded bg-af-card border border-af-border">75%: ${w75} kg</span>
-              <span class="px-2 py-0.5 rounded bg-af-card border border-af-border">65%: ${w65} kg</span>
-            </div>
+          <div class="bg-af-surface/80 border border-af-border rounded-xl p-2 text-center">
+            <div class="text-[10px] font-bold text-af-purpleLight">${p}%</div>
+            <div class="text-xs font-extrabold text-white mt-0.5">${load}kg</div>
           </div>
         `;
       }).join('');
     }
 
-    // ---------------------------------------------------------
-    // VITALS & BODY WEIGHT LOGGING
-    // ---------------------------------------------------------
-    function saveVitalEntry(e) {
-      e.preventDefault();
-      const dateStr = document.getElementById('vital-date').value || getTodayISO();
-      const weightKg = parseFloat(document.getElementById('vital-weight').value);
-      const restingHr = parseInt(document.getElementById('vital-hr').value, 10) || 60;
-      const sleepHrs = parseFloat(document.getElementById('vital-sleep').value) || 7.5;
-      const notes = document.getElementById('vital-notes').value.trim();
-
-      if (isNaN(weightKg) || weightKg <= 0) {
-        showToast('Enter a valid body weight in kg.', 'error');
-        return;
-      }
-
-      appState.vitals = (appState.vitals || []).filter(v => v.date !== dateStr);
-      appState.vitals.unshift({
-        id: 'vit-' + Date.now(),
-        date: dateStr,
-        weightKg: Number(weightKg.toFixed(1)),
-        restingHr,
-        sleepHrs,
-        notes
-      });
-      appState.vitals.sort((a, b) => b.date.localeCompare(a.date));
-
+    function updateSaved1RM(liftName, newValue) {
+      const val = parseFloat(newValue);
+      if (!val || val <= 0) return;
+      appState.oneRMs[liftName] = val;
       saveState();
-      renderVitalsTab();
-      renderNutritionTab();
-      showToast(`Logged ${weightKg.toFixed(1)} kg for ${dateStr} & updated calorie goal.`, 'success');
+      renderWorkoutTab();
+      showToast(`Updated ${liftName} 1RM to ${val} kg`);
     }
 
-    function renderVitalsTab() {
-      const vitals = [...(appState.vitals || [])].sort((a, b) => b.date.localeCompare(a.date));
-      const latest = vitals.length ? vitals[0].weightKg : (appState.nutritionProfile.startWeightKg || 89.0);
-      const avg7 = getEffectiveWeightKg();
-      const targetKg = appState.nutritionProfile.targetWeightKg || 80.0;
-      const toGo = Math.max(0, avg7 - targetKg).toFixed(1);
-
-      document.getElementById('vital-latest-kg').textContent = `${Number(latest).toFixed(1)} kg`;
-      document.getElementById('vital-avg7-kg').textContent = `${Number(avg7).toFixed(1)} kg`;
-      document.getElementById('vital-remaining-kg').textContent = `${toGo} kg`;
-
-      const listEl = document.getElementById('vitals-history-list');
-      if (!vitals.length) {
-        listEl.innerHTML = '<div class="text-xs text-slate-400 py-4 text-center">No weigh-ins recorded yet.</div>';
-        return;
-      }
-
-      listEl.innerHTML = vitals.map(v => `
-        <div class="bg-af-surface/80 border border-af-border rounded-xl p-3 flex items-center justify-between gap-3">
+    function render1RMHub() {
+      calculate1RMHub();
+      const list = document.getElementById('saved-1rm-list');
+      list.innerHTML = Object.entries(appState.oneRMs).map(([lift, val]) => `
+        <div class="bg-af-surface/70 border border-af-border rounded-xl p-3.5 flex items-center justify-between gap-3">
           <div>
-            <div class="text-sm font-extrabold text-white tabular-nums">${Number(v.weightKg).toFixed(1)} kg <span class="text-xs font-semibold text-af-purpleLight ml-1">${v.date}</span></div>
-            <div class="text-xs text-slate-400 mt-0.5 tabular-nums">HR: ${v.restingHr} bpm &bull; Sleep: ${v.sleepHrs}h${v.notes ? ` &bull; ${v.notes}` : ''}</div>
+            <div class="text-sm font-extrabold text-white">${lift}</div>
+            <div class="text-[11px] text-slate-400">75% Working: <strong class="text-af-purpleLight">${roundTo2Point5(val * 0.75)} kg</strong></div>
+          </div>
+          <div class="flex items-center bg-af-dark border border-af-border rounded-xl px-3 py-1.5">
+            <input type="number" step="2.5" value="${val}" onchange="updateSaved1RM('${lift}', this.value)" class="w-14 bg-transparent text-right text-sm font-black text-white focus:outline-none" />
+            <span class="text-xs font-bold text-slate-400 ml-1">kg</span>
           </div>
         </div>
       `).join('');
     }
 
     // ---------------------------------------------------------
-    // STANDALONE PWA MANIFEST & ANDROID APP SHORTCUTS
+    // 9. VITALS TAB & WEIGHT TREND SVG CHART
     // ---------------------------------------------------------
-    function setupPWAManifestAndShortcuts() {
+    function logMorningWeight() {
+      const dateInput = document.getElementById('vital-date-input');
+      const weightInput = document.getElementById('vital-weight-input');
+      const dateVal = dateInput.value || getTodayISO();
+      const weightVal = parseFloat(weightInput.value);
+
+      if (!weightVal || weightVal < 40 || weightVal > 200) {
+        showToast('Enter a valid bodyweight in kg (e.g. 88.5).');
+        return;
+      }
+
+      // Replace if same date exists, otherwise push
+      const existingIdx = appState.weights.findIndex(w => w.date === dateVal);
+      if (existingIdx >= 0) {
+        appState.weights[existingIdx].weight = Number(weightVal.toFixed(1));
+      } else {
+        appState.weights.push({ date: dateVal, weight: Number(weightVal.toFixed(1)) });
+      }
+      appState.weights.sort((a, b) => a.date.localeCompare(b.date));
+      weightInput.value = '';
+
+      saveState();
+      renderVitalsTab();
+      renderNutritionTab();
+      showToast(`Logged ${weightVal.toFixed(1)} kg & updated daily calorie budget!`, 'green');
+    }
+
+    function renderVitalsTab() {
+      document.getElementById('vital-date-input').value = getTodayISO();
+
+      const avgWeight = getRolling7DayWeight();
+      document.getElementById('vitals-avg-display').textContent = `${avgWeight.toFixed(1)} kg`;
+
+      const startW = 89.0;
+      const goalW = 80.0;
+      const lost = Math.max(0, startW - avgWeight);
+      const totalToLose = startW - goalW;
+      const pct = Math.min(100, Math.max(4, Math.round((lost / totalToLose) * 100)));
+      const toGo = Math.max(0, avgWeight - goalW).toFixed(1);
+
+      document.getElementById('vitals-to-go-text').textContent = `${toGo} kg to target`;
+      document.getElementById('vitals-progress-bar').style.width = `${pct}%`;
+
+      // Render SVG Weight Chart
+      const chartBox = document.getElementById('weight-chart-container');
+      const pts = [...appState.weights].sort((a, b) => a.date.localeCompare(b.date)).slice(-10);
+      if (pts.length < 2) {
+        chartBox.innerHTML = '<div class="h-full flex items-center justify-center text-xs text-slate-500">Log at least 2 weigh-ins to see trend line</div>';
+      } else {
+        const w = 520;
+        const h = 130;
+        const padX = 28;
+        const padY = 22;
+        const values = pts.map(p => p.weight);
+        const minV = Math.min(...values) - 0.5;
+        const maxV = Math.max(...values) + 0.5;
+        const range = Math.max(1, maxV - minV);
+
+        const coords = pts.map((p, i) => {
+          const x = padX + (i / (pts.length - 1)) * (w - padX * 2);
+          const y = h - padY - ((p.weight - minV) / range) * (h - padY * 2);
+          return { x, y, label: p.weight.toFixed(1), date: p.date.slice(5) };
+        });
+
+        const polylinePoints = coords.map(c => `${c.x},${c.y}`).join(' ');
+        const circlesHtml = coords.map(c => `
+          <circle cx="${c.x}" cy="${c.y}" r="4.5" fill="#A78BFA" stroke="#0B0F19" stroke-width="2" />
+          <text x="${c.x}" y="${c.y - 9}" text-anchor="middle" fill="#F8FAFC" font-size="11" font-weight="700">${c.label}</text>
+          <text x="${c.x}" y="${h - 4}" text-anchor="middle" fill="#64748B" font-size="9" font-weight="600">${c.date}</text>
+        `).join('');
+
+        chartBox.innerHTML = `
+          <svg viewBox="0 0 ${w} ${h}" class="w-full h-full overflow-visible">
+            <polyline fill="none" stroke="#7C3AED" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${polylinePoints}" />
+            ${circlesHtml}
+          </svg>
+        `;
+      }
+
+      // History list
+      const list = document.getElementById('vitals-history-list');
+      const desc = [...appState.weights].sort((a, b) => b.date.localeCompare(a.date));
+      list.innerHTML = desc.map(item => `
+        <div class="bg-af-surface/70 border border-af-border rounded-xl px-3.5 py-2.5 flex items-center justify-between text-xs">
+          <span class="font-semibold text-slate-300">${item.date}</span>
+          <span class="font-extrabold text-white">${Number(item.weight).toFixed(1)} kg</span>
+        </div>
+      `).join('');
+    }
+
+    // ---------------------------------------------------------
+    // 10. SMART REST TIMER + WEB AUDIO CHIME
+    // ---------------------------------------------------------
+    let restRemainingSec = 90;
+    let restInterval = null;
+    let restRunning = false;
+
+    function playTimerBeep() {
       try {
-        const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#g)"/><path d="M138 150h236M138 362h236M96 204v104M416 204v104M56 232v48M456 232v48M256 150v212" stroke="#FFFFFF" stroke-width="38" stroke-linecap="round" fill="none"/></svg>`;
-        const iconUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(iconSvg);
-        const baseUrl = window.location.origin + window.location.pathname;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        [880, 1174.66].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.15, ctx.currentTime + idx * 0.18);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.18 + 0.35);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.18);
+          osc.stop(ctx.currentTime + idx * 0.18 + 0.36);
+        });
+      } catch (e) {}
+    }
 
-        const manifest = {
-          name: 'AF SG Strength & Fuel',
-          short_name: 'AF SG Tracker',
-          description: 'Anytime Fitness Singapore 3-Day Workout, 1RM & Nutrition Tracker',
-          start_url: baseUrl,
-          scope: baseUrl,
-          display: 'standalone',
-          orientation: 'portrait',
-          background_color: '#0B0F19',
-          theme_color: '#7C3AED',
-          icons: [
-            { src: iconUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' },
-            { src: iconUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
-          ],
-          shortcuts: [
-            {
-              name: 'Log Food',
-              short_name: 'Log Food',
-              description: 'Jump to Nutrition & Food Log',
-              url: `${baseUrl}?action=food`,
-              icons: [{ src: iconUrl, sizes: '192x192', type: 'image/svg+xml' }]
-            },
-            {
-              name: 'Morning Weight',
-              short_name: 'Morning Weight',
-              description: 'Jump to Vitals & Weight Check-In',
-              url: `${baseUrl}?action=weight`,
-              icons: [{ src: iconUrl, sizes: '192x192', type: 'image/svg+xml' }]
-            },
-            {
-              name: 'Supplements',
-              short_name: 'Supplements',
-              description: 'Jump to Daily Supplements Checklist',
-              url: `${baseUrl}?action=supplements`,
-              icons: [{ src: iconUrl, sizes: '192x192', type: 'image/svg+xml' }]
-            },
-            {
-              name: 'Start Workout',
-              short_name: 'Start Workout',
-              description: 'Jump to Anytime Fitness 3-Day Workout',
-              url: `${baseUrl}?action=workout`,
-              icons: [{ src: iconUrl, sizes: '192x192', type: 'image/svg+xml' }]
-            }
-          ]
-        };
+    function updateRestTimerUI() {
+      const mins = Math.floor(restRemainingSec / 60);
+      const secs = restRemainingSec % 60;
+      document.getElementById('rest-timer-display').textContent =
+        `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
-        const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
-        const manifestUrl = URL.createObjectURL(blob);
-        const linkEl = document.getElementById('pwa-manifest-link');
-        if (linkEl) linkEl.setAttribute('href', manifestUrl);
-      } catch (err) {
-        console.warn('PWA manifest generation skipped:', err);
+      const labelEl = document.getElementById('rest-btn-label');
+      const statusEl = document.getElementById('rest-timer-status');
+      const iconEl = document.getElementById('rest-play-icon');
+
+      if (restRunning) {
+        labelEl.textContent = 'Pause';
+        statusEl.textContent = 'RESTING';
+        statusEl.className = 'text-[10px] font-extrabold uppercase tracking-wider text-emerald-400';
+        iconEl.innerHTML = '<rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" />';
+      } else {
+        labelEl.textContent = 'Rest';
+        statusEl.textContent = restRemainingSec === 0 ? 'DONE' : 'READY';
+        statusEl.className = 'text-[10px] font-extrabold uppercase tracking-wider text-slate-400';
+        iconEl.innerHTML = '<polygon points="5 3 19 12 5 21 5 3" />';
       }
     }
 
-    function handleShortcutQuery() {
-      const action = new URLSearchParams(window.location.search).get('action');
-      if (action === 'food') {
-        switchTab('nutrition');
-      } else if (action === 'weight') {
-        switchTab('vitals');
-      } else if (action === 'supplements') {
-        switchTab('nutrition');
-        setTimeout(() => {
-          const el = document.getElementById('supplement-dropdown');
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 120);
-      } else if (action === 'workout') {
-        switchTab('workout');
+    function toggleRestTimer() {
+      if (restRunning) {
+        clearInterval(restInterval);
+        restRunning = false;
+        updateRestTimerUI();
+      } else {
+        if (restRemainingSec <= 0) restRemainingSec = 90;
+        restRunning = true;
+        updateRestTimerUI();
+        restInterval = setInterval(() => {
+          restRemainingSec--;
+          if (restRemainingSec <= 0) {
+            restRemainingSec = 0;
+            clearInterval(restInterval);
+            restRunning = false;
+            playTimerBeep();
+            showToast('Rest complete — hit your next set!', 'green');
+          }
+          updateRestTimerUI();
+        }, 1000);
       }
     }
 
-    function initUI() {
-      setupPWAManifestAndShortcuts();
-      document.getElementById('vital-date').value = getTodayISO();
+    function setRestPreset(seconds) {
+      clearInterval(restInterval);
+      restRemainingSec = seconds;
+      restRunning = true;
+      updateRestTimerUI();
+      restInterval = setInterval(() => {
+        restRemainingSec--;
+        if (restRemainingSec <= 0) {
+          restRemainingSec = 0;
+          clearInterval(restInterval);
+          restRunning = false;
+          playTimerBeep();
+          showToast('Rest complete — hit your next set!', 'green');
+        }
+        updateRestTimerUI();
+      }, 1000);
+    }
+
+    function adjustRestSeconds(delta) {
+      restRemainingSec = Math.max(0, restRemainingSec + delta);
+      updateRestTimerUI();
+    }
+
+    function resetRestTimer() {
+      clearInterval(restInterval);
+      restRunning = false;
+      restRemainingSec = 90;
+      updateRestTimerUI();
+    }
+
+    // ---------------------------------------------------------
+    // 11. INITIALIZATION
+    // ---------------------------------------------------------
+    function renderAll() {
       renderWorkoutTab();
       renderNutritionTab();
-      renderOneRMTab();
+      render1RMHub();
       renderVitalsTab();
-      updateRestUI();
-      switchTab(appState.activeTab || 'workout');
-      handleShortcutQuery();
+      updateRestTimerUI();
     }
 
-    window.addEventListener('DOMContentLoaded', initUI);
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAll();
+      const params = new URLSearchParams(window.location.search);
+      const initialTab = params.get('tab');
+      if (initialTab) {
+        switchTab(initialTab);
+      }
+    });
   </script>
 </body>
 </html>
