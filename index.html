@@ -104,7 +104,7 @@
               AF SG <span class="text-af-purpleLight">Strength &amp; Fuel</span>
             </h1>
             <p class="text-[11px] sm:text-xs text-slate-400 truncate">
-              Yishun &bull; Tiong Bahru &bull; Bugis &bull; 89kg &rarr; 80kg Cut
+              Anytime Fitness &bull; 89kg &rarr; 80kg Cut
             </p>
           </div>
         </div>
@@ -167,6 +167,69 @@
     <!-- ========================================================= -->
     <section id="view-workout" class="space-y-5 animate-fade-in">
 
+      <!-- Weekly 4-3-2 Training Quota Checklist Card -->
+      <div class="bg-af-card border border-af-border rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+        <div class="flex flex-wrap items-start justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-af-purpleLight">Weekly Commitment Tracker</span>
+              <span id="weekly-range-label" class="px-2 py-0.5 rounded-md bg-af-surface border border-af-border text-[10px] font-bold text-slate-300">Mon – Sun</span>
+            </div>
+            <h2 class="text-lg font-extrabold text-white mt-0.5">4-3-2 Training Quota Checklist</h2>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span id="weekly-quota-badge" class="px-3 py-1.5 rounded-xl bg-af-purple/20 border border-af-purple/40 text-xs font-extrabold text-af-purpleLight">
+              0 / 9 (0%)
+            </span>
+            <button onclick="resetWeeklyQuota()" class="px-3 py-1.5 rounded-xl bg-af-surface hover:bg-slate-700 border border-af-border text-xs font-bold text-slate-300 hover:text-white transition">
+              New Week
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Weekly Progress Bar -->
+        <div class="space-y-1.5">
+          <div class="w-full h-2.5 rounded-full bg-af-dark overflow-hidden border border-af-border/60">
+            <div id="weekly-quota-bar" class="h-full bg-gradient-to-r from-af-purple to-emerald-400 rounded-full transition-all duration-300" style="width: 0%;"></div>
+          </div>
+          <div class="flex justify-between text-[11px] font-semibold text-slate-400">
+            <span id="weekly-quota-summary">0 of 9 weekly sessions completed</span>
+            <span class="text-emerald-400 font-bold">Goal: 4 REVL &bull; 3 Gym &bull; 2 Runs</span>
+          </div>
+        </div>
+
+        <!-- 3 Category Groups: REVL (4), Open Gym (3), Runs (2) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+          <!-- 4 REVL Workouts -->
+          <div class="bg-af-surface/70 border border-af-border rounded-xl p-3 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-white">REVL Classes</span>
+              <span id="revl-count-pill" class="text-[11px] font-bold text-af-purpleLight">0 / 4</span>
+            </div>
+            <div id="weekly-revl-list" class="grid grid-cols-2 gap-1.5"></div>
+          </div>
+
+          <!-- 3 Open Gym Workouts -->
+          <div class="bg-af-surface/70 border border-af-border rounded-xl p-3 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-white">Open Gym (AF)</span>
+              <span id="gym-count-pill" class="text-[11px] font-bold text-emerald-400">0 / 3</span>
+            </div>
+            <div id="weekly-gym-list" class="space-y-1.5"></div>
+          </div>
+
+          <!-- 2 Runs -->
+          <div class="bg-af-surface/70 border border-af-border rounded-xl p-3 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-white">Running</span>
+              <span id="run-count-pill" class="text-[11px] font-bold text-amber-300">0 / 2</span>
+            </div>
+            <div id="weekly-run-list" class="space-y-1.5"></div>
+          </div>
+        </div>
+      </div>
+
       <!-- Outlet Selector & Refresh Exercises Controls -->
       <div class="bg-af-card border border-af-border rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -186,24 +249,24 @@
             <span>Refresh Exercises</span>
           </button>
         </div>
+      <!-- Workout Split Selector & Refresh Exercises Controls -->
+      <div class="bg-af-card border border-af-border rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-af-purpleLight">3-Day Open Gym Split</span>
+            <h2 class="text-lg font-extrabold text-white">Workout Generator &amp; Exercise Shuffle</h2>
+          </div>
 
-        <!-- Outlet Pills -->
-        <div class="grid grid-cols-3 gap-2">
-          <button id="outlet-Yishun" onclick="selectOutlet('Yishun')" class="outlet-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border transition text-center">
-            Yishun
+          <!-- Refresh / Shuffle All Exercises Button -->
+          <button onclick="refreshAllDayExercises()" class="px-4 py-2.5 rounded-xl bg-af-purple hover:bg-af-purpleHover active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-lg shadow-purple-950/60 transition flex items-center justify-center gap-2 shrink-0">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+              <path d="M16 16h5v5" />
+            </svg>
+            <span>Refresh Exercises</span>
           </button>
-          <button id="outlet-Tiong Bahru" onclick="selectOutlet('Tiong Bahru')" class="outlet-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border transition text-center">
-            Tiong Bahru
-          </button>
-          <button id="outlet-Bugis" onclick="selectOutlet('Bugis')" class="outlet-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border transition text-center">
-            Bugis
-          </button>
-        </div>
-
-        <!-- Outlet Equipment Note -->
-        <div id="outlet-note-banner" class="bg-af-surface/80 border border-af-border rounded-xl px-3.5 py-2.5 text-xs text-slate-300 flex items-start gap-2">
-          <span class="text-af-purpleLight font-bold">Gym Setup:</span>
-          <span id="outlet-note-text">3 Power Racks, Dual Cable Stack, Plate-Loaded Hack Squat &amp; Dumbbells up to 50kg.</span>
         </div>
 
         <!-- 3-Day Split Selector -->
@@ -611,141 +674,122 @@
   <!-- ========================================================= -->
   <script>
     // ---------------------------------------------------------
-    // 1. PWA MANIFEST & ANDROID APP SHORTCUTS
-    // ---------------------------------------------------------
-    (function setupPWAManifest() {
-      const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#7C3AED"/><path d="M144 152v208M368 152v208M88 192v128M424 192v128M144 256h224" stroke="#FFFFFF" stroke-width="38" stroke-linecap="round"/></svg>`;
-      const iconUri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgIcon);
-      const baseUrl = window.location.origin + window.location.pathname;
-
-      const manifest = {
-        name: 'AF SG Strength & Fuel',
-        short_name: 'AF SG Fuel',
-        start_url: baseUrl,
-        display: 'standalone',
-        background_color: '#0B0F19',
-        theme_color: '#7C3AED',
-        icons: [
-          { src: iconUri, sizes: '192x192', type: 'image/svg+xml' },
-          { src: iconUri, sizes: '512x512', type: 'image/svg+xml' }
-        ],
-        shortcuts: [
-          { name: 'Log Food', short_name: 'Log Food', url: baseUrl + '?tab=nutrition', icons: [{ src: iconUri, sizes: '192x192', type: 'image/svg+xml' }] },
-          { name: 'Morning Weight', short_name: 'Weight', url: baseUrl + '?tab=vitals', icons: [{ src: iconUri, sizes: '192x192', type: 'image/svg+xml' }] },
-          { name: 'Supplements', short_name: 'Supps', url: baseUrl + '?tab=supplements', icons: [{ src: iconUri, sizes: '192x192', type: 'image/svg+xml' }] },
-          { name: 'Start Workout', short_name: 'Workout', url: baseUrl + '?tab=workout', icons: [{ src: iconUri, sizes: '192x192', type: 'image/svg+xml' }] }
-        ]
-      };
-
-      const manifestUri = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
-      const linkEl = document.getElementById('pwa-manifest');
-      if (linkEl) linkEl.setAttribute('href', manifestUri);
-    })();
-
-    // ---------------------------------------------------------
-    // 2. DATA STRUCTURES & OUTLET EXERCISE POOLS
+    // 2. DATA STRUCTURES & LOCATION-AGNOSTIC EXERCISE POOLS
     // ---------------------------------------------------------
     const STORAGE_KEY = 'af_sg_strength_fuel_v2';
+    const WEEKLY_QUOTA_KEY = 'af_sg_weekly_quota_v1';
 
-    const OUTLET_NOTES = {
-      'Yishun': '3 Power Racks, Dual Adjustable Pulley, Plate-Loaded Hack Squat & Dumbbells up to 50kg.',
-      'Tiong Bahru': '2 Squat Racks, Smith Machine, Cable Crossover, Seated Leg Press & Dumbbells up to 45kg.',
-      'Bugis': '4 Half-Racks, Lifting Platforms, Functional Turf, Concept2 Rowers & Dumbbells up to 50kg.'
+    const WEEKLY_QUOTA_ITEMS = {
+      revl: [
+        { id: 'revl-1', label: 'REVL Session 1' },
+        { id: 'revl-2', label: 'REVL Session 2' },
+        { id: 'revl-3', label: 'REVL Session 3' },
+        { id: 'revl-4', label: 'REVL Session 4' }
+      ],
+      gym: [
+        { id: 'gym-1', day: 1, label: 'Day 1: Push' },
+        { id: 'gym-2', day: 2, label: 'Day 2: Legs' },
+        { id: 'gym-3', day: 3, label: 'Day 3: Pull' }
+      ],
+      runs: [
+        { id: 'run-1', label: 'Run 1' },
+        { id: 'run-2', label: 'Run 2' }
+      ]
     };
 
-    // Exercise Pools by Day & Slot (each slot has multiple equipment-matched variants for Refresh & Swap)
+    // Exercise Pools by Day & Slot (location-agnostic variants for Refresh & Swap)
     const EXERCISE_POOLS = {
       1: [
         // Slot 0: Primary Horizontal Push
         [
-          { name: 'Barbell Bench Press', muscle: 'Chest • Primary', liftKey: 'Bench Press', pct: 0.78, sets: 4, reps: '6–8', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Incline Barbell Bench Press', muscle: 'Upper Chest', liftKey: 'Bench Press', pct: 0.72, sets: 4, reps: '6–8', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Flat Dumbbell Bench Press', muscle: 'Chest • Stabilizers', liftKey: 'Bench Press', pct: 0.68, sets: 4, reps: '8–10', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Smith Machine Incline Press', muscle: 'Upper Chest', liftKey: 'Bench Press', pct: 0.74, sets: 4, reps: '8–10', outlets: ['Tiong Bahru', 'Yishun'] }
+          { name: 'Barbell Bench Press', muscle: 'Chest • Primary', liftKey: 'Bench Press', pct: 0.78, sets: 4, reps: '6–8' },
+          { name: 'Incline Barbell Bench Press', muscle: 'Upper Chest', liftKey: 'Bench Press', pct: 0.72, sets: 4, reps: '6–8' },
+          { name: 'Flat Dumbbell Bench Press', muscle: 'Chest • Stabilizers', liftKey: 'Bench Press', pct: 0.68, sets: 4, reps: '8–10' },
+          { name: 'Smith Machine Incline Press', muscle: 'Upper Chest', liftKey: 'Bench Press', pct: 0.74, sets: 4, reps: '8–10' }
         ],
         // Slot 1: Vertical Shoulder Press
         [
-          { name: 'Standing Overhead Barbell Press', muscle: 'Shoulders • Primary', liftKey: 'Overhead Press', pct: 0.75, sets: 3, reps: '6–8', outlets: ['Yishun', 'Bugis', 'Tiong Bahru'] },
-          { name: 'Seated Dumbbell Shoulder Press', muscle: 'Front & Side Delts', liftKey: 'Overhead Press', pct: 0.68, sets: 3, reps: '8–10', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Landmine Single-Arm Press', muscle: 'Shoulders & Core', liftKey: 'Overhead Press', pct: 0.62, sets: 3, reps: '10 / side', outlets: ['Bugis', 'Yishun'] }
+          { name: 'Standing Overhead Barbell Press', muscle: 'Shoulders • Primary', liftKey: 'Overhead Press', pct: 0.75, sets: 3, reps: '6–8' },
+          { name: 'Seated Dumbbell Shoulder Press', muscle: 'Front & Side Delts', liftKey: 'Overhead Press', pct: 0.68, sets: 3, reps: '8–10' },
+          { name: 'Landmine Single-Arm Press', muscle: 'Shoulders & Core', liftKey: 'Overhead Press', pct: 0.62, sets: 3, reps: '10 / side' }
         ],
         // Slot 2: Secondary Chest / Incline
         [
-          { name: 'Incline Dumbbell Press', muscle: 'Upper Chest', liftKey: 'Bench Press', pct: 0.62, sets: 3, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'High-to-Low Cable Chest Fly', muscle: 'Lower & Inner Chest', liftKey: 'Bench Press', pct: 0.35, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Weighted Chest Dips', muscle: 'Chest & Triceps', liftKey: 'Bench Press', pct: 0.25, sets: 3, reps: '8–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+          { name: 'Incline Dumbbell Press', muscle: 'Upper Chest', liftKey: 'Bench Press', pct: 0.62, sets: 3, reps: '10–12' },
+          { name: 'High-to-Low Cable Chest Fly', muscle: 'Lower & Inner Chest', liftKey: 'Bench Press', pct: 0.35, sets: 3, reps: '12–15' },
+          { name: 'Weighted Chest Dips', muscle: 'Chest & Triceps', liftKey: 'Bench Press', pct: 0.25, sets: 3, reps: '8–12' }
         ],
         // Slot 3: Lateral Delts & Triceps
         [
-          { name: 'Cable Lateral Raises', muscle: 'Side Delts', liftKey: 'Overhead Press', pct: 0.22, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Dumbbell Lateral Raises', muscle: 'Side Delts', liftKey: 'Overhead Press', pct: 0.24, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Rope Cable Tricep Pushdowns', muscle: 'Triceps', liftKey: 'Bench Press', pct: 0.35, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Overhead Cable Tricep Extension', muscle: 'Triceps Long Head', liftKey: 'Bench Press', pct: 0.30, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+          { name: 'Cable Lateral Raises', muscle: 'Side Delts', liftKey: 'Overhead Press', pct: 0.22, sets: 3, reps: '12–15' },
+          { name: 'Dumbbell Lateral Raises', muscle: 'Side Delts', liftKey: 'Overhead Press', pct: 0.24, sets: 3, reps: '12–15' },
+          { name: 'Rope Cable Tricep Pushdowns', muscle: 'Triceps', liftKey: 'Bench Press', pct: 0.35, sets: 3, reps: '12–15' },
+          { name: 'Overhead Cable Tricep Extension', muscle: 'Triceps Long Head', liftKey: 'Bench Press', pct: 0.30, sets: 3, reps: '12–15' }
         ],
         // Slot 4: Core
         [
-          { name: 'Hanging Knee / Leg Raises', muscle: 'Lower Abs & Core', liftKey: 'Squat', pct: 0.0, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Kneeling Cable Rope Crunches', muscle: 'Upper & Lower Abs', liftKey: 'Deadlift', pct: 0.28, sets: 3, reps: '15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Ab Wheel Rollouts', muscle: 'Anti-Extension Core', liftKey: 'Squat', pct: 0.0, sets: 3, reps: '10–12', outlets: ['Bugis', 'Yishun', 'Tiong Bahru'] }
+          { name: 'Hanging Knee / Leg Raises', muscle: 'Lower Abs & Core', liftKey: 'Squat', pct: 0.0, sets: 3, reps: '12–15' },
+          { name: 'Kneeling Cable Rope Crunches', muscle: 'Upper & Lower Abs', liftKey: 'Deadlift', pct: 0.28, sets: 3, reps: '15' },
+          { name: 'Ab Wheel Rollouts', muscle: 'Anti-Extension Core', liftKey: 'Squat', pct: 0.0, sets: 3, reps: '10–12' }
         ]
       ],
       2: [
         // Slot 0: Primary Quad Compound
         [
-          { name: 'Barbell Back Squat', muscle: 'Quads & Glutes', liftKey: 'Squat', pct: 0.78, sets: 4, reps: '6–8', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Plate-Loaded Hack Squat', muscle: 'Quads • Controlled', liftKey: 'Squat', pct: 0.85, sets: 4, reps: '8–10', outlets: ['Yishun'] },
-          { name: '45° Leg Press', muscle: 'Quads & Glutes', liftKey: 'Squat', pct: 1.35, sets: 4, reps: '10–12', outlets: ['Tiong Bahru', 'Yishun', 'Bugis'] },
-          { name: 'Barbell Front Squat', muscle: 'Quads & Upper Back', liftKey: 'Squat', pct: 0.65, sets: 4, reps: '6–8', outlets: ['Bugis', 'Yishun'] }
+          { name: 'Barbell Back Squat', muscle: 'Quads & Glutes', liftKey: 'Squat', pct: 0.78, sets: 4, reps: '6–8' },
+          { name: 'Plate-Loaded Hack Squat', muscle: 'Quads • Controlled', liftKey: 'Squat', pct: 0.85, sets: 4, reps: '8–10' },
+          { name: '45° Leg Press', muscle: 'Quads & Glutes', liftKey: 'Squat', pct: 1.35, sets: 4, reps: '10–12' },
+          { name: 'Barbell Front Squat', muscle: 'Quads & Upper Back', liftKey: 'Squat', pct: 0.65, sets: 4, reps: '6–8' }
         ],
         // Slot 1: Posterior Chain Hinge
         [
-          { name: 'Romanian Deadlift (RDL)', muscle: 'Hamstrings & Glutes', liftKey: 'Deadlift', pct: 0.70, sets: 3, reps: '8–10', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Conventional Barbell Deadlift', muscle: 'Full Posterior Chain', liftKey: 'Deadlift', pct: 0.80, sets: 3, reps: '5–6', outlets: ['Bugis', 'Yishun'] },
-          { name: 'Dumbbell Romanian Deadlift', muscle: 'Hamstrings', liftKey: 'Deadlift', pct: 0.45, sets: 3, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+          { name: 'Romanian Deadlift (RDL)', muscle: 'Hamstrings & Glutes', liftKey: 'Deadlift', pct: 0.70, sets: 3, reps: '8–10' },
+          { name: 'Conventional Barbell Deadlift', muscle: 'Full Posterior Chain', liftKey: 'Deadlift', pct: 0.80, sets: 3, reps: '5–6' },
+          { name: 'Dumbbell Romanian Deadlift', muscle: 'Hamstrings', liftKey: 'Deadlift', pct: 0.45, sets: 3, reps: '10–12' }
         ],
         // Slot 2: Unilateral Leg Work
         [
-          { name: 'Dumbbell Walking Lunges', muscle: 'Quads & Glutes', liftKey: 'Squat', pct: 0.35, sets: 3, reps: '10 / leg', outlets: ['Bugis', 'Yishun', 'Tiong Bahru'] },
-          { name: 'Bulgarian Split Squats', muscle: 'Single-Leg Strength', liftKey: 'Squat', pct: 0.32, sets: 3, reps: '8–10 / leg', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Step-Ups (Knee-High Box)', muscle: 'Glutes & Balance', liftKey: 'Squat', pct: 0.28, sets: 3, reps: '10 / leg', outlets: ['Bugis', 'Tiong Bahru'] }
+          { name: 'Dumbbell Walking Lunges', muscle: 'Quads & Glutes', liftKey: 'Squat', pct: 0.35, sets: 3, reps: '10 / leg' },
+          { name: 'Bulgarian Split Squats', muscle: 'Single-Leg Strength', liftKey: 'Squat', pct: 0.32, sets: 3, reps: '8–10 / leg' },
+          { name: 'Step-Ups (Knee-High Box)', muscle: 'Glutes & Balance', liftKey: 'Squat', pct: 0.28, sets: 3, reps: '10 / leg' }
         ],
         // Slot 3: Hamstring / Calf Isolation
         [
-          { name: 'Seated / Lying Leg Curls', muscle: 'Hamstrings', liftKey: 'Deadlift', pct: 0.32, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Leg Extensions', muscle: 'Quads Isolation', liftKey: 'Squat', pct: 0.42, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Standing Calf Raises', muscle: 'Calves', liftKey: 'Squat', pct: 0.60, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+          { name: 'Seated / Lying Leg Curls', muscle: 'Hamstrings', liftKey: 'Deadlift', pct: 0.32, sets: 3, reps: '12–15' },
+          { name: 'Leg Extensions', muscle: 'Quads Isolation', liftKey: 'Squat', pct: 0.42, sets: 3, reps: '12–15' },
+          { name: 'Standing Calf Raises', muscle: 'Calves', liftKey: 'Squat', pct: 0.60, sets: 3, reps: '12–15' }
         ]
       ],
       3: [
         // Slot 0: Vertical Pull
         [
-          { name: 'Wide-Grip Lat Pulldown', muscle: 'Lats & Upper Back', liftKey: 'Lat Pulldown', pct: 0.78, sets: 4, reps: '8–10', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Weighted Pull-Ups / Chin-Ups', muscle: 'Lats & Biceps', liftKey: 'Lat Pulldown', pct: 0.20, sets: 4, reps: '6–8', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Neutral-Grip Mag Pulldown', muscle: 'Mid & Lower Lats', liftKey: 'Lat Pulldown', pct: 0.80, sets: 4, reps: '8–10', outlets: ['Yishun', 'Bugis', 'Tiong Bahru'] }
+          { name: 'Wide-Grip Lat Pulldown', muscle: 'Lats & Upper Back', liftKey: 'Lat Pulldown', pct: 0.78, sets: 4, reps: '8–10' },
+          { name: 'Weighted Pull-Ups / Chin-Ups', muscle: 'Lats & Biceps', liftKey: 'Lat Pulldown', pct: 0.20, sets: 4, reps: '6–8' },
+          { name: 'Neutral-Grip Mag Pulldown', muscle: 'Mid & Lower Lats', liftKey: 'Lat Pulldown', pct: 0.80, sets: 4, reps: '8–10' }
         ],
         // Slot 1: Horizontal Row
         [
-          { name: 'Bent-Over Barbell Row', muscle: 'Mid-Back & Lats', liftKey: 'Barbell Row', pct: 0.75, sets: 4, reps: '6–8', outlets: ['Yishun', 'Bugis', 'Tiong Bahru'] },
-          { name: 'Seated Cable Row (V-Bar)', muscle: 'Rhomboids & Lats', liftKey: 'Barbell Row', pct: 0.78, sets: 4, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Chest-Supported Dumbbell Row', muscle: 'Upper Back', liftKey: 'Barbell Row', pct: 0.62, sets: 4, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+          { name: 'Bent-Over Barbell Row', muscle: 'Mid-Back & Lats', liftKey: 'Barbell Row', pct: 0.75, sets: 4, reps: '6–8' },
+          { name: 'Seated Cable Row (V-Bar)', muscle: 'Rhomboids & Lats', liftKey: 'Barbell Row', pct: 0.78, sets: 4, reps: '10–12' },
+          { name: 'Chest-Supported Dumbbell Row', muscle: 'Upper Back', liftKey: 'Barbell Row', pct: 0.62, sets: 4, reps: '10–12' }
         ],
         // Slot 2: Rear Delts & Traps
         [
-          { name: 'Cable Rope Face Pulls', muscle: 'Rear Delts & Rotators', liftKey: 'Barbell Row', pct: 0.32, sets: 3, reps: '15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Reverse Pec-Deck Flyes', muscle: 'Rear Delts', liftKey: 'Barbell Row', pct: 0.40, sets: 3, reps: '12–15', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Single-Arm Cable Rear Delt Fly', muscle: 'Rear Delts', liftKey: 'Barbell Row', pct: 0.18, sets: 3, reps: '12–15 / side', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+          { name: 'Cable Rope Face Pulls', muscle: 'Rear Delts & Rotators', liftKey: 'Barbell Row', pct: 0.32, sets: 3, reps: '15' },
+          { name: 'Reverse Pec-Deck Flyes', muscle: 'Rear Delts', liftKey: 'Barbell Row', pct: 0.40, sets: 3, reps: '12–15' },
+          { name: 'Single-Arm Cable Rear Delt Fly', muscle: 'Rear Delts', liftKey: 'Barbell Row', pct: 0.18, sets: 3, reps: '12–15 / side' }
         ],
         // Slot 3: Biceps
         [
-          { name: 'Incline Dumbbell Bicep Curls', muscle: 'Biceps Long Head', liftKey: 'Barbell Row', pct: 0.32, sets: 3, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'EZ-Bar / Straight-Bar Curls', muscle: 'Biceps Brachii', liftKey: 'Barbell Row', pct: 0.42, sets: 3, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] },
-          { name: 'Dumbbell Hammer Curls', muscle: 'Brachialis & Forearms', liftKey: 'Barbell Row', pct: 0.36, sets: 3, reps: '10–12', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+          { name: 'Incline Dumbbell Bicep Curls', muscle: 'Biceps Long Head', liftKey: 'Barbell Row', pct: 0.32, sets: 3, reps: '10–12' },
+          { name: 'EZ-Bar / Straight-Bar Curls', muscle: 'Biceps Brachii', liftKey: 'Barbell Row', pct: 0.42, sets: 3, reps: '10–12' },
+          { name: 'Dumbbell Hammer Curls', muscle: 'Brachialis & Forearms', liftKey: 'Barbell Row', pct: 0.36, sets: 3, reps: '10–12' }
         ],
         // Slot 4: Conditioning Finisher
         [
-          { name: 'Heavy Dumbbell Farmer\'s Carries', muscle: 'Grip, Core & Conditioning', liftKey: 'Deadlift', pct: 0.42, sets: 3, reps: '40m walk', outlets: ['Bugis', 'Yishun', 'Tiong Bahru'] },
-          { name: 'Concept2 Rower 30s/30s Intervals', muscle: 'Metabolic Finisher', liftKey: 'Deadlift', pct: 0.0, sets: 8, reps: '30s sprint', outlets: ['Bugis', 'Yishun', 'Tiong Bahru'] },
-          { name: '15% Incline Treadmill Power Walk', muscle: 'Fat-Burn Cardio', liftKey: 'Squat', pct: 0.0, sets: 1, reps: '15 mins', outlets: ['Yishun', 'Tiong Bahru', 'Bugis'] }
+          { name: 'Heavy Dumbbell Farmer\'s Carries', muscle: 'Grip, Core & Conditioning', liftKey: 'Deadlift', pct: 0.42, sets: 3, reps: '40m walk' },
+          { name: 'Concept2 Rower 30s/30s Intervals', muscle: 'Metabolic Finisher', liftKey: 'Deadlift', pct: 0.0, sets: 8, reps: '30s sprint' },
+          { name: '15% Incline Treadmill Power Walk', muscle: 'Fat-Burn Cardio', liftKey: 'Squat', pct: 0.0, sets: 1, reps: '15 mins' }
         ]
       ]
     };
@@ -801,7 +845,6 @@
 
     function getDefaultState() {
       return {
-        outlet: 'Yishun',
         activeDay: 1,
         // Selected variant index per day & slot: { 1: [0,0,0,0,0], 2: [0,0,0,0], 3: [0,0,0,0,0] }
         selectedVariants: {
@@ -826,7 +869,6 @@
           {
             id: 'wh-1',
             date: getPastDateISO(2),
-            outlet: 'Bugis',
             dayTitle: 'Day 3: Pull & Conditioning',
             setsCompleted: 17,
             totalVolumeKg: 6420
@@ -834,7 +876,6 @@
           {
             id: 'wh-2',
             date: getPastDateISO(4),
-            outlet: 'Yishun',
             dayTitle: 'Day 2: Legs & Posterior',
             setsCompleted: 13,
             totalVolumeKg: 7850
@@ -861,6 +902,153 @@
     }
 
     let appState = loadState();
+    let weeklyQuotaState = loadWeeklyQuota();
+
+    function getCurrentWeekRangeLabel() {
+      const now = new Date();
+      const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon
+      const diffToMon = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+      const mon = new Date(now);
+      mon.setDate(now.getDate() + diffToMon);
+      const sun = new Date(mon);
+      sun.setDate(mon.getDate() + 6);
+      const fmt = (d) => d.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' });
+      return `${fmt(mon)} – ${fmt(sun)}`;
+    }
+
+    function getDefaultWeeklyQuota() {
+      return {
+        weekLabel: getCurrentWeekRangeLabel(),
+        completed: {
+          'revl-1': true,
+          'gym-1': false,
+          'run-1': true
+        }
+      };
+    }
+
+    function loadWeeklyQuota() {
+      try {
+        const raw = localStorage.getItem(WEEKLY_QUOTA_KEY);
+        if (!raw) return getDefaultWeeklyQuota();
+        const parsed = JSON.parse(raw);
+        return {
+          weekLabel: parsed.weekLabel || getCurrentWeekRangeLabel(),
+          completed: parsed.completed || {}
+        };
+      } catch (e) {
+        return getDefaultWeeklyQuota();
+      }
+    }
+
+    function saveWeeklyQuota() {
+      try {
+        localStorage.setItem(WEEKLY_QUOTA_KEY, JSON.stringify(weeklyQuotaState));
+      } catch (e) {
+        console.warn('Could not save weekly quota', e);
+      }
+    }
+
+    function toggleWeeklyQuotaItem(itemId, label) {
+      const next = !weeklyQuotaState.completed[itemId];
+      if (next) {
+        weeklyQuotaState.completed[itemId] = true;
+        showToast(`Checked off: ${label}!`, 'green');
+      } else {
+        delete weeklyQuotaState.completed[itemId];
+      }
+      saveWeeklyQuota();
+      renderWeeklyQuota();
+    }
+
+    function resetWeeklyQuota() {
+      weeklyQuotaState = {
+        weekLabel: getCurrentWeekRangeLabel(),
+        completed: {}
+      };
+      saveWeeklyQuota();
+      renderWeeklyQuota();
+      showToast('Started fresh 4-3-2 weekly checklist!');
+    }
+
+    function checkAndAutoSyncOpenGymQuota(dayNum) {
+      const slots = EXERCISE_POOLS[dayNum];
+      const selectedIndices = appState.selectedVariants[dayNum] || slots.map(() => 0);
+      let totalSets = 0;
+      let doneSets = 0;
+
+      slots.forEach((variants, slotIdx) => {
+        const variantIdx = selectedIndices[slotIdx] || 0;
+        const ex = variants[variantIdx] || variants[0];
+        for (let s = 0; s < ex.sets; s++) {
+          totalSets++;
+          const setKey = `${dayNum}-${slotIdx}-${variantIdx}-${s}`;
+          if (appState.setLogs[setKey] && appState.setLogs[setKey].done) {
+            doneSets++;
+          }
+        }
+      });
+
+      const gymItemId = `gym-${dayNum}`;
+      if (totalSets > 0 && doneSets === totalSets && !weeklyQuotaState.completed[gymItemId]) {
+        weeklyQuotaState.completed[gymItemId] = true;
+        saveWeeklyQuota();
+        renderWeeklyQuota();
+        showToast(`Day ${dayNum} Open Gym auto-checked in weekly quota!`, 'green');
+      }
+    }
+
+    function renderWeeklyQuota() {
+      const rangeEl = document.getElementById('weekly-range-label');
+      if (rangeEl) rangeEl.textContent = weeklyQuotaState.weekLabel || getCurrentWeekRangeLabel();
+
+      const comp = weeklyQuotaState.completed || {};
+      const revlDone = WEEKLY_QUOTA_ITEMS.revl.filter(i => comp[i.id]).length;
+      const gymDone = WEEKLY_QUOTA_ITEMS.gym.filter(i => comp[i.id]).length;
+      const runDone = WEEKLY_QUOTA_ITEMS.runs.filter(i => comp[i.id]).length;
+      const totalDone = revlDone + gymDone + runDone;
+      const pct = Math.round((totalDone / 9) * 100);
+
+      document.getElementById('weekly-quota-badge').textContent = `${totalDone} / 9 (${pct}%)`;
+      document.getElementById('weekly-quota-bar').style.width = `${pct}%`;
+      document.getElementById('weekly-quota-summary').textContent = `${totalDone} of 9 weekly sessions completed`;
+
+      document.getElementById('revl-count-pill').textContent = `${revlDone} / 4`;
+      document.getElementById('gym-count-pill').textContent = `${gymDone} / 3`;
+      document.getElementById('run-count-pill').textContent = `${runDone} / 2`;
+
+      const renderCheckBtn = (item, accentClasses) => {
+        const isDone = Boolean(comp[item.id]);
+        return `
+          <button onclick="toggleWeeklyQuotaItem('${item.id}', '${item.label}')" class="w-full px-2.5 py-2 rounded-lg border text-left flex items-center gap-2 transition ${isDone ? accentClasses.active : 'bg-af-dark/80 border-af-border text-slate-300 hover:border-af-purple'}">
+            <span class="w-4 h-4 rounded flex items-center justify-center border shrink-0 ${isDone ? accentClasses.box : 'bg-af-surface border-af-border text-transparent'}">
+              <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </span>
+            <span class="text-[11px] font-bold truncate">${item.label}</span>
+          </button>
+        `;
+      };
+
+      document.getElementById('weekly-revl-list').innerHTML = WEEKLY_QUOTA_ITEMS.revl
+        .map(item => renderCheckBtn(item, {
+          active: 'bg-af-purple/25 border-af-purple/60 text-white',
+          box: 'bg-af-purple border-af-purpleLight text-white'
+        })).join('');
+
+      document.getElementById('weekly-gym-list').innerHTML = WEEKLY_QUOTA_ITEMS.gym
+        .map(item => renderCheckBtn(item, {
+          active: 'bg-emerald-950/40 border-emerald-500/50 text-emerald-100',
+          box: 'bg-emerald-500 border-emerald-400 text-slate-950'
+        })).join('');
+
+      document.getElementById('weekly-run-list').innerHTML = WEEKLY_QUOTA_ITEMS.runs
+        .map(item => renderCheckBtn(item, {
+          active: 'bg-amber-950/40 border-amber-500/50 text-amber-100',
+          box: 'bg-amber-400 border-amber-300 text-slate-950'
+        })).join('');
+    }
 
     function loadState() {
       try {
@@ -883,70 +1071,20 @@
 
     function resetDemoData() {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(WEEKLY_QUOTA_KEY);
       appState = getDefaultState();
+      weeklyQuotaState = getDefaultWeeklyQuota();
       saveState();
+      saveWeeklyQuota();
       renderAll();
       showToast('Demo data restored to defaults!');
     }
 
     // ---------------------------------------------------------
-    // 4. TOAST NOTIFICATIONS (NO ALERT())
-    // ---------------------------------------------------------
-    function showToast(message, type = 'purple') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      const borderCol = type === 'green' ? 'border-emerald-500/60 bg-emerald-950/90 text-emerald-100' : 'border-af-purple/70 bg-af-card/95 text-white';
-      toast.className = `px-4 py-2.5 rounded-xl border ${borderCol} shadow-2xl text-xs font-bold text-center animate-fade-in`;
-      toast.textContent = message;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.25s ease';
-        setTimeout(() => toast.remove(), 260);
-      }, 2400);
-    }
-
-    // ---------------------------------------------------------
-    // 5. TAB NAVIGATION & SHORTCUT DEEP LINKS
-    // ---------------------------------------------------------
-    function switchTab(tabName) {
-      const actualTab = tabName === 'supplements' ? 'nutrition' : tabName;
-      const views = ['workout', 'nutrition', '1rm', 'vitals'];
-      views.forEach(v => {
-        const viewEl = document.getElementById(`view-${v}`);
-        const btnEl = document.getElementById(`tab-btn-${v}`);
-        if (viewEl) viewEl.classList.toggle('hidden', v !== actualTab);
-        if (btnEl) {
-          if (v === actualTab) {
-            btnEl.classList.remove('text-slate-400', 'border-transparent');
-            btnEl.classList.add('text-white', 'border-af-purple');
-          } else {
-            btnEl.classList.remove('text-white', 'border-af-purple');
-            btnEl.classList.add('text-slate-400', 'border-transparent');
-          }
-        }
-      });
-
-      if (tabName === 'supplements') {
-        setTimeout(() => {
-          const suppEl = document.getElementById('supplements-section');
-          if (suppEl) suppEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-      }
-    }
-
-    // ---------------------------------------------------------
-    // 6. WORKOUT TAB: OUTLET, REFRESH EXERCISES, INDIVIDUAL SWAP & SETS
+    // 6. WORKOUT TAB: REFRESH EXERCISES, INDIVIDUAL SWAP & SETS
     // ---------------------------------------------------------
     function roundTo2Point5(val) {
       return Math.round(val / 2.5) * 2.5;
-    }
-
-    function selectOutlet(outletName) {
-      appState.outlet = outletName;
-      saveState();
-      renderWorkoutTab();
-      showToast(`Switched to AF ${outletName}`);
     }
 
     function selectWorkoutDay(dayNum) {
@@ -963,22 +1101,14 @@
 
       const nextIndices = slots.map((variants, slotIdx) => {
         if (variants.length <= 1) return 0;
-        // Prefer variants compatible with current outlet
-        const compatibleIndices = variants
-          .map((v, idx) => ({ v, idx }))
-          .filter(item => item.v.outlets.includes(appState.outlet))
-          .map(item => item.idx);
-
-        const pool = compatibleIndices.length > 1 ? compatibleIndices : variants.map((_, i) => i);
         const curr = currentIndices[slotIdx] || 0;
-        const pos = pool.indexOf(curr);
-        return pool[(pos + 1) % pool.length];
+        return (curr + 1) % variants.length;
       });
 
       appState.selectedVariants[day] = nextIndices;
       saveState();
       renderWorkoutTab();
-      showToast(`Refreshed Day ${day} exercises for AF ${appState.outlet}!`);
+      showToast(`Refreshed Day ${day} exercises!`);
     }
 
     // Swap a SINGLE exercise slot without affecting the rest of the workout
@@ -987,15 +1117,8 @@
       const variants = EXERCISE_POOLS[day][slotIdx];
       if (!variants || variants.length <= 1) return;
 
-      const compatibleIndices = variants
-        .map((v, idx) => ({ v, idx }))
-        .filter(item => item.v.outlets.includes(appState.outlet))
-        .map(item => item.idx);
-
-      const pool = compatibleIndices.length > 1 ? compatibleIndices : variants.map((_, i) => i);
       const curr = appState.selectedVariants[day][slotIdx] || 0;
-      const pos = pool.indexOf(curr);
-      const nextIdx = pool[(pos + 1) % pool.length];
+      const nextIdx = (curr + 1) % variants.length;
 
       appState.selectedVariants[day][slotIdx] = nextIdx;
       saveState();
@@ -1017,6 +1140,8 @@
       if (nextDone) {
         setRestPreset(90);
         showToast('Set logged! 90s rest timer started.', 'green');
+        const dayNum = parseInt(setKey.split('-')[0], 10);
+        if (dayNum) checkAndAutoSyncOpenGymQuota(dayNum);
       }
     }
 
@@ -1028,19 +1153,6 @@
     }
 
     function renderWorkoutTab() {
-      // Outlet buttons
-      ['Yishun', 'Tiong Bahru', 'Bugis'].forEach(outlet => {
-        const btn = document.getElementById(`outlet-${outlet}`);
-        if (!btn) return;
-        if (appState.outlet === outlet) {
-          btn.className = 'outlet-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold border border-af-purple bg-af-purple/20 text-white shadow-sm transition text-center';
-        } else {
-          btn.className = 'outlet-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border border-af-border bg-af-surface/60 text-slate-400 hover:text-white transition text-center';
-        }
-      });
-
-      document.getElementById('outlet-note-text').textContent = OUTLET_NOTES[appState.outlet] || '';
-
       // Day buttons
       [1, 2, 3].forEach(d => {
         const btn = document.getElementById(`day-btn-${d}`);
@@ -1165,11 +1277,17 @@
       appState.workoutHistory.unshift({
         id: 'wh-' + Date.now(),
         date: getTodayISO(),
-        outlet: appState.outlet,
         dayTitle: dayNames[day],
         setsCompleted,
         totalVolumeKg: Math.round(totalVolumeKg)
       });
+
+      const gymItemId = `gym-${day}`;
+      if (!weeklyQuotaState.completed[gymItemId]) {
+        weeklyQuotaState.completed[gymItemId] = true;
+        saveWeeklyQuota();
+        renderWeeklyQuota();
+      }
 
       saveState();
       renderWorkoutHistory();
@@ -1197,7 +1315,7 @@
         <div class="bg-af-surface/70 border border-af-border rounded-xl p-3 flex items-center justify-between gap-2">
           <div>
             <div class="text-xs font-extrabold text-white">${item.dayTitle}</div>
-            <div class="text-[11px] text-slate-400">${item.date} &bull; AF ${item.outlet}</div>
+            <div class="text-[11px] text-slate-400">${item.date} &bull; Open Gym</div>
           </div>
           <div class="text-right">
             <div class="text-xs font-extrabold text-emerald-400">${item.setsCompleted} sets</div>
@@ -1743,6 +1861,7 @@
     // 11. INITIALIZATION
     // ---------------------------------------------------------
     function renderAll() {
+      renderWeeklyQuota();
       renderWorkoutTab();
       renderNutritionTab();
       render1RMHub();
