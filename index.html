@@ -38,7 +38,7 @@
   </script>
 
   <style>
-    /* Base dark slate theme & mobile bottom clearance for compact docked timer */
+    /* Base dark slate theme & bottom clearance for compact docked rest timer */
     body {
       background-color: #090d16;
       color: #f8fafc;
@@ -65,7 +65,7 @@
       -moz-appearance: textfield;
     }
 
-    /* Tab panel visibility enforced via both class and inline style */
+    /* Strict single-tab visibility */
     .tab-panel {
       display: none;
     }
@@ -88,13 +88,13 @@
     }
   </style>
 
-  <!-- Global Tab Switcher defined BEFORE body so inline onclick & listeners always work -->
+  <!-- Global Tab Switcher defined in <head> so inline onclick and listeners always work -->
   <script>
     window.switchTab = function (tabId) {
-      var allowed = ['workout', 'nutrition', 'onerm', 'vitals'];
+      var allowed = ['workout', 'nutrition', '1rm', 'vitals'];
       var target = allowed.indexOf(tabId) !== -1 ? tabId : 'workout';
 
-      // 1. Toggle .tab-panel display & .active class explicitly
+      // 1. Toggle all four top-level .tab-panel siblings explicitly
       var panels = document.querySelectorAll('.tab-panel');
       for (var i = 0; i < panels.length; i++) {
         var panel = panels[i];
@@ -107,7 +107,7 @@
         }
       }
 
-      // 2. Update active styling on all .nav-tab-btn elements
+      // 2. Highlight active tab button in sticky navigation header
       var buttons = document.querySelectorAll('.nav-tab-btn');
       for (var j = 0; j < buttons.length; j++) {
         var btn = buttons[j];
@@ -126,21 +126,21 @@
         }
       }
 
-      // 3. Persist active tab safely without blocking UI
+      // 3. Persist active tab safely
       try {
-        localStorage.setItem('af_sg_active_tab_v3', target);
+        localStorage.setItem('af_sg_active_tab_v4', target);
         if (window.__afState) {
           window.__afState.activeTab = target;
         }
       } catch (err) {
-        // Ignore storage errors in restricted sandboxes
+        // Ignore storage restrictions
       }
     };
   </script>
 </head>
 <body class="min-h-screen bg-[#090d16] text-slate-100 selection:bg-[#7c3aed] selection:text-white">
 
-  <!-- Toast Banner Container (positioned below header, non-blocking) -->
+  <!-- Non-blocking Toast Banner Container -->
   <div id="toast-container" class="fixed top-28 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 pointer-events-none w-full max-w-sm px-4"></div>
 
   <!-- Top Sticky Header & 4-Tab Navigation (z-50 & pointer-events-auto) -->
@@ -164,7 +164,7 @@
                 AF SG Strength &amp; Fuel
               </h1>
               <span id="header-cut-badge" class="px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold bg-[#7c3aed]/20 text-[#c4b5fd] border border-[#8b5cf6]/40 whitespace-nowrap">
-                89.0 kg &rarr; 80.0 kg
+                88.5 kg &rarr; 80.0 kg
               </span>
             </div>
             <p class="text-[11px] text-slate-400 truncate">
@@ -183,7 +183,7 @@
         </button>
       </div>
 
-      <!-- Primary Navigation Tabs -->
+      <!-- Primary 4-Tab Navigation Bar -->
       <nav id="primary-tab-nav" aria-label="Primary Sections" class="flex items-center gap-1 mt-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 relative z-50 pointer-events-auto">
         <button type="button" id="tab-btn-workout" data-tab="workout" onclick="window.switchTab('workout')" class="nav-tab-btn relative px-3.5 py-2.5 text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 text-white border-b-2 border-[#8b5cf6] cursor-pointer">
           <svg class="w-4 h-4 text-[#8b5cf6] pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -207,7 +207,7 @@
           </span>
         </button>
 
-        <button type="button" id="tab-btn-onerm" data-tab="onerm" onclick="window.switchTab('onerm')" class="nav-tab-btn relative px-3.5 py-2.5 text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent cursor-pointer">
+        <button type="button" id="tab-btn-1rm" data-tab="1rm" onclick="window.switchTab('1rm')" class="nav-tab-btn relative px-3.5 py-2.5 text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent cursor-pointer">
           <svg class="w-4 h-4 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 20V10" />
             <path d="M18 20V4" />
@@ -226,11 +226,11 @@
     </div>
   </header>
 
-  <!-- Main Content Area -->
+  <!-- Main Content Area (Strictly 4 Sibling Sections) -->
   <main class="max-w-4xl mx-auto px-4 pt-5 space-y-5 relative z-10">
 
     <!-- ========================================================= -->
-    <!-- TAB 1: WORKOUT GENERATOR & 4-3-2 QUOTA CHECKLIST          -->
+    <!-- SIBLING 1: WORKOUT TAB (#tab-workout)                     -->
     <!-- ========================================================= -->
     <section id="tab-workout" class="tab-panel active space-y-5 animate-fade-in" style="display: block;">
 
@@ -265,7 +265,6 @@
 
         <!-- 3 Checklist Columns: 4 REVL, 3 Open Gym, 2 Runs -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
-          <!-- 4 REVL Sessions -->
           <div class="bg-[#182234]/85 border border-[#253147] rounded-xl p-3 space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold text-white">REVL Sessions (4)</span>
@@ -274,7 +273,6 @@
             <div id="weekly-revl-list" class="grid grid-cols-2 gap-1.5"></div>
           </div>
 
-          <!-- 3 Open Gym Sessions -->
           <div class="bg-[#182234]/85 border border-[#253147] rounded-xl p-3 space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold text-white">Open Gym (3)</span>
@@ -283,7 +281,6 @@
             <div id="weekly-gym-list" class="space-y-1.5"></div>
           </div>
 
-          <!-- 2 Runs -->
           <div class="bg-[#182234]/85 border border-[#253147] rounded-xl p-3 space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold text-white">Runs (2)</span>
@@ -302,7 +299,6 @@
             <h2 class="text-lg font-extrabold text-white">Open Gym 3-Day Split</h2>
           </div>
 
-          <!-- Global Refresh Exercises Button -->
           <button type="button" id="refresh-all-exercises-btn" class="px-4 py-2.5 rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-lg shadow-violet-950/60 transition flex items-center justify-center gap-2 shrink-0 cursor-pointer">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
@@ -347,7 +343,7 @@
     </section>
 
     <!-- ========================================================= -->
-    <!-- TAB 2: NUTRITION & SUPPLEMENTS HUB                        -->
+    <!-- SIBLING 2: NUTRITION & SUPPLEMENTS TAB (#tab-nutrition)   -->
     <!-- ========================================================= -->
     <section id="tab-nutrition" class="tab-panel space-y-5 animate-fade-in" style="display: none;">
 
@@ -358,7 +354,7 @@
             <span class="text-[11px] font-bold uppercase tracking-wider text-[#a78bfa]">Weight-Linked Calorie Engine</span>
             <h2 class="text-lg sm:text-xl font-extrabold text-white">Daily Cut Targets &amp; Remaining Intake</h2>
             <p id="calorie-engine-subtitle" class="text-xs text-slate-400 mt-0.5">
-              182 cm &bull; Current Weight: <strong class="text-slate-200">89.0 kg</strong> &rarr; Goal: <strong class="text-emerald-400">80.0 kg</strong>
+              182 cm &bull; Current Weight: <strong class="text-slate-200">88.5 kg</strong> &rarr; Goal: <strong class="text-emerald-400">80.0 kg</strong>
             </p>
           </div>
           <div class="px-3 py-1.5 rounded-xl bg-[#182234] border border-[#253147] text-right">
@@ -391,45 +387,45 @@
           <div class="bg-[#182234]/85 border border-[#253147] rounded-xl p-3 space-y-1.5">
             <div class="flex items-center justify-between text-xs">
               <span class="font-bold text-blue-300">Protein</span>
-              <span id="rem-pro" class="font-extrabold text-white">90g left</span>
+              <span id="rem-pro" class="font-extrabold text-white">90.0g left</span>
             </div>
             <div class="w-full h-2 rounded-full bg-[#090d16] overflow-hidden">
               <div id="bar-pro" class="h-full bg-blue-500 rounded-full transition-all duration-300" style="width: 53%;"></div>
             </div>
-            <div id="sub-pro" class="text-[11px] text-slate-400 font-medium">100 / 190g</div>
+            <div id="sub-pro" class="text-[11px] text-slate-400 font-medium">100.0 / 190g</div>
           </div>
 
           <div class="bg-[#182234]/85 border border-[#253147] rounded-xl p-3 space-y-1.5">
             <div class="flex items-center justify-between text-xs">
               <span class="font-bold text-amber-300">Carbs</span>
-              <span id="rem-carb" class="font-extrabold text-white">88g left</span>
+              <span id="rem-carb" class="font-extrabold text-white">88.5g left</span>
             </div>
             <div class="w-full h-2 rounded-full bg-[#090d16] overflow-hidden">
               <div id="bar-carb" class="h-full bg-amber-400 rounded-full transition-all duration-300" style="width: 41%;"></div>
             </div>
-            <div id="sub-carb" class="text-[11px] text-slate-400 font-medium">62 / 150g</div>
+            <div id="sub-carb" class="text-[11px] text-slate-400 font-medium">61.5 / 150g</div>
           </div>
 
           <div class="bg-[#182234]/85 border border-[#253147] rounded-xl p-3 space-y-1.5">
             <div class="flex items-center justify-between text-xs">
               <span class="font-bold text-rose-300">Fats</span>
-              <span id="rem-fat" class="font-extrabold text-white">20g left</span>
+              <span id="rem-fat" class="font-extrabold text-white">20.5g left</span>
             </div>
             <div class="w-full h-2 rounded-full bg-[#090d16] overflow-hidden">
               <div id="bar-fat" class="h-full bg-rose-400 rounded-full transition-all duration-300" style="width: 63%;"></div>
             </div>
-            <div id="sub-fat" class="text-[11px] text-slate-400 font-medium">35 / 55g</div>
+            <div id="sub-fat" class="text-[11px] text-slate-400 font-medium">34.5 / 55g</div>
           </div>
 
           <div class="bg-[#182234]/85 border border-[#253147] rounded-xl p-3 space-y-1.5">
             <div class="flex items-center justify-between text-xs">
               <span class="font-bold text-emerald-300">Fibre</span>
-              <span id="rem-fib" class="font-extrabold text-white">17g left</span>
+              <span id="rem-fib" class="font-extrabold text-white">16.8g left</span>
             </div>
             <div class="w-full h-2 rounded-full bg-[#090d16] overflow-hidden">
               <div id="bar-fib" class="h-full bg-emerald-400 rounded-full transition-all duration-300" style="width: 52%;"></div>
             </div>
-            <div id="sub-fib" class="text-[11px] text-slate-400 font-medium">18 / 35g</div>
+            <div id="sub-fib" class="text-[11px] text-slate-400 font-medium">18.2 / 35g</div>
           </div>
         </div>
       </div>
@@ -438,7 +434,7 @@
       <div class="bg-[#111827] border border-[#253147] rounded-2xl p-4 sm:p-5 shadow-xl space-y-3.5">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <span class="text-[11px] font-bold uppercase tracking-wider text-[#a78bfa]">Staple Meals Dropdown</span>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-[#a78bfa]">14 Staple Items Dropdown</span>
             <h3 class="text-lg font-extrabold text-white">Quick Preset Meal Selector</h3>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
@@ -469,7 +465,7 @@
 
         <!-- Live Macro Preview Strip for Selected Dropdown Option -->
         <div id="selected-preset-preview" class="bg-[#182234]/85 border border-[#253147] rounded-xl px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
-          <span class="font-bold text-slate-300 truncate" id="selected-preset-title">Heal Chocolate Whey (0.3 srv)</span>
+          <span class="font-bold text-slate-200 truncate" id="selected-preset-title">Heal Chocolate Whey (0.3 srv)</span>
           <div id="selected-preset-macros" class="flex flex-wrap items-center gap-1.5">
             <span class="px-2 py-0.5 rounded bg-[#090d16] border border-[#253147] text-[11px] font-extrabold text-emerald-300">40 kcal</span>
             <span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-blue-300">P 6.0g</span>
@@ -479,7 +475,7 @@
           </div>
         </div>
 
-        <!-- Collapsible Create Preset Form -->
+        <!-- Collapsible + New Preset Drawer -->
         <div id="new-preset-form" class="hidden bg-[#182234] border border-[#8b5cf6]/40 rounded-xl p-3.5 space-y-3 animate-fade-in">
           <div class="text-xs font-extrabold uppercase tracking-wider text-[#c4b5fd]">Add New Staple Preset</div>
           <div>
@@ -515,7 +511,7 @@
         </div>
       </div>
 
-      <!-- Smart Text Food Macro Calculator & Today's Meals -->
+      <!-- Smart Text Food Macro Calculator & Today's Logged Meals -->
       <div class="bg-[#111827] border border-[#253147] rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
         <div>
           <span class="text-[11px] font-bold uppercase tracking-wider text-[#a78bfa]">Zero-Setup Instant Parser</span>
@@ -523,7 +519,6 @@
           <p class="text-xs text-slate-400">Type what you ate (e.g., <em class="text-slate-300">"150g roast chicken + 100g edamame"</em> or <em class="text-slate-300">"2 scoops whey + 200ml low fat meiji milk"</em>).</p>
         </div>
 
-        <!-- Natural Text Input -->
         <div class="flex flex-col sm:flex-row gap-2">
           <input type="text" id="food-text-input" placeholder="e.g. 200g greek yogurt + 50g oats + 1 banana" class="flex-1 bg-[#182234] border border-[#253147] focus:border-[#8b5cf6] rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none" />
           <button type="button" id="parse-food-btn" class="px-4 py-2.5 rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-xs sm:text-sm font-extrabold shadow-lg shadow-violet-950/50 transition shrink-0 cursor-pointer">
@@ -531,7 +526,6 @@
           </button>
         </div>
 
-        <!-- Quick-Fill Example Chips -->
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
           <span class="text-[11px] font-bold text-slate-500 shrink-0">Quick examples:</span>
           <button type="button" data-food="150g roast chicken + 100g edamame" class="quick-chip px-2.5 py-1 rounded-full bg-[#182234] hover:bg-[#22304a] border border-[#253147] text-[11px] font-semibold text-slate-300 whitespace-nowrap cursor-pointer">150g roast chicken + 100g edamame</button>
@@ -558,11 +552,11 @@
             </div>
             <div>
               <label for="preview-food-pro" class="block text-[10px] font-bold text-blue-300 mb-1">Protein (g)</label>
-              <input type="number" step="0.1" id="preview-food-pro" value="55.4" class="w-full bg-[#090d16] border border-[#253147] rounded-lg px-2 py-1.5 text-xs font-extrabold text-white focus:outline-none" />
+              <input type="number" step="0.1" id="preview-food-pro" value="55.3" class="w-full bg-[#090d16] border border-[#253147] rounded-lg px-2 py-1.5 text-xs font-extrabold text-white focus:outline-none" />
             </div>
             <div>
               <label for="preview-food-carb" class="block text-[10px] font-bold text-amber-300 mb-1">Carbs (g)</label>
-              <input type="number" step="0.1" id="preview-food-carb" value="9.7" class="w-full bg-[#090d16] border border-[#253147] rounded-lg px-2 py-1.5 text-xs font-extrabold text-white focus:outline-none" />
+              <input type="number" step="0.1" id="preview-food-carb" value="9.8" class="w-full bg-[#090d16] border border-[#253147] rounded-lg px-2 py-1.5 text-xs font-extrabold text-white focus:outline-none" />
             </div>
             <div>
               <label for="preview-food-fat" class="block text-[10px] font-bold text-rose-300 mb-1">Fats (g)</label>
@@ -586,39 +580,61 @@
 
         <!-- Today's Logged Meals -->
         <div class="pt-2 border-t border-[#253147] space-y-2.5">
-          <div class="flex items-center justify-between">
-            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Today's Logged Meals</h4>
-            <span id="meals-count-label" class="text-xs font-semibold text-slate-400">0 items</span>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Today's Logged Meals</h4>
+              <span id="meals-count-label" class="text-xs font-semibold text-slate-400">0 items</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button type="button" id="clear-today-meals-btn" class="px-2.5 py-1.5 rounded-lg bg-[#182234] hover:bg-rose-950/60 border border-[#253147] hover:border-rose-500/40 text-[11px] font-bold text-slate-300 hover:text-rose-300 transition cursor-pointer">
+                Clear Today
+              </button>
+              <button type="button" id="save-nutrition-day-btn" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-extrabold shadow-md shadow-emerald-950/50 transition cursor-pointer">
+                Save Day to History
+              </button>
+            </div>
           </div>
           <div id="today-meals-list" class="space-y-2"></div>
         </div>
       </div>
 
-      <!-- 10-Item Daily Supplement Tracker -->
+      <!-- Daily Nutrition History Card -->
+      <div class="bg-[#111827] border border-[#253147] rounded-2xl p-4 sm:p-5 shadow-xl space-y-3.5">
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-[#a78bfa]">Daily Calorie &amp; Macro Archive</span>
+            <h3 class="text-lg font-extrabold text-white">Nutrition History</h3>
+          </div>
+          <span id="nutrition-history-count" class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-[#182234] text-slate-300 border border-[#253147]">0 days</span>
+        </div>
+        <div id="nutrition-history-list" class="space-y-2.5"></div>
+      </div>
+
+      <!-- 15-Item 5-Block Daily Supplement Schedule -->
       <div class="bg-[#111827] border border-[#253147] rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <span class="text-[11px] font-bold uppercase tracking-wider text-[#a78bfa]">Daily Micronutrient &amp; Ergogenic Stack</span>
-            <h3 class="text-lg font-extrabold text-white">10-Item Supplement Tracker</h3>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-[#a78bfa]">Timed Micronutrient, Joint &amp; DIY Pre Stack</span>
+            <h3 class="text-lg font-extrabold text-white">Daily Supplement Schedule</h3>
           </div>
           <div class="flex items-center gap-2">
             <span id="supps-progress-pill" class="px-3 py-1 rounded-full text-xs font-extrabold bg-[#7c3aed]/20 text-[#c4b5fd] border border-[#8b5cf6]/40">
-              0 / 10 Taken
+              0 / 15 Taken
             </span>
             <button type="button" id="reset-supps-btn" class="px-2.5 py-1 rounded-lg bg-[#182234] hover:bg-[#22304a] border border-[#253147] text-[11px] font-bold text-slate-300 hover:text-white transition cursor-pointer">
-              Reset Day
+              Reset All
             </button>
           </div>
         </div>
 
-        <div id="supplements-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+        <div id="supplements-schedule-container" class="space-y-3.5"></div>
       </div>
     </section>
 
     <!-- ========================================================= -->
-    <!-- TAB 3: 1RM HUB & STRENGTH PERCENTAGES                     -->
+    <!-- SIBLING 3: 1RM HUB TAB (#tab-1rm)                         -->
     <!-- ========================================================= -->
-    <section id="tab-onerm" class="tab-panel space-y-5 animate-fade-in" style="display: none;">
+    <section id="tab-1rm" class="tab-panel space-y-5 animate-fade-in" style="display: none;">
 
       <!-- Live Epley 1RM Estimator -->
       <div class="bg-[#111827] border border-[#253147] rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
@@ -660,7 +676,7 @@
     </section>
 
     <!-- ========================================================= -->
-    <!-- TAB 4: VITALS, WEIGHT TREND & WORKOUT HISTORY             -->
+    <!-- SIBLING 4: VITALS & HISTORY TAB (#tab-vitals)             -->
     <!-- ========================================================= -->
     <section id="tab-vitals" class="tab-panel space-y-5 animate-fade-in" style="display: none;">
 
@@ -672,7 +688,7 @@
           </div>
           <div class="px-3 py-1.5 rounded-xl bg-[#182234] border border-[#253147] text-right">
             <div class="text-[10px] uppercase font-bold text-slate-400">Current Weight</div>
-            <div id="vitals-avg-display" class="text-base font-black text-emerald-400">89.0 kg</div>
+            <div id="vitals-avg-display" class="text-base font-black text-emerald-400">88.5 kg</div>
           </div>
         </div>
 
@@ -680,11 +696,11 @@
         <div class="bg-[#182234]/85 border border-[#253147] rounded-xl p-3.5 space-y-2">
           <div class="flex justify-between text-xs font-bold">
             <span class="text-slate-400">Start: 89.0 kg</span>
-            <span id="vitals-to-go-text" class="text-[#c4b5fd]">9.0 kg to go</span>
+            <span id="vitals-to-go-text" class="text-[#c4b5fd]">8.5 kg to go</span>
             <span class="text-emerald-400">Goal: 80.0 kg</span>
           </div>
           <div class="w-full h-3 rounded-full bg-[#090d16] overflow-hidden border border-[#253147]">
-            <div id="vitals-progress-bar" class="h-full bg-gradient-to-r from-[#7c3aed] to-emerald-400 rounded-full transition-all duration-300" style="width: 5%;"></div>
+            <div id="vitals-progress-bar" class="h-full bg-gradient-to-r from-[#7c3aed] to-emerald-400 rounded-full transition-all duration-300" style="width: 6%;"></div>
           </div>
         </div>
 
@@ -758,15 +774,16 @@
   </div>
 
   <!-- ========================================================= -->
-  <!-- APPLICATION JAVASCRIPT (FAULT-TOLERANT & SELF-CONTAINED)  -->
+  <!-- APPLICATION JAVASCRIPT (CLEAN & SYNTAX-VERIFIED)          -->
   <!-- ========================================================= -->
   <script>
     (function () {
       'use strict';
 
-      var STORAGE_KEY = 'af_sg_strength_fuel_slate_v3';
-      var LEGACY_STORAGE_KEYS = ['af_sg_strength_fuel_slate_v2', 'af_sg_strength_fuel_slate_v1'];
-      var WEEKLY_QUOTA_KEY = 'af_sg_weekly_quota_slate_v3';
+      var STORAGE_KEY = 'af_sg_strength_fuel_slate_v4';
+      var LEGACY_STORAGE_KEYS = ['af_sg_strength_fuel_slate_v3', 'af_sg_strength_fuel_slate_v2', 'af_sg_strength_fuel_slate_v1'];
+      var WEEKLY_QUOTA_KEY = 'af_sg_weekly_quota_slate_v4';
+      var NUTRITION_HISTORY_KEY = 'af_sg_nutrition_history';
 
       var WEEKLY_QUOTA_ITEMS = {
         revl: [
@@ -861,18 +878,63 @@
         ]
       };
 
-      var SUPPLEMENTS_LIST = [
-        { name: 'Multivitamin', dose: '1 tab', timing: 'Morning' },
-        { name: 'Omega-3 Fish Oil', dose: '2 softgels', timing: 'With Meal' },
-        { name: 'Vitamin D+K', dose: '1 cap', timing: 'Morning' },
-        { name: 'Creatine', dose: '5g', timing: 'Daily' },
-        { name: 'Citrulline Malate', dose: '6g', timing: 'Pre-Workout' },
-        { name: 'Beta-Alanine', dose: '3.2g', timing: 'Pre-Workout' },
-        { name: 'Ashwagandha', dose: '600mg', timing: 'Evening' },
-        { name: 'Magnesium Glycinate', dose: '400mg', timing: 'Pre-Bed' },
-        { name: 'Zinc Picolinate', dose: '15mg', timing: 'Evening' },
-        { name: 'Electrolyte Mix', dose: '1 scoop', timing: 'Intra-Training' }
+      var SUPPLEMENT_GROUPS = [
+        {
+          id: 'morning',
+          title: 'Morning (Breakfast)',
+          subtitle: 'Gut health, daytime energy & joint cartilage support',
+          items: [
+            { id: 'supp-probiotic', name: 'Probiotic', note: 'Take before/with breakfast' },
+            { id: 'supp-ginseng', name: 'Panax Ginseng', note: 'Daytime energy' },
+            { id: 'supp-uc2', name: 'UC-II Collagen', note: 'Empty stomach or with breakfast' }
+          ]
+        },
+        {
+          id: 'midday',
+          title: 'Midday (Lunch)',
+          subtitle: 'Pair with a meal containing healthy fats for optimal absorption',
+          items: [
+            { id: 'supp-multi', name: 'Multi-vitamin', note: 'Take with healthy fats' },
+            { id: 'supp-d3k2', name: 'Vitamin D3 + K2', note: 'Take with healthy fats' },
+            { id: 'supp-omega3', name: 'Fish Oil Omega-3', note: 'Take with healthy fats' },
+            { id: 'supp-lecithin', name: 'Sunflower Lecithin', note: 'Take with meal' }
+          ]
+        },
+        {
+          id: 'preworkout',
+          title: 'Pre-Workout (30–45 mins prior — DIY Stim-Free)',
+          subtitle: 'Mix with 400–500 ml water prior to training',
+          hasBulkScoopBtn: true,
+          items: [
+            { id: 'supp-citrulline', name: 'Citrulline Malate 2:1', note: '6 g – 8 g' },
+            { id: 'supp-beta-alanine', name: 'Beta-Alanine', note: '3.2 g' },
+            { id: 'supp-creatine', name: 'Creatine Monohydrate', note: '5 g' },
+            { id: 'supp-betaine', name: 'Betaine Anhydrous', note: '2.5 g' },
+            { id: 'supp-tyrosine', name: 'L-Tyrosine', note: '2 g' },
+            { id: 'supp-pink-salt', name: 'Pink Himalayan Salt', note: '1/4 tsp (~500 mg sodium)' }
+          ]
+        },
+        {
+          id: 'evening',
+          title: 'Evening / Post-Workout',
+          subtitle: 'Inflammation recovery & natural melatonin support',
+          items: [
+            { id: 'supp-tart-cherry', name: 'Tart Cherry Concentrate', note: 'Post-workout or 1–2 hrs before bed' }
+          ]
+        },
+        {
+          id: 'night',
+          title: 'Night (Before Bed)',
+          subtitle: 'Nervous system down-regulation & deep sleep quality',
+          items: [
+            { id: 'supp-magnesium', name: 'Magnesium Glycinate', note: '30–60 mins before bedtime' }
+          ]
+        }
       ];
+
+      var ALL_SUPPLEMENT_ITEMS = SUPPLEMENT_GROUPS.reduce(function (acc, grp) {
+        return acc.concat(grp.items);
+      }, []);
 
       var DEFAULT_PRESET_MEALS = [
         { id: 'pm-heal-whey', name: 'Heal Chocolate Whey (0.3 srv)', kcal: 40, pro: 6.0, carb: 2.2, fat: 0.8, fib: 0.9 },
@@ -974,10 +1036,9 @@
             return Object.assign({}, item);
           }),
           supplementsTaken: {
-            'Multivitamin': true,
-            'Omega-3 Fish Oil': true,
-            'Vitamin D+K': true,
-            'Creatine': true
+            'supp-probiotic': true,
+            'supp-ginseng': true,
+            'supp-uc2': true
           },
           weights: [
             { date: getPastDateISO(5), weight: 89.4 },
@@ -986,6 +1047,46 @@
             { date: getTodayISO(), weight: 88.5 }
           ]
         };
+      }
+
+      function getDefaultNutritionHistory() {
+        return [
+          {
+            date: getPastDateISO(1),
+            kcal: 1765,
+            targetKcal: 1800,
+            pro: 192.4,
+            carb: 141.0,
+            fat: 48.2,
+            fib: 34.5,
+            meals: [
+              { name: 'Heal Chocolate Whey (0.3 srv) + Meiji Low Fat Milk (200 ml)', kcal: 126, pro: 12.2, carb: 12.2, fat: 3.2, fib: 0.9 },
+              { name: 'Chobani Vanilla Bean (150 g) + Oatmeal (dry, 45 g) + Blueberries (frozen, 50 g) + Chia Seeds (10 g)', kcal: 368, pro: 18.5, carb: 49.2, fat: 11.7, fib: 9.3 },
+              { name: 'Roast Chicken & Beef + Edamame Plate', kcal: 645, pro: 86.0, carb: 24.5, fat: 19.8, fib: 9.4 },
+              { name: 'W0W ProTEGO Pasta (0.5 srv) + Catalina Crunch Choc (36 g) + Gala Apple (1 med)', kcal: 626, pro: 75.7, carb: 55.1, fat: 13.5, fib: 14.9 }
+            ]
+          }
+        ];
+      }
+
+      function loadNutritionHistory() {
+        try {
+          var raw = localStorage.getItem(NUTRITION_HISTORY_KEY);
+          if (!raw) return getDefaultNutritionHistory();
+          var parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : getDefaultNutritionHistory();
+        } catch (err) {
+          console.error('Nutrition history load error:', err);
+          return getDefaultNutritionHistory();
+        }
+      }
+
+      function saveNutritionHistory(list) {
+        try {
+          localStorage.setItem(NUTRITION_HISTORY_KEY, JSON.stringify(list));
+        } catch (err) {
+          console.error('Nutrition history save error:', err);
+        }
       }
 
       function getDefaultWeeklyQuota() {
@@ -999,31 +1100,25 @@
 
       function loadAppState() {
         try {
-          var rawV3 = localStorage.getItem(STORAGE_KEY);
-          if (rawV3) {
-            var parsed = Object.assign({}, getDefaultState(), JSON.parse(rawV3));
-            // Ensure 1RM keys match current canonical labels safely
+          var rawV4 = localStorage.getItem(STORAGE_KEY);
+          if (rawV4) {
+            var parsed = Object.assign({}, getDefaultState(), JSON.parse(rawV4));
             if (!parsed.oneRMs || typeof parsed.oneRMs !== 'object') {
               parsed.oneRMs = getDefaultState().oneRMs;
             }
             if (!Array.isArray(parsed.presetMeals) || parsed.presetMeals.length === 0) {
               parsed.presetMeals = DEFAULT_PRESET_MEALS.map(function (i) { return Object.assign({}, i); });
             } else {
-              // Remove any previously saved Full Staples Stack combo preset
               var filteredPresets = parsed.presetMeals.filter(function (p) {
                 return p.id !== 'pm-combo-all' && p.name !== 'Full Staples Stack (All 14 Items)';
               });
-              if (filteredPresets.length !== parsed.presetMeals.length) {
-                parsed.presetMeals = filteredPresets.length > 0
-                  ? filteredPresets
-                  : DEFAULT_PRESET_MEALS.map(function (i) { return Object.assign({}, i); });
-                saveJSON(STORAGE_KEY, parsed);
-              }
+              parsed.presetMeals = filteredPresets.length > 0
+                ? filteredPresets
+                : DEFAULT_PRESET_MEALS.map(function (i) { return Object.assign({}, i); });
             }
             return parsed;
           }
 
-          // Migrate any prior v1/v2 user data safely
           for (var i = 0; i < LEGACY_STORAGE_KEYS.length; i++) {
             var legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEYS[i]);
             if (legacyRaw) {
@@ -1049,10 +1144,13 @@
       var appState = loadAppState();
       window.__afState = appState;
       var weeklyQuotaState = loadJSON(WEEKLY_QUOTA_KEY, getDefaultWeeklyQuota);
+      var nutritionHistory = loadNutritionHistory();
+      var expandedNutritionDates = {};
 
       function persistAll() {
         saveJSON(STORAGE_KEY, appState);
         saveJSON(WEEKLY_QUOTA_KEY, weeklyQuotaState);
+        saveNutritionHistory(nutritionHistory);
       }
 
       function showToast(message, isSuccess) {
@@ -1337,26 +1435,32 @@
       }
 
       // ---------------------------------------------------------
-      // NUTRITION, PRESET MEAL DIARY, PARSER & SUPPLEMENTS
+      // NUTRITION, PRESET MEAL DROPDOWN, PARSER, HISTORY & SUPPS
       // ---------------------------------------------------------
       function getCurrentWeightKg() {
-        if (!appState.weights || appState.weights.length === 0) return 89.0;
+        if (!appState.weights || appState.weights.length === 0) return 88.5;
         var sorted = appState.weights.slice().sort(function (a, b) {
           return b.date.localeCompare(a.date);
         });
-        return Number(sorted[0].weight) || 89.0;
+        return Number(sorted[0].weight) || 88.5;
       }
 
       function computeTargets() {
         var curWeight = getCurrentWeightKg();
-        // Default 1,800 kcal, 190g Protein, 150g Carbs, 55g Fats, 35g Fibre (scales lightly with weight)
         var deltaKg = curWeight - 88.5;
         var targetKcal = Math.max(1750, Math.min(1900, Math.round(1800 + deltaKg * 15)));
         var targetPro = 190;
         var targetFat = 55;
         var targetCarb = Math.max(130, Math.round((targetKcal - targetPro * 4 - targetFat * 9) / 4));
         var targetFib = 35;
-        return { curWeight: curWeight, targetKcal: targetKcal, targetPro: targetPro, targetCarb: targetCarb, targetFat: targetFat, targetFib: targetFib };
+        return {
+          curWeight: curWeight,
+          targetKcal: targetKcal,
+          targetPro: targetPro,
+          targetCarb: targetCarb,
+          targetFat: targetFat,
+          targetFib: targetFib
+        };
       }
 
       function parseNaturalFoodText() {
@@ -1474,6 +1578,54 @@
         showToast('Added "' + name + '" to preset dropdown!', true);
       }
 
+      function updateSelectedPresetPreview() {
+        var selectEl = document.getElementById('presetMealSelect');
+        var titleEl = document.getElementById('selected-preset-title');
+        var macrosEl = document.getElementById('selected-preset-macros');
+        if (!selectEl || !titleEl || !macrosEl) return;
+
+        var presets = appState.presetMeals || [];
+        var selected = presets.find(function (p) { return p.id === selectEl.value; }) || presets[0];
+
+        if (!selected) {
+          titleEl.textContent = 'No presets available';
+          macrosEl.innerHTML = '';
+          return;
+        }
+
+        titleEl.textContent = selected.name;
+        macrosEl.innerHTML =
+          '<span class="px-2 py-0.5 rounded bg-[#090d16] border border-[#253147] text-[11px] font-extrabold text-emerald-300">' + Math.round(selected.kcal) + ' kcal</span>' +
+          '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-blue-300">P ' + Number(selected.pro).toFixed(1) + 'g</span>' +
+          '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-amber-300">C ' + Number(selected.carb).toFixed(1) + 'g</span>' +
+          '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-rose-300">F ' + Number(selected.fat).toFixed(1) + 'g</span>' +
+          '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-emerald-400">Fib ' + Number(selected.fib).toFixed(1) + 'g</span>';
+      }
+
+      function renderPresetMeals(forceSelectedId) {
+        var selectEl = document.getElementById('presetMealSelect');
+        if (!selectEl) return;
+        var prevVal = forceSelectedId || selectEl.value;
+        var presets = appState.presetMeals || [];
+
+        if (presets.length === 0) {
+          selectEl.innerHTML = '<option value="">No presets saved — click Restore Defaults or + New Preset</option>';
+          updateSelectedPresetPreview();
+          return;
+        }
+
+        selectEl.innerHTML = presets.map(function (p) {
+          return '<option value="' + p.id + '">' + p.name + ' (' + Math.round(p.kcal) + ' kcal | ' + Number(p.pro).toFixed(1) + 'P)</option>';
+        }).join('');
+
+        if (prevVal && presets.some(function (p) { return p.id === prevVal; })) {
+          selectEl.value = prevVal;
+        } else {
+          selectEl.value = presets[0].id;
+        }
+        updateSelectedPresetPreview();
+      }
+
       function logPresetById(presetId) {
         var found = (appState.presetMeals || []).find(function (p) { return p.id === presetId; });
         if (!found) return;
@@ -1523,120 +1675,243 @@
         showToast('Meal removed from today', false);
       }
 
-      function toggleSupplement(suppName) {
+      function clearTodayMeals() {
+        appState.meals = [];
+        saveJSON(STORAGE_KEY, appState);
+        renderNutritionTab();
+        showToast('Cleared today\'s food log', false);
+      }
+
+      function saveTodayNutritionToHistory() {
+        var meals = appState.meals || [];
+        if (meals.length === 0) {
+          showToast('Log at least 1 meal before saving today.', false);
+          return;
+        }
+
+        var targets = computeTargets();
+        var totals = meals.reduce(function (acc, m) {
+          acc.kcal += Number(m.kcal) || 0;
+          acc.pro += Number(m.pro) || 0;
+          acc.carb += Number(m.carb) || 0;
+          acc.fat += Number(m.fat) || 0;
+          acc.fib += Number(m.fib) || 0;
+          return acc;
+        }, { kcal: 0, pro: 0, carb: 0, fat: 0, fib: 0 });
+
+        var todayStr = getTodayISO();
+        var snapshot = {
+          date: todayStr,
+          kcal: Math.round(totals.kcal),
+          targetKcal: targets.targetKcal,
+          pro: Number(totals.pro.toFixed(1)),
+          carb: Number(totals.carb.toFixed(1)),
+          fat: Number(totals.fat.toFixed(1)),
+          fib: Number(totals.fib.toFixed(1)),
+          meals: meals.map(function (m) {
+            return {
+              name: m.name,
+              kcal: Number(m.kcal) || 0,
+              pro: Number(m.pro) || 0,
+              carb: Number(m.carb) || 0,
+              fat: Number(m.fat) || 0,
+              fib: Number(m.fib) || 0
+            };
+          })
+        };
+
+        var existingIdx = nutritionHistory.findIndex(function (entry) { return entry.date === todayStr; });
+        if (existingIdx >= 0) {
+          nutritionHistory[existingIdx] = snapshot;
+          showToast('Updated ' + todayStr + ' in Nutrition History!', true);
+        } else {
+          nutritionHistory.unshift(snapshot);
+          showToast('Saved ' + todayStr + ' to Nutrition History!', true);
+        }
+
+        nutritionHistory.sort(function (a, b) { return b.date.localeCompare(a.date); });
+        expandedNutritionDates[todayStr] = true;
+        saveNutritionHistory(nutritionHistory);
+        renderNutritionHistory();
+      }
+
+      function toggleNutritionHistoryExpand(dateStr) {
+        expandedNutritionDates[dateStr] = !expandedNutritionDates[dateStr];
+        renderNutritionHistory();
+      }
+
+      function deleteNutritionHistoryEntry(dateStr) {
+        nutritionHistory = nutritionHistory.filter(function (entry) { return entry.date !== dateStr; });
+        delete expandedNutritionDates[dateStr];
+        saveNutritionHistory(nutritionHistory);
+        renderNutritionHistory();
+        showToast('Removed ' + dateStr + ' from Nutrition History', false);
+      }
+
+      function renderNutritionHistory() {
+        var countBadge = document.getElementById('nutrition-history-count');
+        var listEl = document.getElementById('nutrition-history-list');
+        if (!countBadge || !listEl) return;
+
+        var sorted = nutritionHistory.slice().sort(function (a, b) { return b.date.localeCompare(a.date); });
+        countBadge.textContent = sorted.length + (sorted.length === 1 ? ' day' : ' days');
+
+        if (sorted.length === 0) {
+          listEl.innerHTML = '<p class="text-xs text-slate-400 py-1">No days archived yet. Tap <strong>Save Day to History</strong> above after logging your meals.</p>';
+          return;
+        }
+
+        listEl.innerHTML = sorted.map(function (entry) {
+          var diff = entry.targetKcal - entry.kcal;
+          var isOnTarget = diff >= 0;
+          var statusBadge = isOnTarget
+            ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/35">-' + diff + ' kcal deficit &bull; Target Hit</span>'
+            : '<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500/20 text-rose-300 border border-rose-500/35">+' + Math.abs(diff) + ' kcal over target</span>';
+
+          var isExpanded = Boolean(expandedNutritionDates[entry.date]);
+          var mealsHtml = '';
+          if (isExpanded) {
+            var itemRows = (entry.meals || []).map(function (m) {
+              return (
+                '<div class="flex items-center justify-between gap-2 py-1.5 border-b border-[#253147]/60 last:border-b-0 text-[11px]">' +
+                  '<span class="text-slate-200 font-semibold truncate">' + m.name + '</span>' +
+                  '<span class="text-slate-400 font-bold shrink-0">' + Math.round(m.kcal) + ' kcal &bull; ' + Number(m.pro).toFixed(1) + 'g P</span>' +
+                '</div>'
+              );
+            }).join('');
+            mealsHtml =
+              '<div class="mt-2.5 pt-2 border-t border-[#253147] bg-[#090d16]/75 rounded-xl px-3 py-2 space-y-0.5">' +
+                (itemRows || '<div class="text-[11px] text-slate-400">No meal items recorded.</div>') +
+              '</div>';
+          }
+
+          return (
+            '<div class="bg-[#182234]/85 border border-[#253147] rounded-xl p-3.5 transition">' +
+              '<div class="flex flex-wrap items-start justify-between gap-2">' +
+                '<div class="space-y-1">' +
+                  '<div class="flex flex-wrap items-center gap-2">' +
+                    '<span class="text-xs sm:text-sm font-extrabold text-white">' + entry.date + '</span>' +
+                    statusBadge +
+                  '</div>' +
+                  '<div class="flex flex-wrap items-center gap-1.5 pt-0.5">' +
+                    '<span class="px-2 py-0.5 rounded bg-[#090d16] border border-[#253147] text-[11px] font-extrabold text-white">' + Number(entry.kcal).toLocaleString() + ' / ' + Number(entry.targetKcal).toLocaleString() + ' kcal</span>' +
+                    '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-blue-300">P ' + Number(entry.pro).toFixed(1) + 'g</span>' +
+                    '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-amber-300">C ' + Number(entry.carb).toFixed(1) + 'g</span>' +
+                    '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-rose-300">F ' + Number(entry.fat).toFixed(1) + 'g</span>' +
+                    '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-emerald-300">Fib ' + Number(entry.fib).toFixed(1) + 'g</span>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="flex items-center gap-1.5 shrink-0">' +
+                  '<button type="button" data-history-date="' + entry.date + '" class="toggle-nutri-history-btn px-2.5 py-1.5 rounded-lg bg-[#090d16] hover:bg-[#22304a] border border-[#253147] text-[11px] font-bold text-[#c4b5fd] transition cursor-pointer">' +
+                    (isExpanded ? 'Hide Items (' + (entry.meals ? entry.meals.length : 0) + ')' : 'View Items (' + (entry.meals ? entry.meals.length : 0) + ')') +
+                  '</button>' +
+                  '<button type="button" data-history-date="' + entry.date + '" title="Delete history day" class="delete-nutri-history-btn px-2 py-1.5 rounded-lg bg-[#090d16] hover:bg-rose-950/70 border border-[#253147] text-[11px] font-bold text-slate-400 hover:text-rose-300 transition cursor-pointer">' +
+                    'Delete' +
+                  '</button>' +
+                '</div>' +
+              '</div>' +
+              mealsHtml +
+            '</div>'
+          );
+        }).join('');
+      }
+
+      function toggleSupplement(suppId) {
         appState.supplementsTaken = appState.supplementsTaken || {};
-        appState.supplementsTaken[suppName] = !appState.supplementsTaken[suppName];
+        appState.supplementsTaken[suppId] = !appState.supplementsTaken[suppId];
         saveJSON(STORAGE_KEY, appState);
         renderSupplements();
+      }
+
+      function checkEntirePreWorkoutScoop() {
+        var preGroup = SUPPLEMENT_GROUPS.find(function (g) { return g.id === 'preworkout'; });
+        if (!preGroup) return;
+        appState.supplementsTaken = appState.supplementsTaken || {};
+        var allChecked = preGroup.items.every(function (item) { return Boolean(appState.supplementsTaken[item.id]); });
+        var nextState = !allChecked;
+        preGroup.items.forEach(function (item) {
+          appState.supplementsTaken[item.id] = nextState;
+        });
+        saveJSON(STORAGE_KEY, appState);
+        renderSupplements();
+        showToast(nextState ? 'Checked all 6 DIY Pre-Workout Scoop ingredients!' : 'Unchecked DIY Pre-Workout Scoop', nextState);
       }
 
       function resetSupplementsDay() {
         appState.supplementsTaken = {};
         saveJSON(STORAGE_KEY, appState);
         renderSupplements();
-        showToast('Supplement checklist reset for new day', false);
+        showToast('All 15 supplements reset for new day', false);
       }
 
       function renderSupplements() {
         var takenMap = appState.supplementsTaken || {};
-        var count = SUPPLEMENTS_LIST.filter(function (s) { return Boolean(takenMap[s.name]); }).length;
-        document.getElementById('supps-progress-pill').textContent = count + ' / ' + SUPPLEMENTS_LIST.length + ' Taken';
+        var totalItems = ALL_SUPPLEMENT_ITEMS.length;
+        var count = ALL_SUPPLEMENT_ITEMS.filter(function (s) { return Boolean(takenMap[s.id]); }).length;
+        document.getElementById('supps-progress-pill').textContent = count + ' / ' + totalItems + ' Taken';
 
-        document.getElementById('supplements-grid').innerHTML = SUPPLEMENTS_LIST.map(function (s) {
-          var done = Boolean(takenMap[s.name]);
-          return (
-            '<button type="button" data-supp="' + s.name + '" class="supp-toggle-btn p-3 rounded-xl border text-left flex items-center justify-between gap-2 transition cursor-pointer ' +
-            (done ? 'bg-emerald-950/35 border-emerald-500/45 text-white' : 'bg-[#182234]/85 border-[#253147] text-slate-300 hover:border-[#8b5cf6]') + '">' +
-              '<div class="flex items-center gap-2.5 min-w-0">' +
-                '<span class="w-5 h-5 rounded-md flex items-center justify-center border shrink-0 ' +
-                (done ? 'bg-emerald-500 border-emerald-400 text-slate-950' : 'bg-[#090d16] border-[#253147] text-transparent') + '">' +
-                  '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
-                    '<polyline points="20 6 9 17 4 12" />' +
-                  '</svg>' +
-                '</span>' +
-                '<div class="min-w-0">' +
-                  '<div class="text-xs font-extrabold truncate ' + (done ? 'text-emerald-200 line-through opacity-80' : 'text-white') + '">' + s.name + '</div>' +
-                  '<div class="text-[10px] font-semibold text-slate-400">' + s.dose + ' &bull; ' + s.timing + '</div>' +
+        var container = document.getElementById('supplements-schedule-container');
+        if (!container) return;
+
+        container.innerHTML = SUPPLEMENT_GROUPS.map(function (group) {
+          var groupDoneCount = group.items.filter(function (it) { return Boolean(takenMap[it.id]); }).length;
+          var allGroupDone = groupDoneCount === group.items.length;
+
+          var headerRight = group.hasBulkScoopBtn
+            ? '<button type="button" id="check-entire-preworkout-btn" class="px-3 py-1.5 rounded-lg ' +
+                (allGroupDone
+                  ? 'bg-emerald-600/25 border border-emerald-500/50 text-emerald-300'
+                  : 'bg-[#7c3aed] hover:bg-[#8b5cf6] text-white shadow-md shadow-violet-950/50') +
+                ' text-[11px] font-extrabold transition cursor-pointer">' +
+                (allGroupDone ? 'Pre-Workout Checked ✓' : 'Check All Pre-Workout') +
+              '</button>'
+            : '<span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full ' +
+                (allGroupDone ? 'bg-emerald-500/20 text-emerald-300' : 'bg-[#090d16] text-slate-400 border border-[#253147]') + '">' +
+                groupDoneCount + ' / ' + group.items.length +
+              '</span>';
+
+          var itemsHtml = group.items.map(function (item) {
+            var done = Boolean(takenMap[item.id]);
+            return (
+              '<button type="button" data-supp-id="' + item.id + '" class="supp-toggle-btn p-3 rounded-xl border text-left flex items-center justify-between gap-2.5 transition cursor-pointer ' +
+              (done ? 'bg-emerald-950/35 border-emerald-500/45 text-white' : 'bg-[#090d16]/85 border-[#253147] text-slate-300 hover:border-[#8b5cf6]') + '">' +
+                '<div class="flex items-center gap-2.5 min-w-0">' +
+                  '<span class="w-5 h-5 rounded-md flex items-center justify-center border shrink-0 ' +
+                  (done ? 'bg-emerald-500 border-emerald-400 text-slate-950' : 'bg-[#182234] border-[#253147] text-transparent') + '">' +
+                    '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
+                      '<polyline points="20 6 9 17 4 12" />' +
+                    '</svg>' +
+                  '</span>' +
+                  '<div class="min-w-0">' +
+                    '<div class="text-xs font-extrabold truncate ' + (done ? 'text-emerald-200 line-through opacity-85' : 'text-white') + '">' + item.name + '</div>' +
+                    '<div class="text-[11px] font-semibold text-slate-400 truncate">' + item.note + '</div>' +
+                  '</div>' +
                 '</div>' +
-              '</div>' +
-              '<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full ' +
-              (done ? 'bg-emerald-500/20 text-emerald-300' : 'bg-[#090d16] text-slate-400') + '">' +
-                (done ? 'Taken' : 'Pending') +
-              '</span>' +
-            '</button>'
-          );
-        }).join('');
-      }
+                '<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full shrink-0 ' +
+                (done ? 'bg-emerald-500/20 text-emerald-300' : 'bg-[#182234] text-slate-400') + '">' +
+                  (done ? 'Taken' : 'Pending') +
+                '</span>' +
+              '</button>'
+            );
+          }).join('');
 
-      function updateSelectedPresetPreview() {
-        var selectEl = document.getElementById('presetMealSelect');
-        var titleEl = document.getElementById('selected-preset-title');
-        var macrosEl = document.getElementById('selected-preset-macros');
-        var addBtn = document.getElementById('add-selected-preset-btn');
-        var delBtn = document.getElementById('delete-selected-preset-btn');
-        if (!selectEl || !titleEl || !macrosEl) return;
-
-        var presets = appState.presetMeals || [];
-        var selectedId = selectEl.value;
-        var chosen = presets.find(function (p) { return p.id === selectedId; }) || presets[0];
-
-        if (!chosen) {
-          titleEl.textContent = 'No presets saved — click "+ New Preset" or "Restore Defaults"';
-          macrosEl.innerHTML = '';
-          if (addBtn) addBtn.disabled = true;
-          if (delBtn) delBtn.disabled = true;
-          return;
-        }
-
-        if (addBtn) addBtn.disabled = false;
-        if (delBtn) delBtn.disabled = false;
-        titleEl.textContent = chosen.name;
-        macrosEl.innerHTML =
-          '<span class="px-2 py-0.5 rounded bg-[#090d16] border border-[#253147] text-[11px] font-extrabold text-emerald-300">' + Number(chosen.kcal).toLocaleString() + ' kcal</span>' +
-          '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-blue-300">P ' + Number(chosen.pro).toFixed(1) + 'g</span>' +
-          '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-amber-300">C ' + Number(chosen.carb).toFixed(1) + 'g</span>' +
-          '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-rose-300">F ' + Number(chosen.fat).toFixed(1) + 'g</span>' +
-          '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-emerald-400">Fib ' + Number(chosen.fib).toFixed(1) + 'g</span>';
-      }
-
-      function renderPresetMeals(preferredId) {
-        var selectEl = document.getElementById('presetMealSelect');
-        if (!selectEl) return;
-        var prevSelected = preferredId || selectEl.value;
-        var presets = appState.presetMeals || [];
-
-        if (presets.length === 0) {
-          selectEl.innerHTML = '<option value="">No presets saved</option>';
-          updateSelectedPresetPreview();
-          return;
-        }
-
-        selectEl.innerHTML = presets.map(function (p) {
           return (
-            '<option value="' + p.id + '">' +
-              p.name + ' — ' + Math.round(Number(p.kcal)) + ' kcal | ' + Number(p.pro).toFixed(1) + 'g P' +
-            '</option>'
+            '<div class="bg-[#182234]/75 border border-[#253147] rounded-xl p-3.5 space-y-2.5">' +
+              '<div class="flex flex-wrap items-center justify-between gap-2">' +
+                '<div>' +
+                  '<h4 class="text-xs sm:text-sm font-extrabold text-white">' + group.title + '</h4>' +
+                  '<p class="text-[11px] text-slate-400">' + group.subtitle + '</p>' +
+                '</div>' +
+                headerRight +
+              '</div>' +
+              '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">' + itemsHtml + '</div>' +
+            '</div>'
           );
         }).join('');
-
-        if (prevSelected && presets.some(function (p) { return p.id === prevSelected; })) {
-          selectEl.value = prevSelected;
-        } else {
-          selectEl.value = presets[0].id;
-        }
-
-        updateSelectedPresetPreview();
       }
 
       function renderNutritionTab() {
         var targets = computeTargets();
-        var curWeight = targets.curWeight;
-        var targetKcal = targets.targetKcal;
-        var targetPro = targets.targetPro;
-        var targetCarb = targets.targetCarb;
-        var targetFat = targets.targetFat;
-        var targetFib = targets.targetFib;
-
         var totals = (appState.meals || []).reduce(function (acc, m) {
           acc.kcal += Number(m.kcal) || 0;
           acc.pro += Number(m.pro) || 0;
@@ -1646,91 +1921,95 @@
           return acc;
         }, { kcal: 0, pro: 0, carb: 0, fat: 0, fib: 0 });
 
-        var remKcal = Math.round(targetKcal - totals.kcal);
-        var remPro = Math.round(targetPro - totals.pro);
-        var remCarb = Math.round(targetCarb - totals.carb);
-        var remFat = Math.round(targetFat - totals.fat);
-        var remFib = Math.round(targetFib - totals.fib);
-
-        var navBadge = document.getElementById('nav-cal-badge');
-        navBadge.textContent = remKcal + ' left';
-        navBadge.className = remKcal < 0
-          ? 'ml-1 px-2 py-0.5 text-[11px] font-extrabold rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 pointer-events-none'
-          : 'ml-1 px-2 py-0.5 text-[11px] font-extrabold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 pointer-events-none';
-
         document.getElementById('calorie-engine-subtitle').innerHTML =
-          '182 cm &bull; Current Weight: <strong class="text-slate-200">' + curWeight.toFixed(1) + ' kg</strong> &rarr; Goal: <strong class="text-emerald-400">80.0 kg</strong>';
-        document.getElementById('target-kcal-display').textContent = targetKcal.toLocaleString() + ' kcal';
-
-        var remBig = document.getElementById('rem-kcal-big');
-        remBig.textContent = remKcal.toLocaleString();
-        remBig.className = 'text-2xl sm:text-3xl font-black ' + (remKcal < 0 ? 'text-rose-400' : 'text-emerald-400');
-
+          '182 cm &bull; Current Weight: <strong class="text-slate-200">' + targets.curWeight.toFixed(1) + ' kg</strong> &rarr; Goal: <strong class="text-emerald-400">80.0 kg</strong>';
+        document.getElementById('target-kcal-display').textContent = targets.targetKcal.toLocaleString() + ' kcal';
         document.getElementById('consumed-kcal-text').textContent = Math.round(totals.kcal).toLocaleString();
-        document.getElementById('goal-kcal-text').textContent = targetKcal.toLocaleString();
-        document.getElementById('bar-kcal').style.width = Math.min(100, Math.max(0, (totals.kcal / targetKcal) * 100)) + '%';
+        document.getElementById('goal-kcal-text').textContent = targets.targetKcal.toLocaleString();
 
-        document.getElementById('rem-pro').textContent = remPro + 'g left';
-        document.getElementById('bar-pro').style.width = Math.min(100, Math.max(0, (totals.pro / targetPro) * 100)) + '%';
-        document.getElementById('sub-pro').textContent = Math.round(totals.pro) + ' / ' + targetPro + 'g';
-
-        document.getElementById('rem-carb').textContent = remCarb + 'g left';
-        document.getElementById('bar-carb').style.width = Math.min(100, Math.max(0, (totals.carb / targetCarb) * 100)) + '%';
-        document.getElementById('sub-carb').textContent = Math.round(totals.carb) + ' / ' + targetCarb + 'g';
-
-        document.getElementById('rem-fat').textContent = remFat + 'g left';
-        document.getElementById('bar-fat').style.width = Math.min(100, Math.max(0, (totals.fat / targetFat) * 100)) + '%';
-        document.getElementById('sub-fat').textContent = Math.round(totals.fat) + ' / ' + targetFat + 'g';
-
-        document.getElementById('rem-fib').textContent = remFib + 'g left';
-        document.getElementById('bar-fib').style.width = Math.min(100, Math.max(0, (totals.fib / targetFib) * 100)) + '%';
-        document.getElementById('sub-fib').textContent = Math.round(totals.fib) + ' / ' + targetFib + 'g';
-
-        document.getElementById('meals-count-label').textContent = appState.meals.length + ' items';
-        var mealsList = document.getElementById('today-meals-list');
-        if (appState.meals.length === 0) {
-          mealsList.innerHTML = '<p class="text-xs text-slate-400 py-2">No meals logged today.</p>';
+        var remKcal = Math.round(targets.targetKcal - totals.kcal);
+        var remBigEl = document.getElementById('rem-kcal-big');
+        var navBadge = document.getElementById('nav-cal-badge');
+        if (remKcal >= 0) {
+          remBigEl.textContent = remKcal.toLocaleString();
+          remBigEl.className = 'text-2xl sm:text-3xl font-black text-emerald-400';
+          navBadge.textContent = remKcal.toLocaleString() + ' left';
+          navBadge.className = 'ml-1 px-2 py-0.5 text-[11px] font-extrabold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 pointer-events-none';
         } else {
-          mealsList.innerHTML = appState.meals.map(function (m) {
+          remBigEl.textContent = Math.abs(remKcal).toLocaleString() + ' over';
+          remBigEl.className = 'text-2xl sm:text-3xl font-black text-rose-400';
+          navBadge.textContent = Math.abs(remKcal).toLocaleString() + ' over';
+          navBadge.className = 'ml-1 px-2 py-0.5 text-[11px] font-extrabold rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 pointer-events-none';
+        }
+
+        var kcalPct = Math.min(100, Math.round((totals.kcal / targets.targetKcal) * 100));
+        document.getElementById('bar-kcal').style.width = kcalPct + '%';
+
+        function updateMacroBox(remId, barId, subId, eaten, goal) {
+          var left = Math.max(0, goal - eaten);
+          document.getElementById(remId).textContent = left.toFixed(1) + 'g left';
+          document.getElementById(subId).textContent = eaten.toFixed(1) + ' / ' + goal + 'g';
+          document.getElementById(barId).style.width = Math.min(100, Math.round((eaten / goal) * 100)) + '%';
+        }
+
+        updateMacroBox('rem-pro', 'bar-pro', 'sub-pro', totals.pro, targets.targetPro);
+        updateMacroBox('rem-carb', 'bar-carb', 'sub-carb', totals.carb, targets.targetCarb);
+        updateMacroBox('rem-fat', 'bar-fat', 'sub-fat', totals.fat, targets.targetFat);
+        updateMacroBox('rem-fib', 'bar-fib', 'sub-fib', totals.fib, targets.targetFib);
+
+        var mealsList = document.getElementById('today-meals-list');
+        var meals = appState.meals || [];
+        document.getElementById('meals-count-label').textContent = meals.length + (meals.length === 1 ? ' item' : ' items');
+
+        if (meals.length === 0) {
+          mealsList.innerHTML = '<p class="text-xs text-slate-400 py-1">No meals logged yet today. Pick a staple preset above or parse your meal.</p>';
+        } else {
+          mealsList.innerHTML = meals.map(function (m) {
             return (
-              '<div class="bg-[#182234]/85 border border-[#253147] rounded-xl p-3 flex items-center justify-between gap-3">' +
+              '<div class="bg-[#182234]/85 border border-[#253147] rounded-xl p-3 flex items-center justify-between gap-2.5">' +
                 '<div class="min-w-0">' +
-                  '<div class="text-xs sm:text-sm font-bold text-white truncate">' + m.name + '</div>' +
-                  '<div class="flex flex-wrap items-center gap-2 text-[11px] text-slate-400 mt-0.5">' +
-                    '<span class="font-extrabold text-emerald-300">' + m.kcal + ' kcal</span>' +
-                    '<span>P: <strong class="text-blue-300">' + m.pro + 'g</strong></span>' +
-                    '<span>C: <strong class="text-amber-300">' + m.carb + 'g</strong></span>' +
-                    '<span>F: <strong class="text-rose-300">' + m.fat + 'g</strong></span>' +
-                    '<span>Fib: <strong class="text-emerald-300">' + m.fib + 'g</strong></span>' +
+                  '<div class="text-xs sm:text-sm font-extrabold text-white truncate">' + m.name + '</div>' +
+                  '<div class="flex flex-wrap items-center gap-1.5 mt-1">' +
+                    '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-extrabold text-white">' + Math.round(m.kcal) + ' kcal</span>' +
+                    '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-blue-300">P ' + Number(m.pro).toFixed(1) + 'g</span>' +
+                    '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-amber-300">C ' + Number(m.carb).toFixed(1) + 'g</span>' +
+                    '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-rose-300">F ' + Number(m.fat).toFixed(1) + 'g</span>' +
+                    '<span class="px-2 py-0.5 rounded bg-[#090d16] text-[11px] font-bold text-emerald-300">Fib ' + Number(m.fib).toFixed(1) + 'g</span>' +
                   '</div>' +
                 '</div>' +
-                '<button type="button" data-meal-id="' + m.id + '" title="Delete meal" class="delete-meal-btn px-2.5 py-1.5 rounded-lg bg-[#090d16] hover:bg-rose-950/70 border border-[#253147] text-xs font-bold text-slate-400 hover:text-rose-300 transition shrink-0 cursor-pointer">Delete</button>' +
+                '<button type="button" data-meal-id="' + m.id + '" title="Remove meal" class="delete-meal-btn p-2 rounded-lg bg-[#090d16] hover:bg-rose-950/70 text-slate-400 hover:text-rose-300 transition shrink-0 cursor-pointer">' +
+                  '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+                    '<polyline points="3 6 5 6 21 6" />' +
+                    '<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />' +
+                  '</svg>' +
+                '</button>' +
               '</div>'
             );
           }).join('');
         }
 
         renderPresetMeals();
+        renderNutritionHistory();
         renderSupplements();
       }
 
       // ---------------------------------------------------------
-      // 1RM HUB
+      // 1RM HUB & PERCENTAGE MATRIX
       // ---------------------------------------------------------
       function update1RMEstimator() {
         var w = parseFloat(document.getElementById('calc-1rm-weight').value) || 0;
-        var r = Math.max(1, parseInt(document.getElementById('calc-1rm-reps').value, 10) || 1);
-        var epley = r === 1 ? w : w * (1 + r / 30);
-        var est = roundTo2Point5(epley);
-
+        var r = parseInt(document.getElementById('calc-1rm-reps').value, 10) || 1;
+        var est = r <= 1 ? w : w * (1 + r / 30);
         document.getElementById('calc-1rm-output').textContent = est.toFixed(1) + ' kg';
 
-        var pctList = [65, 70, 75, 80, 85, 90, 95];
-        document.getElementById('one-rm-percentages-grid').innerHTML = pctList.map(function (p) {
+        var gridEl = document.getElementById('one-rm-percentages-grid');
+        var pcts = [65, 70, 75, 80, 85, 90, 95];
+        gridEl.innerHTML = pcts.map(function (p) {
+          var load = roundTo2Point5(est * (p / 100));
           return (
             '<div class="bg-[#182234] border border-[#253147] rounded-xl p-2 text-center">' +
-              '<div class="text-[10px] font-bold text-[#c4b5fd]">' + p + '%</div>' +
-              '<div class="text-xs font-extrabold text-white mt-0.5">' + roundTo2Point5(est * (p / 100)) + 'kg</div>' +
+              '<div class="text-[10px] font-bold text-[#a78bfa]">' + p + '%</div>' +
+              '<div class="text-xs sm:text-sm font-black text-white mt-0.5">' + load + ' kg</div>' +
             '</div>'
           );
         }).join('');
@@ -1965,7 +2244,7 @@
       }
 
       // ---------------------------------------------------------
-      // INITIALIZATION & EVENT BINDINGS (WRAPPED IN TRY/CATCH)
+      // INITIALIZATION & EVENT BINDINGS
       // ---------------------------------------------------------
       function renderAllViews() {
         try { renderWeeklyQuota(); } catch (e) { console.error(e); }
@@ -1980,6 +2259,7 @@
         try {
           localStorage.removeItem(STORAGE_KEY);
           localStorage.removeItem(WEEKLY_QUOTA_KEY);
+          localStorage.removeItem(NUTRITION_HISTORY_KEY);
         } catch (err) {
           console.error(err);
         }
@@ -1988,6 +2268,8 @@
         appState.activeTab = keepTab;
         window.__afState = appState;
         weeklyQuotaState = getDefaultWeeklyQuota();
+        nutritionHistory = getDefaultNutritionHistory();
+        expandedNutritionDates = {};
         persistAll();
         renderAllViews();
         window.switchTab(keepTab);
@@ -1996,7 +2278,6 @@
 
       function bindEvents() {
         try {
-          // Fallback addEventListener on every .nav-tab-btn alongside inline onclick
           var tabButtons = document.querySelectorAll('.nav-tab-btn');
           for (var i = 0; i < tabButtons.length; i++) {
             (function (btn) {
@@ -2085,6 +2366,8 @@
           });
           document.getElementById('log-preview-food-btn').addEventListener('click', logPreviewMeal);
           document.getElementById('save-preview-preset-btn').addEventListener('click', savePreviewAsPreset);
+          document.getElementById('clear-today-meals-btn').addEventListener('click', clearTodayMeals);
+          document.getElementById('save-nutrition-day-btn').addEventListener('click', saveTodayNutritionToHistory);
           document.getElementById('reset-supps-btn').addEventListener('click', resetSupplementsDay);
 
           document.getElementById('tab-nutrition').addEventListener('click', function (event) {
@@ -2101,16 +2384,34 @@
               return;
             }
 
+            var toggleHistBtn = event.target.closest('.toggle-nutri-history-btn');
+            if (toggleHistBtn) {
+              toggleNutritionHistoryExpand(toggleHistBtn.getAttribute('data-history-date'));
+              return;
+            }
+
+            var delHistBtn = event.target.closest('.delete-nutri-history-btn');
+            if (delHistBtn) {
+              deleteNutritionHistoryEntry(delHistBtn.getAttribute('data-history-date'));
+              return;
+            }
+
+            var bulkPreBtn = event.target.closest('#check-entire-preworkout-btn');
+            if (bulkPreBtn) {
+              checkEntirePreWorkoutScoop();
+              return;
+            }
+
             var suppBtn = event.target.closest('.supp-toggle-btn');
             if (suppBtn) {
-              toggleSupplement(suppBtn.getAttribute('data-supp'));
+              toggleSupplement(suppBtn.getAttribute('data-supp-id'));
             }
           });
 
           // 1RM Hub Events
           document.getElementById('calc-1rm-weight').addEventListener('input', update1RMEstimator);
           document.getElementById('calc-1rm-reps').addEventListener('input', update1RMEstimator);
-          document.getElementById('tab-onerm').addEventListener('change', function (event) {
+          document.getElementById('tab-1rm').addEventListener('change', function (event) {
             var liftInput = event.target.closest('.saved-1rm-input');
             if (!liftInput) return;
             var liftName = liftInput.getAttribute('data-lift');
@@ -2148,7 +2449,7 @@
         bindEvents();
         var initialTab = 'workout';
         try {
-          initialTab = localStorage.getItem('af_sg_active_tab_v3') || appState.activeTab || 'workout';
+          initialTab = localStorage.getItem('af_sg_active_tab_v4') || appState.activeTab || 'workout';
         } catch (e) {
           initialTab = appState.activeTab || 'workout';
         }
